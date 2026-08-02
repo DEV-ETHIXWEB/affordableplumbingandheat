@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/sections/PageHero.astro';
+import ServicesGrid from '../../../components/sections/ServicesGrid.astro';
+import ContactCTA from '../../../components/sections/ContactCTA.astro';
+import Container from '../../../components/ui/Container.astro';
+import Eyebrow from '../../../components/ui/Eyebrow.astro';
+import Button from '../../../components/ui/Button.astro';
+import { CircleCheck, Phone, MapPin } from 'lucide-react';
+import { cityPages } from '../../../data/cityPages';
+import { business } from '../../../data/business';
+import { buildBreadcrumbSchema, buildServiceSchema } from '../../../lib/schema';
+import heroImage from '../../../assets/images/hero/castle-rock-aerial.jpg';
+
+export function getStaticPaths() {
+  return cityPages.map((city) => ({
+    params: { city: city.slug },
+    props: { city }
+  }));
+}
+
+const { city } = Astro.props;
+
+const trustPoints = [
+  `Fast dispatch across ${city.name}, available 24 hours a day, 7 days a week`,
+  'Licensed, insured technicians on every visit',
+  'Upfront, honest pricing before any work begins'
+];
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'Service Area', path: '/service-area/' },
+  { name: city.name, path: `/service-area/${city.slug}/` }
+]);
+
+const serviceSchema = buildServiceSchema({
+  name: `Plumbing, HVAC & Electrical in ${city.name}, CO`,
+  description: city.blurb,
+  path: `/service-area/${city.slug}/`
+});
+---
+
+<BaseLayout
+  title={`Plumbing, HVAC & Electrical in ${city.name}, CO | ${business.name}`}
+  description={`24/7 plumbing, heating, cooling, and electrical service in ${city.name}, Colorado. Licensed & insured technicians. Call ${business.hotline.display}.`}
+  schema={[breadcrumbSchema, serviceSchema]}
+>
+  <PageHero
+    title={`Plumbing, HVAC & Electrical in ${city.name}, CO`}
+    description={city.blurb}
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Service Area', href: '/service-area/' }, { label: city.name }]}
+    image={heroImage}
+    imageAlt={`Aerial view near ${city.name}, Colorado`}
+  />
+
+  <section class="bg-white py-16 sm:py-20">
+    <Container class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div data-reveal="left">
+        <Eyebrow>{`Serving ${city.name}, Colorado`}</Eyebrow>
+        <h2 class="font-display text-ink-900 mt-4 text-3xl leading-[1.1] font-bold text-balance sm:text-4xl">
+          Your Local Plumbing, Heating & Electrical Company
+        </h2>
+        <p class="text-ink-600 mt-5 max-w-lg leading-relaxed text-balance">
+          If you have an active leak, no heat, or an electrical emergency, call us right away. Our technicians are
+          dispatched across {city.name} and the surrounding area around the clock.
+        </p>
+        <ul class="mt-8 flex flex-col gap-3">
+          {
+            trustPoints.map((item) => (
+              <li class="text-ink-700 flex items-start gap-3 text-sm">
+                <CircleCheck className="mt-0.5 size-4 shrink-0 text-orange-600" aria-hidden="true" />
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <Button href="/contact-us/" size="lg">Schedule Service</Button>
+          <Button href={`tel:${business.hotline.tel}`} variant="outline" size="lg" icon={Phone}>
+            {business.hotline.display}
+          </Button>
+        </div>
+      </div>
+
+      <div class="card-elevated p-8 text-center sm:p-10" data-reveal="right">
+        <MapPin className="mx-auto size-8 text-orange-500" aria-hidden="true" />
+        <p class="font-display mt-3 text-xs font-bold tracking-wider text-orange-600 uppercase">Serving {city.name}</p>
+        <p class="font-display text-ink-900 mt-2 text-2xl font-bold">Colorado Springs & the Pikes Peak Region</p>
+        <p class="text-ink-500 mt-4 text-sm leading-relaxed">
+          Don't see your neighborhood listed by name? We likely still cover it. See the{' '}
+          <a href="/service-area/" class="text-orange-600 underline underline-offset-2 hover:text-orange-700">
+            full service area
+          </a>{' '}
+          for every community we serve.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <ServicesGrid />
+  <ContactCTA
+    title={`One Call Does It All in ${city.name}`}
+    description={`Whatever the issue, our team is licensed, stocked, and ready to fix it right the first time in ${city.name}.`}
+  />
+</BaseLayout>

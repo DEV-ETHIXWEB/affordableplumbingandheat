@@ -1,0 +1,58 @@
+---
+import { cn } from '../../lib/utils';
+import type { LucideIcon } from 'lucide-react';
+
+interface Props {
+  icon: LucideIcon;
+  class?: string;
+  tone?: 'orange' | 'navy' | 'white';
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { icon: Icon, class: className, tone = 'orange', size = 'md' } = Astro.props;
+
+const sizes = {
+  sm: 'size-9 [&>svg]:size-4',
+  md: 'size-12 [&>svg]:size-5',
+  lg: 'size-16 [&>svg]:size-7'
+};
+
+const tones = {
+  orange: {
+    badge:
+      'text-orange-700 ring-1 ring-inset ring-orange-500/30 [background:linear-gradient(155deg,var(--color-orange-100)_0%,var(--color-orange-300)_55%,var(--color-orange-400)_100%)]',
+    shadow:
+      'shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,0.85),inset_0_-6px_10px_-4px_rgba(174,53,10,0.35),0_10px_20px_-8px_rgba(236,87,19,0.45),0_2px_6px_-1px_rgba(236,87,19,0.25)]'
+  },
+  navy: {
+    badge:
+      'text-navy-100 ring-1 ring-inset ring-navy-500/40 [background:linear-gradient(155deg,var(--color-navy-600)_0%,var(--color-navy-800)_55%,var(--color-navy-900)_100%)]',
+    shadow:
+      'shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,0.15),inset_0_-6px_10px_-4px_rgba(0,0,0,0.35),0_10px_20px_-8px_rgba(10,24,48,0.55),0_2px_6px_-1px_rgba(10,24,48,0.35)]'
+  },
+  white: {
+    badge:
+      'text-orange-500 ring-1 ring-inset ring-white/60 [background:linear-gradient(155deg,white_0%,var(--color-orange-50)_100%)]',
+    shadow:
+      'shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,0.9),inset_0_-4px_8px_-4px_rgba(236,87,19,0.15),0_10px_20px_-8px_rgba(11,13,16,0.25),0_2px_6px_-1px_rgba(11,13,16,0.12)]'
+  }
+};
+
+const t = tones[tone];
+---
+
+<span
+  class={cn(
+    'relative inline-flex shrink-0 items-center justify-center rounded-2xl transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-0.5 group-hover:rotate-[-2deg]',
+    sizes[size],
+    t.badge,
+    t.shadow,
+    className
+  )}
+>
+  <Icon
+    aria-hidden="true"
+    strokeWidth={2.25}
+    className="[filter:drop-shadow(0_1px_1px_rgba(255,255,255,0.6))_drop-shadow(0_1.5px_0.5px_rgba(0,0,0,0.12))] transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110"
+  />
+</span>

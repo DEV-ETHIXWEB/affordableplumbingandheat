@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import { Phone, ShieldCheck, Clock } from 'lucide-react';
+import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+import heroImage from '../../assets/images/hero/colorado-springs-aerial.webp';
+import { business } from '../../data/business';
+
+const badges = [
+  { icon: Clock, label: 'Available 24/7' },
+  { icon: ShieldCheck, label: 'Licensed & Insured' }
+];
+---
+
+<section class="relative overflow-hidden bg-navy-900">
+  <div class="absolute inset-0" aria-hidden="true">
+    <Image
+      src={heroImage}
+      alt=""
+      widths={[800, 1400, 2000, 2500]}
+      sizes="100vw"
+      quality="high"
+      format="webp"
+      class="h-full w-full object-cover opacity-45"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-gradient-to-b from-navy-950/80 via-navy-900/75 to-navy-900"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-navy-950/60 via-transparent to-transparent"></div>
+  </div>
+
+  <Container class="relative flex min-h-[560px] flex-col justify-center gap-8 py-24 sm:min-h-[620px] sm:py-28 lg:py-32">
+    <div class="max-w-2xl" data-reveal>
+      <span
+        class="font-display inline-flex items-center gap-2 rounded-full border border-orange-400/40 bg-orange-500/10 px-4 py-1.5 text-xs font-bold tracking-wider text-orange-300 uppercase"
+      >
+        <span class="relative flex size-2">
+          <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
+          <span class="relative inline-flex size-2 rounded-full bg-orange-400"></span>
+        </span>
+        Available 24/7 &mdash; Emergency Service
+      </span>
+
+      <h1 class="font-display mt-6 text-[2.75rem] leading-[1.02] font-extrabold tracking-[-0.02em] text-balance text-white sm:text-[3.75rem]">
+        Plumbing, Heating, Cooling &amp; Electrical
+      </h1>
+
+      <p class="mt-5 max-w-lg text-lg leading-relaxed text-balance text-white/75 sm:text-xl">
+        Colorado Springs' trusted plumber for honest pricing, licensed technicians, and fast, reliable service, day
+        or night.
+      </p>
+
+      <div class="mt-9 flex flex-col gap-3.5 sm:flex-row sm:items-center">
+        <Button href="/contact-us/" size="lg" class="justify-center">Request Service</Button>
+        <Button href={`tel:${business.hotline.tel}`} variant="secondary" size="lg" icon={Phone} class="justify-center">
+          {business.hotline.display}
+        </Button>
+      </div>
+
+      <ul class="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+        {
+          badges.map(({ icon: Icon, label }) => (
+            <li class="flex items-center gap-2 text-sm font-semibold text-white/85">
+              <Icon className="size-4 text-orange-400" aria-hidden="true" />
+              {label}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Container>
+</section>

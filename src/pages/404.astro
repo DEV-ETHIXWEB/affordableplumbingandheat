@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/ui/Container.astro';
+import Button from '../components/ui/Button.astro';
+import { Phone, Wrench } from 'lucide-react';
+import { business } from '../data/business';
+import { services } from '../data/services';
+
+const popularServices = services.slice(0, 4);
+---
+
+<BaseLayout title={`Page Not Found | ${business.name}`} description="This page couldn't be found." noIndex>
+  <section class="bg-white py-24 sm:py-32">
+    <Container class="mx-auto flex max-w-2xl flex-col items-center text-center">
+      <span class="bg-orange-500/15 text-orange-600 ring-orange-500/25 grid size-16 place-items-center rounded-full ring-1 ring-inset">
+        <Wrench className="size-7" aria-hidden="true" />
+      </span>
+      <h1 class="font-display text-ink-900 mt-6 text-4xl font-bold sm:text-5xl">404</h1>
+      <p class="font-display text-ink-900 mt-2 text-xl font-bold">We couldn't find that page</p>
+      <p class="text-ink-500 mt-3 max-w-md">
+        The page you're looking for may have moved or no longer exists. Let's get you back on track.
+      </p>
+
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <Button href="/" size="lg">Back to Homepage</Button>
+        <Button href={`tel:${business.hotline.tel}`} variant="outline" size="lg" icon={Phone}>
+          {business.hotline.display}
+        </Button>
+      </div>
+
+      <div class="border-ink-100 mt-14 w-full border-t pt-10">
+        <p class="text-ink-500 text-sm font-semibold">Popular services</p>
+        <ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {
+            popularServices.map((s) => (
+              <li>
+                <a href={`/services/${s.slug}/`} class="border-ink-100 text-ink-700 hover:border-orange-300 block rounded-xl border bg-white px-3 py-2.5 text-xs font-medium transition-colors hover:text-orange-600">
+                  {s.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

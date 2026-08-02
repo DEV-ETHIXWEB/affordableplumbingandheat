@@ -1,0 +1,489 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/inter/wght.css';
+
+/* ------------------------------------------------------------------
+   Design tokens — "Affordable Plumbing & Heat, redesigned for 2026."
+   80% preserved identity: deep navy + safety-orange, the brand's
+   existing colors from the live site (navy header/footer, orange CTAs
+   and logo wrench mark). 20% modern facelift: a refined navy/orange
+   scale with real depth, a warm neutral surface instead of flat
+   white, and a single confident accent instead of scattered hues.
+------------------------------------------------------------------ */
+@theme {
+  --font-display: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Navy — sampled from the existing header/footer navy (#0a2647 family).
+     Anchors navbar, footer, dark sections, and headings. */
+  --color-navy-50: #eef2f7;
+  --color-navy-100: #d7e0ec;
+  --color-navy-200: #adc0da;
+  --color-navy-300: #7c9abd;
+  --color-navy-400: #4d739e;
+  --color-navy-500: #325780;
+  --color-navy-600: #234266;
+  --color-navy-700: #1a3252;
+  --color-navy-800: #12233c;
+  --color-navy-900: #0a1830;
+  --color-navy-950: #060f20;
+
+  /* Orange — the brand's existing CTA/logo orange (#e8590c family),
+     extended into a full scale. orange-500/600 are the workhorse solid
+     CTA fills, matching the old site's button color closely. */
+  --color-orange-50: #fff4ed;
+  --color-orange-100: #ffe4d2;
+  --color-orange-200: #ffc5a3;
+  --color-orange-300: #ff9d6b;
+  --color-orange-400: #fb7638;
+  --color-orange-500: #ec5713;
+  --color-orange-600: #d3440a;
+  --color-orange-700: #ae350a;
+  --color-orange-800: #8b2c10;
+  --color-orange-900: #712710;
+  --color-orange-950: #3d1106;
+
+  /* Ink: near-black neutral for headings/overlays and soft grays for
+     body text on light surfaces. */
+  --color-ink-50: #f8f9fa;
+  --color-ink-100: #e9eaec;
+  --color-ink-200: #cfd2d7;
+  --color-ink-300: #a6acb5;
+  --color-ink-400: #7a8290;
+  --color-ink-500: #5b6270;
+  --color-ink-600: #434955;
+  --color-ink-700: #313640;
+  --color-ink-800: #21242c;
+  --color-ink-900: #16181e;
+  --color-ink-950: #0c0d11;
+
+  /* Warm mist surface: a barely-there warm gray for the alternating
+     section rhythm, distinct from pure white cards. */
+  --color-mist-100: #f6f4f1;
+  --color-mist-200: #ede9e4;
+
+  /* Trust gold for star ratings. */
+  --color-gold-400: #fbbf3f;
+  --color-gold-500: #f2a90f;
+
+  --shadow-glow-orange:
+    0 0 0 1px color-mix(in oklab, var(--color-orange-500) 35%, transparent),
+    0 12px 32px -8px color-mix(in oklab, var(--color-orange-500) 50%, transparent);
+  --shadow-card: 0 1px 2px rgba(12, 13, 17, 0.03), 0 6px 20px -6px rgba(12, 13, 17, 0.08);
+  --shadow-card-hover: 0 2px 6px rgba(12, 13, 17, 0.05), 0 18px 36px -10px rgba(12, 13, 17, 0.14);
+
+  --animate-marquee: marquee 34s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  80%,
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    font-family: var(--font-body);
+    background-color: #fff;
+    color: var(--color-ink-800);
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-orange-500);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .container-px {
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+  .card-elevated {
+    background-color: white;
+    border-radius: 1.25rem;
+    border: 1px solid var(--color-ink-100);
+    box-shadow: var(--shadow-card);
+    transition:
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.3s ease;
+  }
+  .card-elevated:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: var(--color-ink-200);
+  }
+  .glass-light {
+    background-color: color-mix(in oklab, white 94%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid color-mix(in oklab, white 70%, transparent);
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  .not-sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Blog article typography — applied to the rendered Markdown body
+   (src/pages/blog/[...id]/index.astro). Kept as a hand-written scope
+   instead of @tailwindcss/typography to avoid an extra dependency for
+   one content type. */
+.prose-blog {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.prose-blog > * + * {
+  margin-top: 1.25em;
+}
+.prose-blog h2 {
+  font-family: var(--font-display);
+  color: var(--color-ink-900);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-top: 2em;
+}
+.prose-blog h3 {
+  font-family: var(--font-display);
+  color: var(--color-ink-900);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1.75em;
+}
+.prose-blog a {
+  color: var(--color-orange-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-blog a:hover {
+  color: var(--color-orange-700);
+}
+.prose-blog ul,
+.prose-blog ol {
+  padding-left: 1.5em;
+}
+.prose-blog ul {
+  list-style: disc;
+}
+.prose-blog ol {
+  list-style: decimal;
+}
+.prose-blog li + li {
+  margin-top: 0.4em;
+}
+.prose-blog strong {
+  color: var(--color-ink-900);
+  font-weight: 700;
+}
+.prose-blog blockquote {
+  border-left: 3px solid var(--color-orange-400);
+  padding-left: 1.25em;
+  color: var(--color-ink-500);
+  font-style: italic;
+}
+.prose-blog img {
+  border-radius: 1.25rem;
+}
+.prose-blog code {
+  background: var(--color-ink-50);
+  border-radius: 0.25rem;
+  padding: 0.15em 0.4em;
+  font-size: 0.9em;
+}
+
+/* Skip link: visually hidden until focused, then jumps above everything. */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 100;
+  background: var(--color-navy-900);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  font-weight: 600;
+  transition: top 0.2s ease;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ------------------------------------------------------------------
+   Scroll-reveal gate (see src/scripts/reveal.ts + shared/Reveal.astro).
+   Only hide [data-reveal] content once we KNOW js + IntersectionObserver
+   will actually run (html.js, set by a synchronous inline script in
+   BaseLayout's <head>, and .io-ready, set right before the observer is
+   wired up in reveal.ts). Without that, content stays fully visible:
+   no-JS users, crawlers, and static renders never see blank sections. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js.io-ready [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  html.js.io-ready [data-reveal].is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  html.js.io-ready [data-reveal='scale'] {
+    transform: scale(0.94);
+  }
+  html.js.io-ready [data-reveal='scale'].is-revealed {
+    transform: scale(1);
+  }
+  html.js.io-ready [data-reveal='left'] {
+    transform: translateX(-24px);
+  }
+  html.js.io-ready [data-reveal='left'].is-revealed {
+    transform: translateX(0);
+  }
+  html.js.io-ready [data-reveal='right'] {
+    transform: translateX(24px);
+  }
+  html.js.io-ready [data-reveal='right'].is-revealed {
+    transform: translateX(0);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Accessibility widget effects — applied to <html> via data classes
+   toggled from the AccessibilityWidget island (src/lib/accessibility).
+   Overriding the ink/mist custom properties directly (rather than a
+   blanket filter()) cascades through every Tailwind utility already
+   referencing them, without distorting the navy/orange brand colors.
+------------------------------------------------------------------ */
+html {
+  font-size: calc(100% * var(--a11y-font-scale, 1));
+}
+
+html.a11y-custom-spacing body,
+html.a11y-custom-spacing :where(p, li, span, a, blockquote, h1, h2, h3, h4, h5, h6, button, label) {
+  letter-spacing: var(--a11y-letter-spacing) !important;
+}
+
+html.a11y-custom-leading body,
+html.a11y-custom-leading :where(p, li, blockquote) {
+  line-height: var(--a11y-line-height) !important;
+}
+
+html.a11y-align-left :where(p, li, blockquote) {
+  text-align: left !important;
+}
+html.a11y-align-center :where(p, li, blockquote) {
+  text-align: center !important;
+}
+html.a11y-align-right :where(p, li, blockquote) {
+  text-align: right !important;
+}
+html.a11y-align-justify :where(p, li, blockquote) {
+  text-align: justify !important;
+}
+
+html.a11y-high-contrast {
+  --color-ink-50: #ffffff;
+  --color-ink-100: #000000;
+  --color-ink-200: #000000;
+  --color-ink-300: #000000;
+  --color-ink-400: #000000;
+  --color-ink-500: #000000;
+  --color-ink-600: #000000;
+  --color-ink-700: #000000;
+  --color-ink-800: #000000;
+  --color-ink-900: #000000;
+  --color-mist-100: #ffffff;
+  --color-mist-200: #ffffff;
+}
+html.a11y-high-contrast body {
+  background-color: #ffffff !important;
+}
+
+html.a11y-invert,
+html.a11y-invert img,
+html.a11y-invert video,
+html.a11y-invert picture,
+html.a11y-invert iframe {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html.a11y-grayscale {
+  filter: grayscale(1);
+}
+
+html.a11y-underline-links a {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+html.a11y-highlight-links a {
+  background: var(--color-orange-200) !important;
+  color: var(--color-navy-900) !important;
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px var(--color-orange-200);
+}
+
+html.a11y-highlight-headings h1,
+html.a11y-highlight-headings h2,
+html.a11y-highlight-headings h3,
+html.a11y-highlight-headings h4,
+html.a11y-highlight-headings h5,
+html.a11y-highlight-headings h6 {
+  outline: 3px solid var(--color-orange-500) !important;
+  outline-offset: 3px;
+  background: color-mix(in oklab, var(--color-orange-200) 35%, transparent) !important;
+}
+
+html.a11y-large-cursor,
+html.a11y-large-cursor * {
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path d="M6 2 L6 34 L14 26 L20 37 L25 34.5 L19 24 L30 24 Z" fill="black" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg>')
+      4 4,
+    auto !important;
+}
+
+html.a11y-dyslexia-font body,
+html.a11y-dyslexia-font * {
+  font-family: 'Comic Sans MS', 'Comic Sans', Verdana, Tahoma, sans-serif !important;
+  word-spacing: 0.12em;
+}
+
+html.a11y-hide-images img {
+  visibility: hidden !important;
+}
+
+html.a11y-pause-animations *,
+html.a11y-pause-animations *::before,
+html.a11y-pause-animations *::after {
+  animation-play-state: paused !important;
+}
+
+html.a11y-reduce-motion *,
+html.a11y-reduce-motion *::before,
+html.a11y-reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+.a11y-reading-guide-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 44px;
+  pointer-events: none;
+  z-index: 2147483000;
+  background: color-mix(in oklab, var(--color-orange-200) 30%, transparent);
+  border-top: 2px solid var(--color-orange-500);
+  border-bottom: 2px solid var(--color-orange-500);
+}
+
+.a11y-reading-mask-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 2147483000;
+  background: rgba(0, 0, 0, 0.78);
+}
+
+.a11y-reading-highlight {
+  outline: 3px solid var(--color-orange-500) !important;
+  outline-offset: 3px;
+  border-radius: 0.25rem;
+  background: color-mix(in oklab, var(--color-orange-200) 30%, transparent) !important;
+  transition: background 0.2s ease;
+}
+
+@utility a11y-panel-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--color-orange-500) 45%, transparent) transparent;
+}

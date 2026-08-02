@@ -1,0 +1,19 @@
+---
+import { cn } from '../../lib/utils';
+interface Props {
+  class?: string;
+  tone?: 'light' | 'dark';
+}
+const { class: className, tone = 'light' } = Astro.props;
+---
+
+<span
+  class={cn(
+    'inline-flex items-center gap-2 font-display text-xs font-bold uppercase tracking-[0.16em]',
+    tone === 'light' ? 'text-orange-600' : 'text-orange-300',
+    className
+  )}
+>
+  <span class:list={['h-px w-6', tone === 'light' ? 'bg-orange-600/70' : 'bg-orange-300/70']} aria-hidden="true"></span>
+  <slot />
+</span>

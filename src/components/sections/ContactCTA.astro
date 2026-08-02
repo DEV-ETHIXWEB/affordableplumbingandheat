@@ -1,0 +1,31 @@
+---
+import { Phone } from 'lucide-react';
+import Container from '../ui/Container.astro';
+import Button from '../ui/Button.astro';
+import { business } from '../../data/business';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Don't Wait, Small Problems Become Big Problems Fast",
+  description = 'Contact us today for reliable plumbing, heating, cooling, and electrical service you can count on.'
+} = Astro.props;
+---
+
+<section class="bg-navy-900 py-20 sm:py-24">
+  <Container class="flex flex-col items-center gap-6 text-center">
+    <h2 class="font-display max-w-2xl text-3xl font-bold text-balance text-white sm:text-4xl" data-reveal>{title}</h2>
+    <p class="max-w-xl text-balance text-white/70" data-reveal>{description}</p>
+    <div class="mt-2 flex flex-col gap-3 sm:flex-row" data-reveal>
+      <Button href="/contact-us/" size="lg" class="justify-center">
+        Request Service
+      </Button>
+      <Button href={`tel:${business.hotline.tel}`} variant="secondary" size="lg" icon={Phone} class="justify-center">
+        {business.hotline.display}
+      </Button>
+    </div>
+  </Container>
+</section>

@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/ui/Container.astro';
+import { business } from '../../data/business';
+import { buildBreadcrumbSchema } from '../../lib/schema';
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'Accessibility', path: '/accessibility/' }
+]);
+---
+
+<BaseLayout
+  title={`Accessibility Statement | ${business.name}`}
+  description={`${business.name}'s commitment to a website that's accessible to everyone.`}
+  schema={[breadcrumbSchema]}
+>
+  <section class="bg-white py-20 sm:py-28">
+    <Container class="mx-auto max-w-3xl">
+      <p class="font-display text-xs font-bold tracking-wider text-orange-600 uppercase">Accessibility</p>
+      <h1 class="font-display text-ink-900 mt-3 text-4xl font-bold">Accessibility Statement</h1>
+
+      <div class="text-ink-600 mt-10 space-y-8 text-[15px] leading-relaxed">
+        <p>
+          {business.name} is committed to ensuring digital accessibility for people of all abilities. We continually
+          work to improve the user experience for everyone and apply relevant accessibility standards.
+        </p>
+
+        <div>
+          <h2 class="font-display text-ink-900 text-xl font-bold">What We've Built In</h2>
+          <ul class="mt-3 list-disc space-y-2 pl-5">
+            <li>Semantic HTML, proper heading structure, and labeled form fields throughout the site</li>
+            <li>Full keyboard navigation, including a "Skip to content" link and visible focus states</li>
+            <li>Alt text on meaningful images and accessible names on icon-only controls</li>
+            <li>Color choices checked for sufficient contrast against their backgrounds</li>
+            <li>Respect for your device's "reduce motion" setting, and a matching in-site toggle</li>
+            <li>An accessibility panel (the icon on the edge of the screen) with text size, contrast, dyslexia-friendly
+              font, reading guide, and read-aloud controls, which you can reach any time with Alt+A</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="font-display text-ink-900 text-xl font-bold">About the Accessibility Panel</h2>
+          <p class="mt-3">
+            The accessibility panel lets you personalize how you view this site: larger text, higher contrast, a
+            dyslexia-friendly font, a reading guide or mask, reduced motion, and more. Your preferences are saved in
+            your browser so they carry across pages. This panel is a helpful addition, not a replacement, for
+            building the site itself to be accessible; we don't consider an overlay alone sufficient for compliance,
+            and we've focused on the underlying HTML, contrast, and keyboard support first.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-display text-ink-900 text-xl font-bold">Ongoing Effort</h2>
+          <p class="mt-3">
+            Accessibility is an ongoing effort. If you encounter a barrier using this site, please let us know so we
+            can address it.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-display text-ink-900 text-xl font-bold">Contact Us</h2>
+          <p class="mt-3">
+            Reach out at{' '}
+            <a href={`mailto:${business.email}`} class="text-orange-600 underline underline-offset-2 hover:text-orange-700">
+              {business.email}
+            </a>{' '}
+            or call {business.hotline.display}.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

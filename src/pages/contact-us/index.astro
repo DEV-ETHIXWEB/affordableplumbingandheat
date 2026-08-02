@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import Container from '../../components/ui/Container.astro';
+import ContactForm from '../../components/islands/ContactForm.tsx';
+import { Phone, Clock, MapPin, ShieldCheck } from 'lucide-react';
+import { business } from '../../data/business';
+import heroImage from '../../assets/images/services/water-heater-leak.jpg';
+import { buildBreadcrumbSchema } from '../../lib/schema';
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'Contact Us', path: '/contact-us/' }
+]);
+---
+
+<BaseLayout
+  title={`Contact Us | ${business.name} - Get a Free Estimate`}
+  description="Request a free plumbing, HVAC, or electrical estimate, or call us directly for 24/7 emergency service in Colorado Springs, CO."
+  schema={[breadcrumbSchema]}
+>
+  <PageHero
+    title="Let's Fix It"
+    description="Tell us what's going on and we'll get back to you fast, or call now for emergencies."
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Contact Us' }]}
+    image={heroImage}
+    imageAlt="A water heater serviced by an Affordable Plumbing, Heat & Electrical technician"
+  />
+
+  <section class="bg-mist-100 py-16 sm:py-24">
+    <Container class="grid gap-10 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
+      <aside class="space-y-6" data-reveal="left">
+        <div class="border-orange-300/40 shadow-card rounded-3xl border bg-gradient-to-br from-orange-50 to-white p-7">
+          <p class="font-display flex items-center gap-2 text-xs font-bold tracking-wider text-orange-600 uppercase">
+            <span class="relative flex size-2">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
+              <span class="relative inline-flex size-2 rounded-full bg-orange-500"></span>
+            </span>
+            Emergency? Skip the form.
+          </p>
+          <a href={`tel:${business.hotline.tel}`} class="font-display text-ink-900 mt-3 flex items-center gap-3 text-3xl font-bold hover:text-orange-600">
+            <Phone className="size-7 text-orange-600" aria-hidden="true" />
+            {business.hotline.display}
+          </a>
+          <p class="text-ink-500 mt-2 text-sm">{business.hours}</p>
+        </div>
+
+        <div class="border-ink-100 shadow-card rounded-3xl border bg-white p-7">
+          <div class="flex items-center gap-3">
+            <Clock className="text-navy-700 size-5" aria-hidden="true" />
+            <p class="text-ink-700 text-sm">{business.hours}</p>
+          </div>
+          <div class="mt-3 flex items-center gap-3">
+            <MapPin className="text-navy-700 size-5" aria-hidden="true" />
+            <p class="text-ink-700 text-sm">
+              {business.streetAddress}, {business.addressLocality}, {business.addressRegion} {business.postalCode}
+            </p>
+          </div>
+          <div class="mt-3 flex items-center gap-3">
+            <ShieldCheck className="text-navy-700 size-5" aria-hidden="true" />
+            <p class="text-ink-700 text-sm">Licensed &amp; insured</p>
+          </div>
+        </div>
+
+        <div class="card-elevated overflow-hidden p-0">
+          <iframe
+            title={`Map to ${business.name}`}
+            src={`https://maps.google.com/maps?q=${encodeURIComponent(`${business.streetAddress}, ${business.addressLocality}, ${business.addressRegion} ${business.postalCode}`)}&z=13&output=embed`}
+            class="h-[220px] w-full border-0"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </aside>
+
+      <div class="border-ink-100 shadow-card rounded-3xl border bg-white p-6 sm:p-9" data-reveal="right">
+        <h2 class="font-display text-ink-900 text-2xl font-bold">Request Service</h2>
+        <p class="text-ink-500 mt-2 text-sm">No obligation. We'll follow up within one business day.</p>
+        <div class="mt-8">
+          <ContactForm client:load />
+        </div>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

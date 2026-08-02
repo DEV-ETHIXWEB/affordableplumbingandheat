@@ -1,0 +1,12 @@
+---
+import { cn } from '../../lib/utils';
+interface Props {
+  class?: string;
+  as?: keyof HTMLElementTagNameMap;
+}
+const { class: className, as: Tag = 'div' }: Props = Astro.props;
+---
+
+<Tag class={cn('mx-auto w-full max-w-[1280px] container-px', className)}>
+  <slot />
+</Tag>

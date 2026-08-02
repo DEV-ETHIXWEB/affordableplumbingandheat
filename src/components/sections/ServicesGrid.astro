@@ -1,0 +1,57 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import Container from '../ui/Container.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import IconBadge from '../ui/IconBadge.astro';
+import Button from '../ui/Button.astro';
+import Reveal from '../shared/Reveal.astro';
+import { services, categoryMeta, type ServiceCategory } from '../../data/services';
+import { serviceIconMap as iconMap } from '../../lib/serviceIcons';
+
+const categories: ServiceCategory[] = ['plumbing', 'hvac', 'electrical', 'sewer'];
+// Feature the first 2 services per category on the homepage (8 total) so the
+// grid stays scannable; /services/ lists the complete catalog.
+const featured = categories.flatMap((cat) => services.filter((s) => s.category === cat).slice(0, 2));
+---
+
+<section class="bg-white py-20 sm:py-28">
+  <Container>
+    <SectionHeading
+      eyebrow="Plumbing, HVAC, Electrical & Sewer"
+      title="Our Services"
+      description="From a dripping faucet to a full furnace replacement, no job is too small or too big."
+    />
+
+    <Reveal as="div" class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4" step={70}>
+      {
+        featured.map((s) => {
+          const Icon = iconMap[s.icon];
+          return (
+            <a
+              href={`/services/${s.slug}/`}
+              data-reveal
+              class="card-elevated group hover:border-orange-300/60 relative flex flex-col gap-4 p-6"
+            >
+              <div class="flex items-start justify-between">
+                <IconBadge icon={Icon} tone="orange" />
+                <ArrowUpRight
+                  className="size-5 text-ink-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-orange-600"
+                  aria-hidden="true"
+                />
+              </div>
+              <div>
+                <p class="text-ink-400 text-xs font-bold tracking-wider uppercase">{categoryMeta[s.category].label}</p>
+                <h3 class="font-display text-ink-900 mt-1 text-lg font-bold">{s.title}</h3>
+                <p class="text-ink-500 mt-1.5 text-sm leading-relaxed">{s.short}</p>
+              </div>
+            </a>
+          );
+        })
+      }
+    </Reveal>
+
+    <div class="mt-12 flex justify-center" data-reveal>
+      <Button href="/services/" variant="outline" size="lg">View All Services</Button>
+    </div>
+  </Container>
+</section>

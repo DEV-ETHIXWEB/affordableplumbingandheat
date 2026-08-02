@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import Container from '../../components/ui/Container.astro';
+import Reveal from '../../components/shared/Reveal.astro';
+import IconBadge from '../../components/ui/IconBadge.astro';
+import { Image } from 'astro:assets';
+import { ArrowRight, CircleCheck, Wrench } from 'lucide-react';
+import { services, categoryMeta, type ServiceCategory } from '../../data/services';
+import waterHeaterImg from '../../assets/images/services/water-heater-leak.jpg';
+import { serviceIconMap as iconMap } from '../../lib/serviceIcons';
+import { buildBreadcrumbSchema } from '../../lib/schema';
+
+const categories: ServiceCategory[] = ['plumbing', 'hvac', 'electrical', 'sewer'];
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'Services', path: '/services/' }
+]);
+---
+
+<BaseLayout
+  title="Plumbing, HVAC & Electrical Services in Colorado Springs, CO"
+  description="Emergency plumbing, water heaters, drain cleaning, HVAC, electrical, and sewer service. Licensed, 24/7 technicians serving Colorado Springs and the surrounding area."
+  schema={[breadcrumbSchema]}
+>
+  <PageHero
+    title="Our Services"
+    description="Residential & commercial plumbing, HVAC, and electrical, from a five-minute fix to a full system replacement."
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Services' }]}
+    image={waterHeaterImg}
+    imageAlt="A water heater serviced by an Affordable Plumbing, Heat & Electrical technician"
+    large
+  />
+
+  {
+    categories.map((cat) => (
+      <section class="border-ink-100 border-t bg-white py-16 sm:py-20">
+        <Container>
+          <div class="flex items-center gap-4" data-reveal>
+            <IconBadge icon={cat === 'sewer' ? Wrench : iconMap[services.find((s) => s.category === cat)!.icon]} tone="orange" />
+            <div>
+              <h2 class="font-display text-ink-900 text-2xl font-bold sm:text-3xl">{categoryMeta[cat].label}</h2>
+              <p class="text-ink-500 mt-1 max-w-xl text-sm leading-relaxed">{categoryMeta[cat].description}</p>
+            </div>
+          </div>
+
+          <Reveal as="div" class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3" step={50}>
+            {services
+              .filter((s) => s.category === cat)
+              .map((s) => {
+                const Icon = iconMap[s.icon];
+                return (
+                  <article
+                    data-reveal
+                    class="group hover:shadow-card-hover border-ink-100 shadow-card hover:border-orange-300/60 flex flex-col overflow-hidden rounded-3xl border bg-white transition-all duration-300 hover:-translate-y-1"
+                  >
+                    {s.image ? (
+                      <div class="relative h-[180px] overflow-hidden">
+                        <Image
+                          src={s.image}
+                          alt=""
+                          role="presentation"
+                          width={520}
+                          height={300}
+                          densities={[1, 2]}
+                          quality="high"
+                          class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div class="from-ink-950 via-ink-950/10 absolute inset-0 bg-gradient-to-t to-transparent" />
+                        <IconBadge icon={Icon} tone="white" size="sm" class="absolute bottom-3 left-4" />
+                      </div>
+                    ) : (
+                      <div class="bg-navy-900 flex h-[100px] items-center px-6">
+                        <IconBadge icon={Icon} tone="white" />
+                      </div>
+                    )}
+                    <div class="flex flex-1 flex-col p-6">
+                      <h3 class="font-display text-ink-900 text-lg font-bold">{s.title}</h3>
+                      <p class="text-ink-500 mt-2 text-sm leading-relaxed">{s.short}</p>
+                      <ul class="mt-3 space-y-1.5">
+                        {s.bullets.slice(0, 2).map((b) => (
+                          <li class="text-ink-500 flex items-start gap-2 text-xs">
+                            <CircleCheck className="mt-0.5 size-3.5 shrink-0 text-orange-600" aria-hidden="true" />
+                            {b}
+                          </li>
+                        ))}
+                      </ul>
+                      <a
+                        href={`/services/${s.slug}/`}
+                        class="font-display mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-orange-600 transition-colors hover:text-orange-700"
+                      >
+                        Learn More<span class="sr-only"> about {s.title}</span> <ArrowRight className="size-4" aria-hidden="true" />
+                      </a>
+                    </div>
+                  </article>
+                );
+              })}
+          </Reveal>
+        </Container>
+      </section>
+    ))
+  }
+</BaseLayout>

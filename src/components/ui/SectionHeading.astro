@@ -1,0 +1,37 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import { cn } from '../../lib/utils';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  align?: 'left' | 'center';
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { eyebrow, title, description, align = 'center', tone = 'light', class: className } = Astro.props;
+---
+
+<div
+  class={cn('flex flex-col gap-4', align === 'center' ? 'items-center text-center' : 'items-start text-left', className)}
+  data-reveal
+>
+  {eyebrow && <Eyebrow tone={tone === 'light' ? 'light' : 'dark'}>{eyebrow}</Eyebrow>}
+  <h2
+    class={cn(
+      'text-balance font-display text-4xl leading-[1.02] font-extrabold tracking-[-0.025em] sm:text-5xl md:text-[3.25rem]',
+      tone === 'light' ? 'text-ink-900' : 'text-white'
+    )}
+  >
+    {title}
+  </h2>
+  {
+    description && (
+      <p class={cn('max-w-2xl text-base leading-relaxed text-balance sm:text-lg', tone === 'light' ? 'text-ink-500' : 'text-white/70')}>
+        {description}
+      </p>
+    )
+  }
+</div>

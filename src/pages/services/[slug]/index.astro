@@ -1,0 +1,163 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/sections/PageHero.astro';
+import FAQ from '../../../components/sections/FAQ.astro';
+import Container from '../../../components/ui/Container.astro';
+import Button from '../../../components/ui/Button.astro';
+import IconBadge from '../../../components/ui/IconBadge.astro';
+import Eyebrow from '../../../components/ui/Eyebrow.astro';
+import { CircleCheck, Phone } from 'lucide-react';
+import { services, categoryMeta } from '../../../data/services';
+import { business } from '../../../data/business';
+import { serviceIconMap } from '../../../lib/serviceIcons';
+import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '../../../lib/schema';
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service }
+  }));
+}
+
+const { service } = Astro.props;
+const Icon = serviceIconMap[service.icon];
+
+const related = services.filter((s) => s.category === service.category && s.slug !== service.slug).slice(0, 3);
+
+const faqItems = [
+  {
+    question: `How quickly can you get to my home for ${service.title.toLowerCase()}?`,
+    answer: `We're available 24/7, and most ${service.title.toLowerCase()} calls in Colorado Springs are scheduled the same day, often within a few hours.`
+  },
+  {
+    question: 'Is the estimate free?',
+    answer: "Yes, estimates are free with no obligation. We'll explain the cost clearly before any work begins."
+  },
+  {
+    question: `Why choose Affordable Plumbing, Heat & Electrical for ${service.title.toLowerCase()}?`,
+    answer:
+      'We’re licensed and insured, available around the clock, and every job gets an upfront quote before we start. No surprises on the invoice.'
+  }
+];
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'Services', path: '/services/' },
+  { name: service.title, path: `/services/${service.slug}/` }
+]);
+
+const serviceSchema = buildServiceSchema({
+  name: service.title,
+  description: service.description,
+  path: `/services/${service.slug}/`
+});
+
+const faqSchema = buildFaqSchema(faqItems);
+---
+
+<BaseLayout
+  title={`${service.title} in Colorado Springs, CO | ${business.name}`}
+  description={service.short}
+  schema={[breadcrumbSchema, serviceSchema, faqSchema]}
+>
+  <PageHero
+    title={`${service.title} in Colorado Springs, CO`}
+    description={service.short}
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Services', href: '/services/' }, { label: service.title }]}
+    image={service.image}
+    imageAlt={`${service.title} performed by an ${business.name} technician`}
+    fallbackIcon={Icon}
+    large
+  />
+
+  <section class="bg-white py-20 sm:py-28">
+    <Container class="grid gap-14 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
+      <div data-reveal="left">
+        <Eyebrow>{service.eyebrow}</Eyebrow>
+        <div class="mt-4 flex items-center gap-4">
+          <IconBadge icon={Icon} size="lg" />
+          <h2 class="font-display text-ink-900 text-2xl font-bold sm:text-3xl">{service.title}</h2>
+        </div>
+        <p class="text-ink-600 mt-6 max-w-xl leading-relaxed text-balance">{service.description}</p>
+
+        <ul class="mt-8 space-y-3">
+          {
+            service.bullets.map((b) => (
+              <li class="border-ink-100 text-ink-700 shadow-card flex items-start gap-3 rounded-2xl border bg-white px-5 py-4 text-sm">
+                <CircleCheck className="mt-0.5 size-5 shrink-0 text-orange-600" aria-hidden="true" />
+                {b}
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="mt-9 flex flex-wrap gap-3">
+          <Button href="/contact-us/" size="lg">Schedule Service</Button>
+          <Button href={`tel:${business.hotline.tel}`} variant="outline" size="lg" icon={Phone}>
+            {business.hotline.display}
+          </Button>
+        </div>
+      </div>
+
+      <aside class="lg:sticky lg:top-32 lg:self-start" data-reveal="right">
+        <div class="card-elevated p-7">
+          <h3 class="font-display text-ink-900 text-lg font-bold">Why call us?</h3>
+          <ul class="text-ink-600 mt-5 space-y-4 text-sm">
+            <li class="flex items-start gap-3">
+              <CircleCheck className="mt-0.5 size-4 shrink-0 text-orange-600" aria-hidden="true" />
+              Licensed &amp; insured technicians
+            </li>
+            <li class="flex items-start gap-3">
+              <CircleCheck className="mt-0.5 size-4 shrink-0 text-orange-600" aria-hidden="true" />
+              Available 24/7, nights &amp; weekends
+            </li>
+            <li class="flex items-start gap-3">
+              <CircleCheck className="mt-0.5 size-4 shrink-0 text-orange-600" aria-hidden="true" />
+              Free, no-obligation estimates
+            </li>
+            <li class="flex items-start gap-3">
+              <CircleCheck className="mt-0.5 size-4 shrink-0 text-orange-600" aria-hidden="true" />
+              Financing available
+            </li>
+          </ul>
+          <div class="border-ink-100 mt-6 border-t pt-6">
+            <p class="text-ink-500 text-xs font-semibold tracking-wide uppercase">Serving</p>
+            <p class="text-ink-600 mt-1.5 text-sm">Colorado Springs &amp; the surrounding area</p>
+          </div>
+        </div>
+      </aside>
+    </Container>
+  </section>
+
+  <FAQ items={faqItems} eyebrow="FAQ" title={`${service.title} Questions`} accordionName="service-faq" />
+
+  {
+    related.length > 0 && (
+      <section class="border-t border-white/5 bg-navy-900 py-16 sm:py-20">
+        <Container>
+          <h2 class="font-display text-2xl font-bold text-white sm:text-3xl" data-reveal>
+            Related {categoryMeta[service.category].label} Services
+          </h2>
+          <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3" data-reveal-group>
+            {related.map((s) => {
+              const RelIcon = serviceIconMap[s.icon];
+              return (
+                <a
+                  href={`/services/${s.slug}/`}
+                  data-reveal
+                  class="group border-navy-700 bg-navy-950/45 hover:bg-navy-950/60 flex items-start gap-4 rounded-2xl border p-5 transition-colors"
+                >
+                  <IconBadge icon={RelIcon} tone="navy" />
+                  <span>
+                    <span class="font-display block text-sm font-bold text-white">{s.title}</span>
+                    <span class="mt-1 flex items-center gap-1 text-xs text-orange-300">View service</span>
+                  </span>
+                </a>
+              );
+            })}
+          </div>
+        </Container>
+      </section>
+    )
+  }
+</BaseLayout>

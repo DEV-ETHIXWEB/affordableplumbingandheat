@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import TrustBar from '../components/sections/TrustBar.astro';
+import ServicesGrid from '../components/sections/ServicesGrid.astro';
+import WhyChooseUs from '../components/sections/WhyChooseUs.astro';
+import FinancingBanner from '../components/sections/FinancingBanner.astro';
+import ServiceAreaSection from '../components/sections/ServiceAreaSection.astro';
+import FAQ from '../components/sections/FAQ.astro';
+import ContactCTA from '../components/sections/ContactCTA.astro';
+import { business } from '../data/business';
+import { generalFaq } from '../data/faq';
+import { buildFaqSchema } from '../lib/schema';
+---
+
+<BaseLayout
+  title={`Plumber in Colorado Springs, CO | ${business.name}`}
+  description="Affordable Plumbing, Heat & Electrical is your trusted plumbing, HVAC & electrical company in Colorado Springs, CO. Available 24/7. Licensed & insured."
+  schema={[buildFaqSchema(generalFaq as unknown as { question: string; answer: string }[])]}
+>
+  <Hero />
+  <TrustBar />
+  <ServicesGrid />
+  <WhyChooseUs />
+  <FinancingBanner />
+  <ServiceAreaSection />
+  <FAQ items={generalFaq} title="Common Questions" />
+  <ContactCTA />
+</BaseLayout>

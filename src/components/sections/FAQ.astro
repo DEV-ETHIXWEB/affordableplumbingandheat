@@ -1,0 +1,67 @@
+---
+import { Plus, Phone } from 'lucide-react';
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Button from '../ui/Button.astro';
+import Reveal from '../shared/Reveal.astro';
+import { business } from '../../data/business';
+
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  items: readonly FaqItem[];
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  accordionName?: string;
+}
+
+const {
+  items,
+  eyebrow = 'FAQ',
+  title = 'Questions, answered.',
+  description = "Answers to what Colorado Springs homeowners ask us most. Don't see yours here? Just call, we'll talk you through it.",
+  accordionName = 'faq-accordion'
+} = Astro.props;
+---
+
+<section class="bg-white py-20 sm:py-28">
+  <Container class="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+    <div class="lg:sticky lg:top-32 lg:self-start" data-reveal="left">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 class="font-display text-ink-900 mt-4 text-4xl leading-[1.02] font-extrabold tracking-[-0.02em] text-balance sm:text-5xl">
+        {title}
+      </h2>
+      <p class="text-ink-500 mt-5 max-w-sm leading-relaxed text-balance">{description}</p>
+      <div class="mt-8">
+        <Button href={`tel:${business.hotline.tel}`} variant="outline" size="lg" icon={Phone}>
+          {business.hotline.display}
+        </Button>
+      </div>
+    </div>
+
+    <Reveal as="div" class="space-y-3" step={60}>
+      {
+        items.map((item, i) => (
+          <details
+            data-reveal
+            name={accordionName}
+            open={i === 0}
+            class="card-elevated group open:border-orange-300/60 px-6 py-5 sm:px-7 sm:py-6"
+          >
+            <summary class="font-display text-ink-900 flex cursor-pointer list-none items-center justify-between gap-4 text-base font-bold sm:text-lg [&::-webkit-details-marker]:hidden">
+              {item.question}
+              <span class="bg-ink-50 flex size-8 shrink-0 items-center justify-center rounded-full transition-colors group-open:bg-orange-600/15">
+                <Plus className="size-4 shrink-0 text-orange-600 transition-transform duration-300 group-open:rotate-45" aria-hidden="true" />
+              </span>
+            </summary>
+            <p class="text-ink-500 mt-4 max-w-2xl text-[15px] leading-relaxed">{item.answer}</p>
+          </details>
+        ))
+      }
+    </Reveal>
+  </Container>
+</section>

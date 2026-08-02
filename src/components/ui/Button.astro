@@ -1,0 +1,63 @@
+---
+import { cn } from '../../lib/utils';
+import { ArrowRight, type LucideIcon } from 'lucide-react';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  size?: 'md' | 'lg';
+  icon?: LucideIcon | false;
+  class?: string;
+  type?: 'button' | 'submit';
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon = ArrowRight,
+  class: className,
+  type = 'button',
+  ariaLabel
+} = Astro.props;
+
+const Icon = icon || null;
+
+const base =
+  'group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-display font-semibold ' +
+  'transition-all duration-300 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 ' +
+  'active:scale-[0.97]';
+
+const sizes = {
+  md: 'px-6 py-3 text-sm',
+  lg: 'px-8 py-4 text-base'
+};
+
+const variants = {
+  primary:
+    'bg-orange-600 text-white shadow-[0_1px_0_0_rgba(255,255,255,0.25)_inset,0_6px_16px_-6px_rgba(211,68,10,0.45)] hover:bg-orange-700 hover:-translate-y-0.5 hover:shadow-[0_1px_0_0_rgba(255,255,255,0.3)_inset,0_10px_22px_-6px_rgba(211,68,10,0.55)]',
+  secondary:
+    'border-2 border-navy-900 bg-white text-navy-900 shadow-card hover:-translate-y-0.5 hover:bg-navy-900 hover:text-white hover:shadow-card-hover',
+  outline: 'border-2 border-orange-600/70 text-orange-600 hover:border-orange-600 hover:bg-orange-600/10',
+  ghost: 'text-white hover:bg-white/10'
+};
+
+const classes = cn(base, sizes[size], variants[variant], className);
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag href={href} type={!href ? type : undefined} aria-label={ariaLabel} class={classes}>
+  <span>
+    <slot />
+  </span>
+  {
+    Icon && (
+      <Icon
+        className="size-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
+        aria-hidden="true"
+        strokeWidth={2.5}
+      />
+    )
+  }
+</Tag>

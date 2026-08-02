@@ -1,0 +1,21 @@
+# Security headers for static hosting (Netlify / Cloudflare Pages both read
+# this file automatically). If deploying the Node adapter build behind a
+# platform without _headers support (e.g. a bare VPS/Docker), mirror these
+# as response headers in the reverse proxy (nginx/Caddy) config instead.
+#
+# Script/style CSP allows 'unsafe-inline' because this is a static build
+# with no edge runtime to mint per-request nonces: Astro emits a couple of
+# small inline <script> tags (JSON-LD structured data, the no-JS/js class
+# toggle) and inline styles for a few islands. If this site ever moves
+# behind an edge runtime that can mint per-request nonces, swap
+# 'unsafe-inline' for that instead of loosening this further.
+#
+# frame-src allows Google Maps (the embedded service-area/contact map
+# iframes) — no other third-party frames are used.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-src 'self' https://maps.google.com https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'

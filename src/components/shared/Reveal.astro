@@ -1,0 +1,47 @@
+---
+/**
+ * Wraps a group of children and staggers their [data-reveal] transition
+ * delay via inline custom properties, no JS required beyond the shared
+ * IntersectionObserver in src/scripts/reveal.ts.
+ */
+import { cn } from '../../lib/utils';
+
+interface Props {
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+  step?: number;
+}
+
+const { as: Tag = 'div', class: className, step = 80 }: Props = Astro.props;
+---
+
+<Tag class={cn(className)} style={`--reveal-step:${step}ms`} data-reveal-group>
+  <slot />
+</Tag>
+
+<style>
+  :global([data-reveal-group] > [data-reveal]:nth-child(1)) {
+    --reveal-delay: 0ms;
+  }
+  :global([data-reveal-group] > [data-reveal]:nth-child(2)) {
+    --reveal-delay: var(--reveal-step, 80ms);
+  }
+  :global([data-reveal-group] > [data-reveal]:nth-child(3)) {
+    --reveal-delay: calc(var(--reveal-step, 80ms) * 2);
+  }
+  :global([data-reveal-group] > [data-reveal]:nth-child(4)) {
+    --reveal-delay: calc(var(--reveal-step, 80ms) * 3);
+  }
+  :global([data-reveal-group] > [data-reveal]:nth-child(5)) {
+    --reveal-delay: calc(var(--reveal-step, 80ms) * 4);
+  }
+  :global([data-reveal-group] > [data-reveal]:nth-child(6)) {
+    --reveal-delay: calc(var(--reveal-step, 80ms) * 5);
+  }
+  :global([data-reveal-group] > [data-reveal]:nth-child(7)) {
+    --reveal-delay: calc(var(--reveal-step, 80ms) * 6);
+  }
+  :global([data-reveal-group] > [data-reveal]:nth-child(8)) {
+    --reveal-delay: calc(var(--reveal-step, 80ms) * 7);
+  }
+</style>

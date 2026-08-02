@@ -1,0 +1,91 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import Container from '../../components/ui/Container.astro';
+import { CalendarDays, ArrowRight } from 'lucide-react';
+import { business } from '../../data/business';
+import heroImage from '../../assets/images/services/thermostat.jpg';
+import { buildBreadcrumbSchema } from '../../lib/schema';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+const categories = [...new Set(posts.map((p) => p.data.category))].sort();
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'Blog', path: '/blog/' }
+]);
+
+function formatDate(d: Date) {
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+---
+
+<BaseLayout
+  title={`Blog | ${business.name}`}
+  description="Plumbing, HVAC, and electrical tips and guides for Colorado Springs homeowners from Affordable Plumbing, Heat & Electrical."
+  schema={[breadcrumbSchema]}
+>
+  <PageHero
+    title="Homeowner Tips & Guides"
+    description="Practical plumbing, heating, cooling, and electrical advice for Colorado Springs homes."
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Blog' }]}
+    image={heroImage}
+    imageAlt="Smart thermostat"
+  />
+
+  <section class="bg-white py-16 sm:py-24">
+    <Container>
+      {
+        categories.length > 0 && (
+          <div class="mb-10 flex flex-wrap gap-2" data-reveal>
+            {categories.map((cat) => (
+              <a
+                href={`#${cat.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                class="border-ink-200 text-ink-600 hover:border-orange-400 hover:text-orange-600 rounded-full border bg-white px-3.5 py-1.5 text-xs font-semibold transition-colors"
+              >
+                {cat}
+              </a>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          posts.map((post) => (
+            <article data-reveal class="card-elevated group flex flex-col p-6">
+              <p class="font-display text-xs font-bold tracking-wider text-orange-600 uppercase">{post.data.category}</p>
+              <h2 class="font-display text-ink-900 mt-2 text-lg leading-snug font-bold">
+                <a href={`/blog/${post.id}/`} class="transition-colors hover:text-orange-600">
+                  {post.data.title}
+                </a>
+              </h2>
+              <p class="text-ink-500 mt-2.5 flex-1 text-sm leading-relaxed">{post.data.description}</p>
+              <div class="border-ink-100 mt-5 flex items-center justify-between border-t pt-4">
+                <span class="text-ink-400 flex items-center gap-1.5 text-xs">
+                  <CalendarDays className="size-3.5" aria-hidden="true" />
+                  {formatDate(post.data.publishDate)}
+                </span>
+                <a
+                  href={`/blog/${post.id}/`}
+                  class="inline-flex items-center gap-1 text-xs font-bold text-orange-600 group-hover:text-orange-700"
+                >
+                  Read <ArrowRight className="size-3.5" aria-hidden="true" />
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      {
+        posts.length === 0 && (
+          <p class="text-ink-500 py-20 text-center">New posts are on the way. Check back soon.</p>
+        )
+      }
+    </Container>
+  </section>
+</BaseLayout>

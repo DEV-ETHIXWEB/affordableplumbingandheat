@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/ui/Container.astro';
+import Button from '../../components/ui/Button.astro';
+import { CheckCircle2, Phone } from 'lucide-react';
+import { business } from '../../data/business';
+import { buildBreadcrumbSchema } from '../../lib/schema';
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'Financing', path: '/financing/' }
+]);
+
+const points = [
+  'Finance projects up to $55,000',
+  'Simple and fast application with instant decisions',
+  'Completely digital process',
+  'View loan offers with a soft credit pull that doesn’t affect your credit score',
+  'Multiple loan offers for qualified borrowers to choose from',
+  'Convenient monthly payments',
+  'No early payment penalties on any loans'
+];
+---
+
+<BaseLayout
+  title={`Financing | ${business.name}`}
+  description="Simple, fast financing for plumbing, heating, cooling, and electrical projects through BuyFin, powered by Momnt. Pre-qualify with no impact on your credit score."
+  schema={[breadcrumbSchema]}
+>
+  <section class="bg-white py-20 sm:py-28">
+    <Container class="mx-auto max-w-3xl">
+      <p class="font-display text-xs font-bold tracking-wider text-orange-600 uppercase">Financing</p>
+      <h1 class="font-display text-ink-900 mt-3 text-4xl font-bold sm:text-5xl">Affordable Financing Options</h1>
+      <p class="text-ink-600 mt-5 max-w-xl text-lg leading-relaxed">
+        We work with BuyFin&reg;, powered by Momnt, to offer customers financing that's simple, fast, and affordable
+        so you can pay for your home project over time.
+      </p>
+
+      <ul class="mt-10 space-y-3">
+        {
+          points.map((p) => (
+            <li class="border-ink-100 text-ink-700 shadow-card flex items-start gap-3 rounded-2xl border bg-white px-5 py-4 text-sm">
+              <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-orange-600" aria-hidden="true" />
+              {p}
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <Button href="/contact-us/" size="lg">Ask About Financing</Button>
+        <Button href={`tel:${business.hotline.tel}`} variant="outline" size="lg" icon={Phone}>
+          {business.hotline.display}
+        </Button>
+      </div>
+
+      <p class="text-ink-400 mt-10 max-w-xl text-xs leading-relaxed">
+        *BuyFin, powered by Momnt Technologies, Inc., arranges consumer loans used to purchase goods and services
+        from its participating merchant businesses. All loans are originated by participating financial
+        institutions. Equal Housing Lender.
+      </p>
+    </Container>
+  </section>
+</BaseLayout>

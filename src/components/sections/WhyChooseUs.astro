@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import Container from '../ui/Container.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Button from '../ui/Button.astro';
+import StatCounter from '../islands/StatCounter.tsx';
+import techImage from '../../assets/images/services/electrical-panel.jpg';
+
+const stats = [
+  { value: 24, suffix: '/7', label: 'Emergency Availability' },
+  { value: 3, suffix: '', label: 'Licenses Held' },
+  { value: 12, suffix: '+', label: 'Communities Served' },
+  { value: 100, suffix: '%', label: 'Upfront Pricing' }
+];
+---
+
+<section class="bg-mist-100 py-20 sm:py-28">
+  <Container class="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+    <div class="relative" data-reveal="left">
+      <div
+        class="from-orange-300/25 to-navy-500/10 absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br blur-2xl"
+        aria-hidden="true"
+      >
+      </div>
+      <Image
+        src={techImage}
+        alt="Electrical panel serviced by an Affordable Plumbing, Heat & Electrical technician"
+        width={640}
+        height={520}
+        densities={[1, 2]}
+        quality="high"
+        class="shadow-card-hover aspect-[4/3.3] w-full rounded-[2rem] object-cover"
+      />
+      <div class="shadow-card-hover border-ink-100 absolute -right-4 -bottom-6 rounded-2xl border bg-white px-6 py-4 backdrop-blur-xl sm:-right-8">
+        <p class="font-display text-ink-900 text-2xl font-bold">24 Hrs</p>
+        <p class="text-ink-500 text-xs">Emergency response</p>
+      </div>
+    </div>
+
+    <div data-reveal="right">
+      <Eyebrow>Why Choose Us?</Eyebrow>
+      <h2 class="font-display text-ink-900 mt-4 text-3xl leading-[1.1] font-bold text-balance sm:text-4xl md:text-[2.75rem]">
+        Your Trusted Plumber in Colorado Springs
+      </h2>
+      <p class="text-ink-600 mt-5 max-w-lg leading-relaxed text-balance">
+        With decades of combined experience, our team delivers expert plumbing, heating, cooling, and electrical
+        service at honest, upfront prices. Whether it's a leaky faucet or a full furnace replacement, our licensed
+        technicians provide prompt, reliable solutions tailored to your home.
+      </p>
+
+      <dl class="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
+        {
+          stats.map((s) => (
+            <div class="border-orange-400 border-l-2 pl-4">
+              <dt class="sr-only">{s.label}</dt>
+              <dd class="font-display text-ink-900 text-3xl font-bold">
+                <StatCounter value={s.value} suffix={s.suffix} client:visible />
+              </dd>
+              <dd class="text-ink-500 mt-1 text-xs font-medium tracking-wide uppercase">{s.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="mt-10">
+        <Button href="/about-us/" variant="outline" size="lg">More About Us</Button>
+      </div>
+    </div>
+  </Container>
+</section>

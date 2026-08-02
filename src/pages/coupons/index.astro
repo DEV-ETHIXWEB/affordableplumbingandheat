@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/ui/Container.astro';
+import Button from '../../components/ui/Button.astro';
+import { Tag, Phone } from 'lucide-react';
+import { business } from '../../data/business';
+import { coupons } from '../../data/coupons';
+import { buildBreadcrumbSchema } from '../../lib/schema';
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'Coupons', path: '/coupons/' }
+]);
+---
+
+<BaseLayout
+  title={`Coupons & Specials | ${business.name}`}
+  description="Save on plumbing, heating, cooling, and electrical service in Colorado Springs, CO with our current coupons and specials."
+  schema={[breadcrumbSchema]}
+>
+  <section class="bg-white py-20 sm:py-28">
+    <Container class="mx-auto max-w-3xl text-center">
+      <p class="font-display text-xs font-bold tracking-wider text-orange-600 uppercase">Save Today</p>
+      <h1 class="font-display text-ink-900 mt-3 text-4xl font-bold sm:text-5xl">Coupons &amp; Specials</h1>
+      <p class="text-ink-600 mx-auto mt-5 max-w-xl text-lg leading-relaxed">
+        Show these coupons to your technician at the time of service to redeem. Restrictions may apply.
+      </p>
+    </Container>
+
+    <Container class="mx-auto mt-14 grid max-w-4xl gap-5 sm:grid-cols-2">
+      {
+        coupons.map((coupon) => (
+          <div class="border-ink-100 shadow-card rounded-3xl border bg-white p-7">
+            <span class="bg-orange-500/15 text-orange-500 ring-orange-500/25 inline-flex size-11 items-center justify-center rounded-2xl ring-1 ring-inset">
+              <Tag className="size-5" aria-hidden="true" />
+            </span>
+            <h2 class="font-display text-ink-900 mt-4 text-xl font-bold">{coupon.title}</h2>
+            <p class="text-ink-600 mt-2 text-sm leading-relaxed">{coupon.description}</p>
+            <span class="font-display border-ink-200 text-ink-500 mt-4 inline-block rounded-full border px-3 py-1 text-xs font-bold tracking-wide">
+              CODE {coupon.code}
+            </span>
+          </div>
+        ))
+      }
+    </Container>
+
+    <Container class="mx-auto mt-14 flex max-w-3xl flex-col items-center gap-4 text-center">
+      <p class="text-ink-500 text-sm">Call to redeem or ask about current offers when you schedule.</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <Button href={`tel:${business.hotline.tel}`} size="lg" icon={Phone}>{business.hotline.display}</Button>
+        <Button href="/contact-us/" variant="outline" size="lg">Request Service</Button>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

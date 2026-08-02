@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/sections/PageHero.astro';
+import ContactCTA from '../../components/sections/ContactCTA.astro';
+import Container from '../../components/ui/Container.astro';
+import { Image } from 'astro:assets';
+import { ShieldCheck, Clock, Award } from 'lucide-react';
+import { business } from '../../data/business';
+import heroImage from '../../assets/images/hero/colorado-springs-aerial.webp';
+import energyStarBadge from '../../assets/images/badges/energy-star.png';
+import equalHousingBadge from '../../assets/images/badges/equal-housing-lender.png';
+import { buildBreadcrumbSchema } from '../../lib/schema';
+
+const trustBadges = [
+  { name: 'Energy Star Partner', image: energyStarBadge },
+  { name: 'Equal Housing Lender', image: equalHousingBadge }
+];
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', path: '/' },
+  { name: 'About Us', path: '/about-us/' }
+]);
+
+const points = [
+  { icon: Clock, title: 'Available 24/7', body: 'A real person answers, day or night, holidays included.' },
+  { icon: ShieldCheck, title: 'Licensed & Insured', body: `Electrical #${business.license.electrical}, plumbing #${business.license.plumbing}, mechanical #${business.license.mechanical}.` },
+  { icon: Award, title: 'Upfront Pricing', body: "We explain the cost clearly before any work begins, no surprises." }
+];
+---
+
+<BaseLayout
+  title={`About Us | ${business.name}`}
+  description="Affordable Plumbing, Heat & Electrical is Colorado Springs' trusted plumbing, HVAC, and electrical company. Licensed, insured, and available 24/7."
+  schema={[breadcrumbSchema]}
+>
+  <PageHero
+    title="Your Trusted Plumber in Colorado Springs"
+    description="Decades of combined experience delivering honest, reliable home service."
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'About Us' }]}
+    image={heroImage}
+    imageAlt="Aerial view of downtown Colorado Springs with Pikes Peak in the background"
+    large
+  />
+
+  <section class="bg-white py-16 sm:py-24">
+    <Container class="mx-auto max-w-3xl">
+      <p class="text-ink-600 text-lg leading-relaxed">
+        Welcome to Affordable Plumbing, Heat &amp; Electrical, your trusted solution for top-notch home services in
+        Colorado Springs, Colorado. With decades of combined experience, our team is dedicated to delivering
+        unparalleled expertise and exceptional customer care at affordable rates. Whether you're facing a leaky
+        faucet, a malfunctioning furnace, or electrical issues, our licensed technicians are here to provide prompt,
+        reliable solutions tailored to your needs.
+      </p>
+      <p class="text-ink-600 mt-6 text-lg leading-relaxed">
+        We prioritize transparency and integrity in every interaction. We understand the importance of a smoothly
+        running home, which is why we offer comprehensive services backed by our commitment to quality craftsmanship.
+        From routine maintenance to emergency repairs, we're your dependable partner for keeping your home safe,
+        comfortable, and efficient.
+      </p>
+
+      <div class="mt-14 grid gap-5 sm:grid-cols-3">
+        {
+          points.map((p) => (
+            <div class="border-ink-100 shadow-card rounded-2xl border bg-white p-6">
+              <span class="bg-orange-500/15 text-orange-600 ring-orange-500/25 inline-flex size-11 items-center justify-center rounded-2xl ring-1 ring-inset">
+                <p.icon className="size-5" aria-hidden="true" />
+              </span>
+              <h2 class="font-display text-ink-900 mt-4 text-base font-bold">{p.title}</h2>
+              <p class="text-ink-500 mt-1.5 text-sm leading-relaxed">{p.body}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-14 flex flex-wrap items-center gap-6">
+        {trustBadges.map((badge) => <Image src={badge.image} alt={badge.name} width={120} height={50} class="h-12 w-auto" loading="lazy" />)}
+      </div>
+    </Container>
+  </section>
+
+  <ContactCTA />
+</BaseLayout>

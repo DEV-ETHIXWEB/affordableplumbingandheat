@@ -1,0 +1,24 @@
+---
+import { Phone, Calendar } from 'lucide-react';
+import { business } from '../../data/business';
+---
+
+<div
+  class="fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-white/10 bg-navy-900/95 p-3 backdrop-blur-xl lg:hidden"
+  style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));"
+>
+  <a
+    href={`tel:${business.hotline.tel}`}
+    class="font-display flex flex-1 items-center justify-center gap-2 rounded-full bg-orange-600 py-3.5 text-sm font-bold text-white shadow-[0_1px_0_0_rgba(255,255,255,0.25)_inset]"
+  >
+    <Phone className="size-4" aria-hidden="true" />
+    Call Now
+  </a>
+  <a
+    href="/contact-us/"
+    class="font-display flex flex-1 items-center justify-center gap-2 rounded-full border-2 border-white/20 py-3.5 text-sm font-bold text-white"
+  >
+    <Calendar className="size-4" aria-hidden="true" />
+    Get Estimate
+  </a>
+</div>

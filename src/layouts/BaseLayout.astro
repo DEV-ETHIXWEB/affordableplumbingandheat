@@ -1,0 +1,129 @@
+---
+import Navbar from '../components/layout/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
+import StickyCallBar from '../components/layout/StickyCallBar.astro';
+import CouponWidget from '../components/islands/CouponWidget.tsx';
+import ChatWidget from '../components/islands/ChatWidget.tsx';
+import AccessibilityWidget from '../components/islands/AccessibilityWidget.tsx';
+import { business } from '../data/business';
+import '../styles/global.css';
+import logo from '../assets/images/brand/logo.png';
+import { getImage } from 'astro:assets';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Extra JSON-LD objects (FAQPage, BreadcrumbList, Service, etc.) to emit alongside the site-wide LocalBusiness schema. */
+  schema?: Record<string, unknown>[];
+  noIndex?: boolean;
+  /** Optional page-specific social preview image; falls back to the logo. */
+  ogImage?: { src: string; width: number; height: number };
+}
+
+const { title, description, schema = [], noIndex = false, ogImage } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const defaultOg = await getImage({ src: logo, width: 1200, height: 630, format: 'png', fit: 'contain', background: '#0a1830' });
+const ogImageURL = ogImage ? new URL(ogImage.src, Astro.site).toString() : new URL(defaultOg.src, Astro.site).toString();
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HVACBusiness',
+  '@id': `${business.url}/#business`,
+  name: business.name,
+  legalName: business.legalName,
+  url: business.url,
+  telephone: business.hotline.tel,
+  email: business.email,
+  priceRange: business.priceRange,
+  image: ogImageURL,
+  logo: ogImageURL,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: business.streetAddress,
+    addressLocality: business.addressLocality,
+    addressRegion: business.addressRegion,
+    postalCode: business.postalCode,
+    addressCountry: business.addressCountry
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: business.geo.latitude,
+    longitude: business.geo.longitude
+  },
+  areaServed: { '@type': 'City', name: business.addressLocality },
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: '00:00',
+    closes: '23:59'
+  },
+  sameAs: [business.social.facebook]
+};
+
+const allSchema = [localBusinessSchema, ...schema];
+
+// JSON.stringify can't produce an unescaped "</script>" from our own typed
+// data, but belt-and-suspenders: neutralize it anyway so this is safe even
+// if a future field ever carries free-text content.
+const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="en" class="scroll-pt-28">
+  <head>
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0a1830" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    {allSchema.map((obj) => <script type="application/ld+json" set:html={schemaJson(obj)} is:inline />)}
+
+    <script>
+      import '../scripts/reveal.ts';
+    </script>
+  </head>
+  <body class="bg-white font-body text-ink-600 antialiased">
+    <a
+      href="#main-content"
+      class="skip-link fixed top-0 left-4 z-[100] rounded-b-lg bg-orange-600 px-5 py-3 font-semibold text-white"
+    >
+      Skip to content
+    </a>
+    <Navbar />
+    <main id="main-content" class="pt-[76px] pb-[84px] lg:pt-[112px] lg:pb-0">
+      <slot />
+    </main>
+    <Footer />
+    <StickyCallBar />
+    <CouponWidget client:load />
+    <AccessibilityWidget client:load />
+    <ChatWidget client:load />
+  </body>
+</html>
