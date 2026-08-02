@@ -1,7 +1,8 @@
-# Security headers for static hosting (Netlify / Cloudflare Pages both read
-# this file automatically). If deploying the Node adapter build behind a
-# platform without _headers support (e.g. a bare VPS/Docker), mirror these
-# as response headers in the reverse proxy (nginx/Caddy) config instead.
+# Security headers for static hosting on Netlify / Cloudflare Pages (both
+# read this file automatically). NOT read by Vercel — Vercel uses
+# vercel.json instead (see that file at the project root, which carries the
+# same header set). If deploying to a bare VPS/Docker instead, mirror these
+# as response headers in the reverse proxy (nginx/Caddy) config.
 #
 # Script/style CSP allows 'unsafe-inline' because this is a static build
 # with no edge runtime to mint per-request nonces: Astro emits a couple of

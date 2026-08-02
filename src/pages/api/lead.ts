@@ -114,6 +114,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   // correctly, it just can't dispatch email yet, so local development and a
   // fresh deploy never hard-fail on a missing secret.
   if (!RESEND_API_KEY) {
+    // Deliberately includes name/phone (not redacted): this fallback exists
+    // so a lead is never silently lost while RESEND_API_KEY is unset — an
+    // operator tailing server logs needs enough to call the person back.
+    // This never reaches the client or a third party, only server-side
+    // stdout/log storage, but whoever has access to that hosting platform's
+    // log viewer can read it — treat server log access as PII-sensitive.
     console.warn('[api/lead] RESEND_API_KEY not configured — lead captured but not emailed:', {
       name: lead.name,
       phone: lead.phone,

@@ -115,29 +115,40 @@ snippets simply don't render, etc).
 
 ## Deployment
 
-The site is `output: 'static'` with the `@astrojs/node` adapter in standalone mode. `astro build` produces two
-things: `dist/client/` (126 prerendered static HTML pages) and `dist/server/entry.mjs` (a real Node.js server).
-Only `POST /api/lead` (`src/pages/api/lead.ts`, `export const prerender = false`) needs that server — every other
-page is plain static HTML.
+The site is `output: 'static'` with an Astro adapter. `astro build` produces two things: prerendered static HTML
+for 126 pages, and a real server for the one SSR route, `POST /api/lead` (`src/pages/api/lead.ts`,
+`export const prerender = false`) — the contact form and chatbot lead capture both call it.
 
-**⚠️ Do not deploy only the `dist/client/` folder to a static-only host** (GitHub Pages, a plain S3 bucket/CDN with
-no function support, etc). The 126 pages will work perfectly, but the contact form and chatbot lead capture will
-POST to `/api/lead`, get a 404 (that route doesn't exist as a static file), and silently fail every submission —
-no error surfaces to you, leads just never arrive. This was verified directly during the pre-deploy audit: the
-static pages and the API route were tested independently, and the API route only responds when
-`dist/server/entry.mjs` is actually running.
+**This project is deployed on Vercel**, using `@astrojs/vercel` (see `astro.config.mjs`). That adapter is what
+translates `/api/lead` into a Vercel serverless function; every other page ships as static output. Deploy as-is —
+no extra Vercel configuration needed beyond what's already in this repo (`vercel.json` carries the security
+headers, since Vercel does not read the Netlify-style `public/_headers` file).
 
-Two deployment paths keep `/api/lead` working:
+⚠️ **A previous deploy attempt used `@astrojs/node` (standalone mode) on Vercel and produced a live
+`404: NOT_FOUND` on every route.** Vercel cannot run that adapter's output directly — it's a self-contained Node
+server binary meant to be launched with `node dist/server/entry.mjs`, not a Vercel serverless function. If you see
+that error again, confirm `astro.config.mjs` still imports `@astrojs/vercel`, not `@astrojs/node`.
 
-- **Netlify / Cloudflare Pages**: deploy as-is. Both platforms have first-party Astro integrations that detect
-  `@astrojs/node` and automatically run the SSR route as a serverless/edge function while serving `dist/client/` as
-  static assets — this is standard Astro deployment behavior. Both platforms also read `public/_headers`
-  automatically for security headers on the static routes.
-- **Bare Node / Docker**: run `node dist/server/entry.mjs` (respects the `PORT` env var; requires Node ≥22.12.0
-  per `package.json` engines) — this single process serves both the static pages and `/api/lead` correctly. Put a
-  reverse proxy (nginx/Caddy) in front and mirror the headers in `public/_headers` there for the static
-  routes — that file is only auto-applied by Netlify/Cloudflare, not by the Node adapter itself, though
-  `src/middleware.ts` already applies the same headers to the one real SSR route regardless of host.
+If this project ever moves off Vercel:
+
+- **Netlify / Cloudflare Pages**: swap the adapter to `@astrojs/netlify` or `@astrojs/cloudflare` respectively (or
+  `@astrojs/node` — both platforms also support running it). Both platforms read `public/_headers` automatically
+  for security headers on static routes.
+- **Bare Node / Docker**: switch the adapter back to `@astrojs/node` (standalone mode) — kept as a devDependency
+  for exactly this — then run `node dist/server/entry.mjs` (respects the `PORT` env var; requires Node ≥22.12.0 per
+  `package.json` engines). Put a reverse proxy (nginx/Caddy) in front and mirror the headers from `vercel.json` /
+  `public/_headers` there — neither file is read by a bare Node process, though `src/middleware.ts` already applies
+  the same headers to the one real SSR route regardless of host.
+
+## Known dependency risk (accepted)
+
+`npm audit` reports a ReDoS advisory in `path-to-regexp`, pulled in transitively via
+`@astrojs/vercel` → `@vercel/routing-utils`. npm's suggested fix is downgrading to
+`@astrojs/vercel@8.0.4`, which requires `astro: ^5.0.0` — incompatible with this project's Astro 7
+and would be a breaking downgrade, not a fix. The vulnerable code path only parses this repo's own
+`astro.config.mjs` route definitions at build time; it never touches runtime user input (no user-
+controlled string reaches `path-to-regexp` at request time). Risk accepted as build-tool-only until
+`@astrojs/vercel` ships an Astro-7-compatible release with the dependency bumped.
 
 ## Content
 
