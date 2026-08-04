@@ -28,3 +28,6 @@ desktop.ini
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# raw unprocessed video source (use public/video/ optimized versions instead)
+public/vast-cityscape-of-colorado-springs-colorado-usa-2025-12-18-01-51-06-utc.mov
