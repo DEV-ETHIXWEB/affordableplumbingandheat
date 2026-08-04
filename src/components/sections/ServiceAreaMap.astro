@@ -2,50 +2,49 @@
 /**
  * Premium interactive Colorado service-area map.
  *
- * Geometry: real Colorado state boundary (US Census cartographic boundary
- * data via the public us-atlas states-10m TopoJSON), projected at build
- * time to a static SVG path — see scripts/generate-service-area-map.mjs
- * and src/data/serviceAreaMap.generated.ts. The coverage-area "blob", the
- * decorative I-25/I-70 corridor lines, and the interstate shield anchor
- * points are ALSO computed at build time in that same script, from the
- * real projected marker coordinates (a padded, smoothed convex hull) —
- * nothing here is hand-drawn or eyeballed. No mapping library, no
- * geography payload ships to the browser; the SVG paths are just markup.
+ * The map surface is an illustrated raster map
+ * (src/assets/images/service-area/colorado-service-area-map.webp) which
+ * already carries the terrain shading, county lines, rivers, interstate
+ * shields, compass rose, legend, and every city label as artwork. It is
+ * served through Astro's <Image> pipeline, so responsive srcsets and
+ * further optimisation happen at build time.
  *
- * Markers come from the canonical serviceAreas dataset (src/data/business.ts)
- * via the generated projection file, so this never drifts from the
- * Service Area page, footer, or homepage strip.
+ * Interactivity is layered ON TOP of that artwork as absolutely-positioned
+ * hotspots — one per drawn marker — using percentage coordinates measured
+ * from the artwork itself (see src/data/serviceAreaMapHotspots.ts for how
+ * those were derived and why Cascade has no hotspot). Percentages mean the
+ * hotspots stay locked to their pixels at every rendered size.
  *
- * Two visual variants, one shared marker/tooltip/data engine:
+ * Names/links for those hotspots still come from the canonical serviceAreas
+ * dataset (src/data/business.ts) + cityPages, so labels and link targets
+ * never drift from the Service Area page, footer, or homepage strip.
+ *
+ * Two visual variants, one shared hotspot/tooltip/data engine:
  *  - `variant="full"` (default): the full poster layout used on the
- *    Service Area page — map + legend + compass + shields + "COLORADO"
- *    watermark, paired with a "Communities We Serve" side panel and a
- *    bottom stat/CTA strip.
- *  - `variant="compact"`: a smaller single-card treatment (map only, with
- *    a trimmed legend) sized for the homepage, where a full poster layout
- *    would overwhelm the page's pacing. Still built from the same
- *    projectedMarkers/coverageAreaPath data — no separate hardcoded city
- *    list.
+ *    Service Area page — the map artwork paired with a "Communities We
+ *    Serve" side panel and a bottom stat/CTA strip.
+ *  - `variant="compact"`: a smaller single-card treatment (map only) sized
+ *    for the homepage, where the full poster layout would overwhelm the
+ *    page's pacing. Same artwork and hotspot data — no separate hardcoded
+ *    city list.
  *
  * Interaction is vanilla JS (see the inline <script> below): hover/focus a
- * marker to reveal a tooltip with a real link when a location page exists,
- * or a "Request Service" CTA when it doesn't. Denver is rendered as a tiny
- * muted geographic reference point only — never styled or labeled as a
- * service marker.
+ * hotspot to reveal a tooltip with a real link when a location page exists,
+ * or a "Request Service" CTA when it doesn't. The crawlable "Communities We
+ * Serve" list is real HTML outside the image — it, not the artwork, is the
+ * accessible/indexable source of truth for coverage.
  */
+import { Image } from 'astro:assets';
 import { MapPin, Phone } from 'lucide-react';
 import { business, serviceAreas } from '../../data/business';
 import { cityPages } from '../../data/cityPages';
+import mapArtwork from '../../assets/images/service-area/colorado-service-area-map.webp';
 import {
-  MAP_VIEW_BOX,
-  coloradoPath,
-  coverageAreaPath,
-  i25Path,
-  i70Path,
-  roadShields,
-  projectedMarkers,
-  projectedReferences
-} from '../../data/serviceAreaMap.generated';
+  MAP_IMAGE_HEIGHT,
+  MAP_IMAGE_WIDTH,
+  primaryHotspot,
+  surroundingHotspots
+} from '../../data/serviceAreaMapHotspots';
 
 interface Props {
   variant?: 'full' | 'compact';
@@ -54,38 +53,24 @@ const { variant = 'full' } = Astro.props;
 const isCompact = variant === 'compact';
 
 const pagedSlugs = new Set(cityPages.map((c) => c.slug));
+const areaBySlug = new Map(serviceAreas.map((a) => [a.slug, a]));
 
-const primary = projectedMarkers.find((m) => m.type === 'primary')!;
-const surrounding = projectedMarkers.filter((m) => m.type === 'surrounding');
-
-/** Colorado Springs sits in a genuinely dense real-world cluster with
- * Cascade, Manitou Springs, Woodland Park, and Monument/Palmer Lake all
- * within a few map-miles — the default "label centered above the dot"
- * placement collides badly there. Rather than a general label-placement
- * algorithm, these few markers get a manually tuned offset + anchor so
- * the label reads outward, away from the cluster center. Every other
- * marker uses the default above-center placement. Precise identification
- * for every marker is still available via the tooltip (hover/focus) and
- * the crawlable community list below/beside the map. The compact variant
- * hides labels entirely below its own breakpoint (see CSS) since there
- * isn't room to apply overrides at that smaller scale. */
-const LABEL_OVERRIDES: Record<string, { dx: number; dy: number; anchor: 'start' | 'middle' | 'end' }> = {
-  cascade: { dx: -16, dy: 4, anchor: 'end' },
-  'manitou-springs': { dx: -12, dy: 14, anchor: 'end' },
-  'woodland-park': { dx: -10, dy: -6, anchor: 'end' },
-  monument: { dx: 10, dy: -10, anchor: 'start' },
-  'palmer-lake': { dx: -10, dy: -2, anchor: 'end' },
-  security: { dx: 12, dy: -4, anchor: 'start' },
-  widefield: { dx: 12, dy: 12, anchor: 'start' },
-  fountain: { dx: -10, dy: 4, anchor: 'end' },
-  'black-forest': { dx: -10, dy: -4, anchor: 'end' },
-  falcon: { dx: 10, dy: 14, anchor: 'start' },
-  peyton: { dx: 10, dy: -8, anchor: 'start' }
-};
-
-function labelFor(slug: string) {
-  return LABEL_OVERRIDES[slug] ?? { dx: 0, dy: -12, anchor: 'middle' as const };
+/** Join a measured artwork hotspot to its canonical dataset entry, so the
+ * accessible name and link target always come from src/data/business.ts
+ * rather than being restated here. */
+function hotspotEntry(spot: { slug: string; xPct: number; yPct: number }) {
+  const area = areaBySlug.get(spot.slug);
+  const hasPage = pagedSlugs.has(spot.slug);
+  return {
+    ...spot,
+    name: area?.name ?? spot.slug,
+    hasPage,
+    href: hasPage ? `/service-area/${spot.slug}/` : ''
+  };
 }
+
+const primary = hotspotEntry(primaryHotspot);
+const surrounding = surroundingHotspots.map(hotspotEntry);
 
 const trustTiles = [
   { icon: 'shield', title: 'Licensed & Insured', copy: 'Your home is in safe hands.' },
@@ -99,227 +84,67 @@ const trustTiles = [
   <div class:list={['map-poster-grid', !isCompact && 'map-poster-grid--full']}>
     <!-- ============ MAP CARD ============ -->
     <div class="service-area-map card-elevated relative overflow-hidden bg-white p-4 sm:p-6">
-      {
-        !isCompact && (
-          <div class="map-legend" aria-hidden="true">
-            <p class="map-legend-item">
-              <span class="map-legend-dot map-legend-dot--primary" />
-              <span>
-                <strong>Primary Market</strong>
-                <span class="map-legend-sub">{business.addressLocality}</span>
-              </span>
-            </p>
-            <p class="map-legend-item">
-              <span class="map-legend-dot map-legend-dot--surrounding" />
-              <span>
-                <strong>Communities We Serve</strong>
-              </span>
-            </p>
-            <p class="map-legend-item">
-              <span class="map-legend-dot map-legend-dot--reference" />
-              <span>
-                <strong>Major Reference City</strong>
-              </span>
-            </p>
-          </div>
-        )
-      }
+      <!-- The map surface itself is illustrated artwork: terrain, county
+           lines, rivers, interstate shields, the compass rose, the legend,
+           and every city label are drawn into the image. Interactivity is
+           layered over it below. Marked aria-hidden + empty alt because the
+           "Communities We Serve" list (real HTML, outside the image) is the
+           accessible source of truth for coverage — a long alt string
+           restating 15 towns would just duplicate it noisily. -->
+      <div class="map-figure">
+        <Image
+          src={mapArtwork}
+          alt=""
+          aria-hidden="true"
+          widths={[640, 1024, 1536]}
+          sizes={isCompact ? '(min-width: 1024px) 640px, 100vw' : '(min-width: 1024px) 1024px, 100vw'}
+          quality="high"
+          format="webp"
+          class="map-image"
+          loading={isCompact ? 'lazy' : 'eager'}
+          width={MAP_IMAGE_WIDTH}
+          height={MAP_IMAGE_HEIGHT}
+        />
 
-      {
-        !isCompact && (
-          <div class="map-compass" aria-hidden="true">
-            <svg viewBox="0 0 40 40" class="size-9">
-              <circle cx="20" cy="20" r="18" fill="white" stroke="var(--color-navy-200)" stroke-width="1.5" />
-              <path d="M20 4 L24 20 L20 17 L16 20 Z" fill="var(--color-orange-600)" />
-              <path d="M20 36 L16 20 L20 23 L24 20 Z" fill="var(--color-navy-700)" />
-              <path d="M4 20 L20 18 L20 22 Z" fill="var(--color-navy-300)" />
-              <path d="M36 20 L20 22 L20 18 Z" fill="var(--color-navy-300)" />
-              <text x="20" y="12" text-anchor="middle" class="map-compass-n">
-                N
-              </text>
-            </svg>
-          </div>
-        )
-      }
-
-      <svg
-        class="map-svg h-auto w-full"
-        viewBox={MAP_VIEW_BOX}
-        role="img"
-        aria-labelledby="service-map-title service-map-desc"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <title id="service-map-title">Map of the Affordable Plumbing, Heat &amp; Electrical service area in Colorado</title>
-        <desc id="service-map-desc">
-          A map of Colorado showing Colorado Springs as the primary service market, with {surrounding.length} verified
-          surrounding communities marked, a shaded coverage area around the service corridor, and Denver shown only as a
-          muted geographic reference point.
-        </desc>
-
-        <defs>
-          <radialGradient id="map-surface" cx="30%" cy="15%" r="95%">
-            <stop offset="0%" stop-color="var(--color-mist-100)"></stop>
-            <stop offset="55%" stop-color="#eef1ea"></stop>
-            <stop offset="100%" stop-color="#e4e8de"></stop>
-          </radialGradient>
-          <linearGradient id="map-terrain-1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="var(--color-navy-200)" stop-opacity="0.35"></stop>
-            <stop offset="100%" stop-color="var(--color-navy-300)" stop-opacity="0.12"></stop>
-          </linearGradient>
-          <linearGradient id="map-terrain-2" x1="0%" y1="0%" x2="100%" y2="60%">
-            <stop offset="0%" stop-color="var(--color-ink-300)" stop-opacity="0.25"></stop>
-            <stop offset="100%" stop-color="var(--color-ink-200)" stop-opacity="0.08"></stop>
-          </linearGradient>
-          <radialGradient id="map-coverage" cx="45%" cy="45%" r="65%">
-            <stop offset="0%" stop-color="var(--color-orange-300)" stop-opacity="0.55"></stop>
-            <stop offset="100%" stop-color="var(--color-orange-400)" stop-opacity="0.28"></stop>
-          </radialGradient>
-          <filter id="marker-shadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#0a1830" flood-opacity="0.25"></feDropShadow>
-          </filter>
-        </defs>
-
-        <rect x="0" y="0" width="800" height="620" fill="url(#map-surface)"></rect>
-
-        <!-- Stylized terrain backdrop: soft layered navy/gray shapes suggesting
-             mountain massing west of the Front Range corridor. Purely
-             decorative illustration (NOT a literal/photographic relief) —
-             kept lightweight and on-brand, drawn once at build time as
-             static shapes with no runtime cost. -->
-        <g class="map-terrain" aria-hidden="true">
-          <path
-            d="M-40,180 L60,90 L140,150 L210,70 L290,160 L250,250 L120,300 L-40,260 Z"
-            fill="url(#map-terrain-1)"></path>
-          <path
-            d="M-40,320 L90,260 L180,330 L260,290 L300,380 L180,460 L40,430 L-40,470 Z"
-            fill="url(#map-terrain-2)"></path>
-          <path
-            d="M-40,480 L80,430 L170,490 L230,460 L300,540 L200,620 L-40,620 Z"
-            fill="url(#map-terrain-1)"></path>
-        </g>
-
-        <!-- "COLORADO" watermark label in the empty western portion of the
-             state, matching the reference poster's muted background text. -->
-        <text x="185" y="360" class="map-watermark" text-anchor="middle" aria-hidden="true">COLORADO</text>
-
-        <!-- Colorado outline: real state boundary, projected at build time -->
-        <path
-          class="map-outline"
-          d={coloradoPath}
-          fill="none"
-          stroke="var(--color-navy-300)"
-          stroke-width="2"
-          stroke-linejoin="round"></path>
-
-        <!-- Decorative interstate corridor lines: I-25 (north-south through
-             the service corridor) and I-70 (east-west, well north, near
-             Denver). Waypoints computed at build time from the real
-             projected marker/reference coordinates — decorative context,
-             not survey-accurate highway traces. -->
-        <path d={i70Path} class="map-highway" fill="none" aria-hidden="true"></path>
-        <path d={i25Path} class="map-highway" fill="none" aria-hidden="true"></path>
-
-        <!-- Coverage-area "blob": a padded, smoothed convex hull around the
-             real projected markers (see scripts/generate-service-area-map.mjs).
-             Communicates the service footprint at a glance without ever
-             implying statewide coverage — it sits well inside the Colorado
-             outline and only covers the actual service corridor. -->
-        <path class="map-coverage" d={coverageAreaPath} fill="url(#map-coverage)" stroke="var(--color-orange-500)"
-          stroke-width="1.5" stroke-opacity="0.5"></path>
-
-        <!-- Interstate shield icons: simple SVG silhouettes (not literal
-             FHWA artwork), navy/orange, anchored along the corridor lines. -->
-        {
-          roadShields.map((s) => (
-            <g class="map-shield" transform={`translate(${s.x} ${s.y})`} aria-hidden="true">
-              <path
-                d="M0,-9 L8,-6 L8,2 C8,7 4,10 0,12 C-4,10 -8,7 -8,2 L-8,-6 Z"
-                fill="var(--color-navy-800)"
-                stroke="white"
-                stroke-width="1.2"
-              />
-              <text y="3.5" text-anchor="middle" class="map-shield-text">
-                {s.interstate.replace('I-', '')}
-              </text>
-            </g>
-          ))
-        }
-
-        <!-- Geographic reference points (e.g. Denver) — tiny, muted, clearly not service markers -->
-        {
-          projectedReferences.map((ref) => (
-            <g class="map-reference" transform={`translate(${ref.x} ${ref.y})`} aria-hidden="true">
-              <circle r="3.5" fill="var(--color-navy-800)" />
-              <circle r="3.5" fill="none" stroke="white" stroke-width="1" />
-              <text x="7" y="3.5" class="map-reference-label">
-                {ref.name}
-                {!isCompact && <tspan class="map-reference-sublabel"> (reference)</tspan>}
-              </text>
-            </g>
-          ))
-        }
-
-        <!-- Surrounding service-community markers -->
-        {
-          surrounding.map((m, i) => {
-            const hasPage = pagedSlugs.has(m.slug);
-            const href = hasPage ? `/service-area/${m.slug}/` : undefined;
-            const label = labelFor(m.slug);
-            return (
-              <g
-                class="map-marker map-marker--surrounding"
+        <!-- Interactive hotspots, positioned as a % of the artwork so they
+             stay locked to their painted marker at any rendered size. Each
+             one sits over a dot the artwork already draws; the visible ring
+             only appears on hover/focus so it never fights the illustration. -->
+        <div class="map-hotspots">
+          {
+            surrounding.map((m, i) => (
+              <button
+                type="button"
+                class="map-hotspot map-hotspot--surrounding"
                 data-marker
                 data-name={m.name}
-                data-href={href ?? ''}
-                data-has-page={hasPage ? '1' : '0'}
-                transform={`translate(${m.x} ${m.y})`}
-                tabindex="0"
-                role="button"
-                aria-label={`${m.name}, verified service community${hasPage ? ' — view service details' : ' — request service'}`}
+                data-href={m.href}
+                data-has-page={m.hasPage ? '1' : '0'}
+                style={`left:${m.xPct}%; top:${m.yPct}%; --enter-delay:${80 + i * 45}ms`}
+                aria-label={`${m.name}, verified service community${m.hasPage ? ' — view service details' : ' — request service'}`}
               >
-                {/* Position (translate) lives on this outer <g>; the inner <g>
-                    below carries the CSS enter/hover animation. SVG's
-                    `transform` attribute and a CSS `transform` on the SAME
-                    element don't compose — an animated CSS transform would
-                    silently replace the translate and reposition every marker
-                    to the SVG origin. Splitting them into two nested <g>s keeps
-                    position and animation independent. */}
-                <g class="map-marker-inner" style={`--enter-delay:${80 + i * 45}ms`}>
-                  <circle r="7" fill="var(--color-orange-500)" filter="url(#marker-shadow)" />
-                  <circle r="7" fill="none" stroke="white" stroke-width="1.5" />
-                  <text x={label.dx} y={label.dy} class="map-marker-label" text-anchor={label.anchor}>
-                    {m.name}
-                  </text>
-                </g>
-              </g>
-            );
-          })
-        }
+                <span class="map-hotspot-ring" aria-hidden="true" />
+              </button>
+            ))
+          }
 
-        <!-- Primary market marker: Colorado Springs, drawn last so it sits on top -->
-        <g
-          class="map-marker map-marker--primary"
-          data-marker
-          data-name={primary.name}
-          data-href="/service-area/"
-          data-has-page="0"
-          data-primary="1"
-          transform={`translate(${primary.x} ${primary.y})`}
-          tabindex="0"
-          role="button"
-          aria-label={`${primary.name}, primary service market`}
-        >
-          <g class="map-marker-inner">
-            <circle class="map-pulse" r="10" fill="var(--color-orange-500)" opacity="0.35"></circle>
-            <circle r="11" fill="var(--color-orange-600)" filter="url(#marker-shadow)"></circle>
-            <circle r="11" fill="none" stroke="white" stroke-width="2"></circle>
-            <text y="-18" class="map-marker-label map-marker-label--primary" text-anchor="middle">
-              {primary.name}
-            </text>
-            <text y="-6" class="map-marker-sublabel" text-anchor="middle"> Primary Market </text>
-          </g>
-        </g>
-      </svg>
+          <button
+            type="button"
+            class="map-hotspot map-hotspot--primary"
+            data-marker
+            data-name={primary.name}
+            data-href="/service-area/"
+            data-has-page="0"
+            data-primary="1"
+            style={`left:${primary.xPct}%; top:${primary.yPct}%`}
+            aria-label={`${primary.name}, primary service market`}
+          >
+            <span class="map-hotspot-pulse" aria-hidden="true"></span>
+            <span class="map-hotspot-ring" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
 
       <!-- Tooltip: positioned via JS on hover/focus. Kept outside the SVG so it
            can hold real interactive HTML (a real link or button). -->
@@ -441,334 +266,125 @@ const trustTiles = [
     }
   }
 
-  /* Scoped to the map's own <svg> via .map-svg specifically — NOT a bare
-   * `:global(svg)` selector, which would also match the unrelated lucide
-   * <Phone>/<MapPin> icon <svg> elements rendered elsewhere in this same
-   * component and blow them up to the map's own pixel dimensions. */
-  .map-svg {
-    /* Matches the 800x620 viewBox exactly so the CSS box and the SVG's
-     * internal coordinate system always scale together. A `max-height`
-     * combined with a definite `width: 100%` breaks aspect-ratio (the
-     * browser clamps height but doesn't reduce width to match), which
-     * desyncs every marker's hit-test position from what's visually
-     * rendered. Capping `max-width` instead of `max-height` keeps a single
-     * definite axis, so `aspect-ratio` reliably derives the other. */
-    aspect-ratio: 800 / 620;
+  /* ---- Illustrated map surface ---- */
+
+  .map-figure {
+    /* Establishes the positioning context for the percentage-placed
+     * hotspots, and locks the box to the artwork's intrinsic ratio so
+     * those percentages always resolve against the same shape the
+     * hotspots were measured from. */
+    position: relative;
     width: 100%;
-    max-width: 826px; /* 640px tall at this component's viewBox ratio */
-    height: auto;
-    display: block;
+    max-width: 1024px;
     margin-inline: auto;
+    aspect-ratio: 1024 / 678;
+    border-radius: 1rem;
+    overflow: hidden;
   }
 
-  .is-compact .map-svg {
-    max-width: 100%;
+  .map-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
-  .map-outline {
-    opacity: 0;
-    animation: map-fade-in 0.7s ease-out 0.05s both;
+  .map-hotspots {
+    position: absolute;
+    inset: 0;
   }
 
-  .map-terrain {
-    opacity: 0;
-    animation: map-fade-in 0.8s ease-out 0s both;
-  }
-
-  .map-watermark {
-    font-family: var(--font-display);
-    font-size: 34px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    fill: var(--color-ink-300);
-    opacity: 0.45;
-  }
-
-  .is-compact .map-watermark {
-    font-size: 26px;
-  }
-
-  .map-coverage {
-    opacity: 0;
-    animation: map-fade-in 0.7s ease-out 0.3s both;
-  }
-
-  .map-highway {
-    stroke: var(--color-navy-300);
-    stroke-width: 2.5;
-    stroke-dasharray: 1 7;
-    stroke-linecap: round;
-    opacity: 0;
-    animation: map-fade-in 0.6s ease-out 0.5s both;
-  }
-
-  .map-shield {
-    opacity: 0;
-    animation: map-fade-in 0.5s ease-out 0.85s both;
-  }
-
-  .map-shield-text {
-    font-family: var(--font-display);
-    font-size: 7px;
-    font-weight: 800;
-    fill: white;
-  }
-
-  .map-reference {
-    opacity: 0;
-    animation: map-fade-in 0.5s ease-out 0.7s both;
-  }
-
-  .map-reference-label {
-    font-family: var(--font-body);
-    font-size: 10px;
-    fill: var(--color-ink-400);
-  }
-
-  .map-reference-sublabel {
-    fill: var(--color-ink-300);
-    font-style: italic;
-  }
-
-  .map-marker {
+  /* Each hotspot sits centred on the marker the artwork already paints, so
+   * it stays invisible until hovered/focused — the illustration supplies
+   * the visual dot, this supplies the hit target and the affordance. */
+  .map-hotspot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
     cursor: pointer;
+    display: grid;
+    place-items: center;
   }
 
-  /* The inner <g> carries the enter animation + hover/focus scale — kept
-     separate from the outer <g>'s positional `transform="translate(...)"`
-     attribute so the CSS animation's `transform` never overwrites it. */
-  .map-marker-inner {
+  .map-hotspot--primary {
+    width: 42px;
+    height: 42px;
+  }
+
+  .map-hotspot-ring {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    border: 2px solid var(--color-orange-600);
     opacity: 0;
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: marker-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) var(--enter-delay, 0.6s) both;
+    transform: scale(0.6);
+    transition:
+      opacity 0.18s ease-out,
+      transform 0.18s ease-out;
+    box-shadow: 0 0 0 4px rgb(236 87 19 / 0.16);
   }
 
-  .map-marker--primary .map-marker-inner {
-    animation-delay: 0.75s;
+  .map-hotspot:hover .map-hotspot-ring,
+  .map-hotspot:focus-visible .map-hotspot-ring {
+    opacity: 1;
+    transform: scale(1);
   }
 
-  .map-marker-label {
-    font-family: var(--font-display);
-    font-size: 12px;
-    font-weight: 600;
-    fill: var(--color-navy-900);
-    paint-order: stroke;
-    stroke: white;
-    stroke-width: 3px;
-    stroke-linejoin: round;
-  }
-
-  .map-marker-label--primary {
-    font-size: 14px;
-    font-weight: 800;
-  }
-
-  .map-marker-sublabel {
-    font-family: var(--font-display);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    fill: var(--color-orange-600);
-    text-transform: uppercase;
-    paint-order: stroke;
-    stroke: white;
-    stroke-width: 3px;
-  }
-
-  .map-marker:hover .map-marker-inner,
-  .map-marker:focus-visible .map-marker-inner {
-    transform: scale(1.18);
-  }
-
-  .map-marker--surrounding .map-marker-inner {
-    transition: transform 0.2s ease-out;
-  }
-
-  .map-marker--primary:hover .map-marker-inner,
-  .map-marker--primary:focus-visible .map-marker-inner {
-    transform: scale(1.08);
-  }
-
-  .map-marker:focus-visible {
+  .map-hotspot:focus-visible {
     outline: none;
   }
 
-  .map-marker:focus-visible .map-marker-inner circle:nth-child(2) {
-    stroke: var(--color-orange-600);
-    stroke-width: 3px;
+  .map-hotspot:focus-visible .map-hotspot-ring {
+    border-width: 3px;
+    box-shadow: 0 0 0 5px rgb(236 87 19 / 0.28);
   }
 
-  .map-pulse {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: pulse-ring 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* Subtle attention pulse on the primary market only. */
+  .map-hotspot-pulse {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: var(--color-orange-500);
+    opacity: 0.28;
+    animation: hotspot-pulse 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
-  @keyframes map-fade-in {
-    from {
+  @keyframes hotspot-pulse {
+    0%,
+    100% {
+      transform: scale(0.75);
+      opacity: 0.3;
+    }
+    50% {
+      transform: scale(1.15);
       opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes marker-enter {
-    from {
-      opacity: 0;
-      transform: scale(0.4);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .map-outline,
-    .map-terrain,
-    .map-coverage,
-    .map-highway,
-    .map-shield,
-    .map-reference,
-    .map-marker-inner {
-      animation: none !important;
-      opacity: 1 !important;
-    }
-    .map-pulse {
+    .map-hotspot-pulse {
       animation: none !important;
       opacity: 0 !important;
     }
-  }
-
-  /* ---- Legend (top-left) ---- */
-  .map-legend {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    border-radius: 1rem;
-    border: 1px solid var(--color-ink-100);
-    background: color-mix(in oklab, white 96%, transparent);
-    backdrop-filter: blur(6px);
-    box-shadow: var(--shadow-card);
-    padding: 0.75rem 0.9rem;
-    max-width: 168px;
-  }
-
-  .map-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 11px;
-    line-height: 1.25;
-    color: var(--color-ink-700);
-  }
-
-  .map-legend-item strong {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 11.5px;
-    font-weight: 700;
-    color: var(--color-navy-900);
-  }
-
-  .map-legend-sub {
-    display: block;
-    color: var(--color-ink-400);
-    font-size: 10px;
-  }
-
-  .map-legend-dot {
-    flex-shrink: 0;
-    border-radius: 999px;
-    border: 1.5px solid white;
-    box-shadow: 0 0 0 1px var(--color-ink-100);
-  }
-
-  .map-legend-dot--primary {
-    width: 14px;
-    height: 14px;
-    background: var(--color-orange-600);
-  }
-
-  .map-legend-dot--surrounding {
-    width: 10px;
-    height: 10px;
-    background: var(--color-orange-500);
-  }
-
-  .map-legend-dot--reference {
-    width: 8px;
-    height: 8px;
-    background: var(--color-navy-800);
-  }
-
-  /* ---- Compass (top-right) ---- */
-  .map-compass {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    z-index: 10;
-  }
-
-  .map-compass-n {
-    font-family: var(--font-display);
-    font-size: 8px;
-    font-weight: 800;
-    fill: var(--color-navy-800);
-  }
-
-  @media (max-width: 640px) {
-    .map-legend {
-      max-width: 130px;
-      padding: 0.55rem 0.65rem;
-      gap: 0.35rem;
-    }
-    .map-legend-item {
-      font-size: 9.5px;
-    }
-    .map-legend-item strong {
-      font-size: 10px;
-    }
-    .map-legend-dot--primary {
-      width: 11px;
-      height: 11px;
-    }
-    .map-legend-dot--surrounding {
-      width: 8px;
-      height: 8px;
-    }
-    .map-marker-label,
-    .map-marker-sublabel {
-      font-size: 10px;
-    }
-    .map-marker-label--primary {
-      font-size: 12px;
+    .map-hotspot-ring {
+      transition: none !important;
     }
   }
 
-  /* Compact variant (homepage): hide small-label clutter below its own
-   * narrower breakpoint rather than shrinking text to the point of
-   * illegibility — reuses the same LABEL_OVERRIDES mechanism (labels are
-   * still positioned correctly), it's purely a visibility toggle so the
-   * compact card stays readable at small sizes. Full identification stays
-   * available via tooltip (hover/focus) and the crawlable community list. */
-  .is-compact .map-marker-label,
-  .is-compact .map-marker-sublabel {
-    display: none;
-  }
-
-  @media (min-width: 640px) {
-    .is-compact .map-marker--primary .map-marker-label,
-    .is-compact .map-marker--primary .map-marker-sublabel {
-      display: block;
+  /* Touch/coarse pointers get no hover state, so show a faint persistent
+   * ring to signal the markers are tappable. */
+  @media (hover: none) {
+    .map-hotspot-ring {
+      opacity: 0.5;
+      transform: scale(0.85);
     }
   }
+
 
   .map-tooltip {
     position: absolute;
@@ -1001,11 +617,11 @@ const trustTiles = [
     const cityEl = tooltip.querySelector<HTMLElement>('.map-tooltip-city');
     const viewCta = tooltip.querySelector<HTMLAnchorElement>('.map-tooltip-cta--view');
     const requestCta = tooltip.querySelector<HTMLAnchorElement>('.map-tooltip-cta--request');
-    const markers = root.querySelectorAll<SVGGElement>('[data-marker]');
+    const markers = root.querySelectorAll<HTMLButtonElement>('[data-marker]');
 
     let hideTimeout: number | undefined;
 
-    function showTooltip(marker: SVGGElement) {
+    function showTooltip(marker: HTMLButtonElement) {
       window.clearTimeout(hideTimeout);
       const name = marker.dataset.name ?? '';
       const href = marker.dataset.href ?? '';
@@ -1022,11 +638,15 @@ const trustTiles = [
         requestCta?.classList.add('map-tooltip-cta--active');
       }
 
-      const svg = root.querySelector('svg');
-      if (!svg) return;
-      const svgRect = svg.getBoundingClientRect();
+      // Measure against the map artwork's own box. NOT `root.querySelector('svg')`,
+      // which would now match the first lucide icon <svg> in the card (the
+      // map surface is an <img>, not an SVG) and clamp the tooltip to a
+      // 14px-wide icon.
+      const figure = root.querySelector<HTMLElement>('.map-figure');
+      if (!figure) return;
+      const svgRect = figure.getBoundingClientRect();
       const rootRect = root.getBoundingClientRect();
-      const pt = (marker as unknown as SVGGraphicsElement).getBoundingClientRect();
+      const pt = marker.getBoundingClientRect();
 
       const left = pt.left - rootRect.left + pt.width / 2;
       const top = pt.top - rootRect.top;
