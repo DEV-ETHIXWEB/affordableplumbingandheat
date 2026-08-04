@@ -6,13 +6,10 @@ import ContactCTA from '../../components/sections/ContactCTA.astro';
 import Container from '../../components/ui/Container.astro';
 import Button from '../../components/ui/Button.astro';
 import Eyebrow from '../../components/ui/Eyebrow.astro';
-import { CircleCheck, Phone, MapPin, ArrowUpRight } from 'lucide-react';
-import { business, primaryServiceArea, surroundingServiceAreas, serviceAreaCount } from '../../data/business';
-import { cityPages } from '../../data/cityPages';
+import { CircleCheck, Phone } from 'lucide-react';
+import { business, surroundingServiceAreas } from '../../data/business';
 import heroImage from '../../assets/images/hero/castle-rock-aerial.jpg';
 import { buildBreadcrumbSchema } from '../../lib/schema';
-
-const featuredSlugs = new Map(cityPages.map((c) => [c.name, c.slug]));
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', path: '/' },
@@ -71,7 +68,9 @@ const trustPoints = [
     </Container>
   </section>
 
-  <!-- Premium interactive Colorado service-area map -->
+  <!-- Premium interactive Colorado service-area map: markers, legend, compass,
+       coverage-area hull, and a crawlable "Communities We Serve" side panel
+       that's the primary a11y/SEO redundancy for the visual map. -->
   <section class="border-ink-100 border-t bg-mist-100 py-16 sm:py-20">
     <Container>
       <div class="mx-auto max-w-2xl text-center" data-reveal>
@@ -82,71 +81,13 @@ const trustPoints = [
           communities.
         </p>
       </div>
-      <div class="mx-auto mt-10 max-w-4xl">
-        <ServiceAreaMap />
+      <div class="mx-auto mt-10 max-w-6xl">
+        <ServiceAreaMap variant="full" />
       </div>
-    </Container>
-  </section>
-
-  <!-- Communities We Serve: crawlable HTML list, kept outside the SVG -->
-  <section class="border-ink-100 border-t bg-white pb-20 sm:pb-28">
-    <Container class="mx-auto max-w-4xl pt-16 text-center" data-reveal>
-      <h2 class="font-display text-ink-900 text-2xl font-bold sm:text-3xl">Communities We Serve</h2>
-      <p class="text-ink-500 mx-auto mt-3 max-w-lg">
-        Don't see your community listed? Give us a call anyway, there's a good chance we still cover you.
-      </p>
-
-      <div class="mt-10 text-left">
-        <p class="text-ink-900 text-xs font-bold tracking-wider uppercase">Primary Market</p>
-        <ul class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-          <li>
-            <a
-              href="/service-area/"
-              class="shadow-card flex items-center gap-2.5 rounded-xl border-2 border-orange-500/30 bg-orange-50 px-4 py-3 text-sm font-semibold text-orange-700 transition-colors hover:bg-orange-100"
-            >
-              <MapPin className="size-4 shrink-0 text-orange-600" aria-hidden="true" />
-              {primaryServiceArea.name}
-              <span class="text-ink-400 ml-auto text-[11px] font-medium uppercase">Home Base</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <div class="mt-10 text-left">
-        <p class="text-ink-500 text-xs font-semibold tracking-wide uppercase">
-          Surrounding Communities ({surroundingServiceAreas.length})
-        </p>
-        <ul class="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 md:grid-cols-4">
-          {
-            surroundingServiceAreas.map((area) => {
-              const slug = featuredSlugs.get(area.name);
-              return (
-                <li>
-                  {slug ? (
-                    <a
-                      href={`/service-area/${slug}/`}
-                      class="border-ink-100 text-ink-700 shadow-card flex h-full items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-sm transition-colors hover:border-orange-200 hover:text-orange-600"
-                    >
-                      <MapPin className="size-3.5 shrink-0 text-orange-500" aria-hidden="true" />
-                      {area.name}
-                      <ArrowUpRight className="text-ink-300 ml-auto size-3.5 shrink-0" aria-hidden="true" />
-                    </a>
-                  ) : (
-                    <span class="border-ink-100 text-ink-700 shadow-card flex h-full items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-sm">
-                      <MapPin className="size-3.5 shrink-0 text-orange-500" aria-hidden="true" />
-                      {area.name}
-                    </span>
-                  )}
-                </li>
-              );
-            })
-          }
-        </ul>
-      </div>
-
-      <p class="text-ink-400 mt-8 text-xs">
-        Serving {business.addressLocality} as our primary market, plus {surroundingServiceAreas.length} surrounding Colorado
-        communities ({serviceAreaCount} total).
+      <p class="text-ink-400 mt-8 flex items-center justify-center gap-1.5 text-center text-xs">
+        <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+        Don&rsquo;t see your town? Call {business.hotline.display} — there&rsquo;s a good chance we still cover you
+        (serving {surroundingServiceAreas.length} verified surrounding communities today).
       </p>
     </Container>
   </section>

@@ -1,8 +1,9 @@
 ---
-import { MapPin, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
-import { business, surroundingServiceAreas } from '../../data/business';
+import ServiceAreaMap from './ServiceAreaMap.astro';
+import { surroundingServiceAreas } from '../../data/business';
 ---
 
 <section class="bg-mist-100 py-20 sm:py-28">
@@ -13,43 +14,17 @@ import { business, surroundingServiceAreas } from '../../data/business';
       description={`Fast, reliable plumbing, heating, cooling, and electrical service across Colorado Springs and ${surroundingServiceAreas.length} surrounding Colorado communities.`}
     />
 
-    <div class="mt-14 grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
-      <div class="card-elevated overflow-hidden p-0" data-reveal="left">
-        <iframe
-          title={`Map of ${business.name} service area`}
-          src={`https://maps.google.com/maps?q=${encodeURIComponent(`${business.streetAddress}, ${business.addressLocality}, ${business.addressRegion} ${business.postalCode}`)}&z=9&output=embed`}
-          class="h-[360px] w-full border-0 sm:h-[420px]"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
+    <div class="mx-auto mt-14 max-w-3xl" data-reveal="scale">
+      <ServiceAreaMap variant="compact" />
+    </div>
 
-      <div data-reveal="right">
-        <p class="text-ink-900 text-xs font-bold tracking-wider uppercase">
-          Primary Market: <span class="text-orange-600">{business.addressLocality}</span>
-        </p>
-        <p class="text-ink-500 mt-1 mb-5 text-xs font-semibold tracking-wide uppercase">Surrounding Communities</p>
-        <ul class="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
-          {
-            surroundingServiceAreas.map((area) => (
-              <li>
-                <a
-                  href={area.hasLocationPage ? `/service-area/${area.slug}/` : '/service-area/'}
-                  class="text-ink-700 flex items-center gap-2 text-sm font-medium transition-colors hover:text-orange-600"
-                >
-                  <MapPin className="size-3.5 shrink-0 text-orange-500" aria-hidden="true" />
-                  {area.name}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-        <a
-          href="/service-area/"
-          class="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:text-orange-700"
-        >
-          View full service area details <ArrowRight className="size-4" aria-hidden="true" />
-        </a>
-      </div>
+    <div class="mt-8 text-center">
+      <a
+        href="/service-area/"
+        class="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:text-orange-700"
+      >
+        View full service area details <ArrowRight className="size-4" aria-hidden="true" />
+      </a>
     </div>
   </Container>
 </section>
