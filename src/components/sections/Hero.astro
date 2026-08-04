@@ -13,23 +13,25 @@ const badges = [
 <section class="relative overflow-hidden bg-navy-900">
   <div class="absolute inset-0" aria-hidden="true">
     <!--
-      Decorative background only, so it is optimized hard for weight:
+      Full-quality 1920p master, deliberately: the hero is the first thing a
+      visitor sees and the brand impression is worth the bytes here. Downscaled
+      1280/854 encodes were trialled and rejected — quality comes first for
+      this element.
 
-      • Two encodes, picked by `media`: a 854px file (~624KB) for phones and
-        a 1280px file (~1.6MB) above that. The original 1920p/5.5Mbps master
-        was 7.8MB and the webm alternative 22MB — both were downloading in
-        full on every homepage view and dominating the page's byte budget.
-        At 80% opacity under two gradient overlays, the smaller encodes are
-        visually indistinguishable.
+      The delivery is still tuned so the weight costs as little as possible:
+
       • `preload="none"`: the poster paints the hero, so no video bytes
         compete with LCP. `autoplay` still begins the fetch once layout
         settles, it just stops being a render-blocking cost.
-      • Reduced-motion visitors never download the clip at all. The real
-        URLs live in `data-src`, not `src`, so the browser's preload scanner
-        has nothing to fetch from the markup; the inline script below is
-        what promotes them to `src`, and it declines to do so under
-        `prefers-reduced-motion`. Removing sources after the fact does not
+      • Reduced-motion visitors never download the clip at all. The real URL
+        lives in `data-src`, not `src`, so the browser's preload scanner has
+        nothing to fetch from the markup; the inline script below is what
+        promotes it to `src`, and it declines to do so under
+        `prefers-reduced-motion`. Removing the source after the fact does not
         work — the scanner has already issued the request by then.
+      • The 22MB webm is not offered: a browser takes the FIRST source it can
+        play, and every target browser plays this H.264 mp4, so listing webm
+        only risked a far heavier download for no visual gain.
     -->
     <video
       id="hero-video"
@@ -39,10 +41,9 @@ const badges = [
       muted
       playsinline
       preload="none"
-      poster="/video/hero-cityscape-poster-opt.jpg"
+      poster="/video/hero-cityscape-poster.jpg"
     >
-      <source data-src="/video/hero-cityscape-854.mp4" type="video/mp4" media="(max-width: 767px)" />
-      <source data-src="/video/hero-cityscape-1280.mp4" type="video/mp4" />
+      <source data-src="/video/hero-cityscape.mp4" type="video/mp4" />
     </video>
     <div class="absolute inset-0 bg-gradient-to-b from-navy-950/55 via-navy-900/35 to-navy-900/85"></div>
     <div class="absolute inset-0 bg-gradient-to-r from-navy-950/40 via-transparent to-transparent"></div>
