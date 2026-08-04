@@ -121,10 +121,18 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
       Skip to content
     </a>
     <Navbar />
-    <main id="main-content" class="pt-[76px] pb-[84px] lg:pt-[112px] lg:pb-0">
+    <main id="main-content" class="pt-[76px] lg:pt-[112px]">
       <slot />
     </main>
     <Footer />
+    {/* Clearance for the fixed mobile call bar. This has to sit AFTER the
+        footer, not as bottom padding on <main>: main is transparent, so
+        padding there painted the white <body> as a band between the navy
+        ContactCTA and the navy footer. Below the footer the same reserved
+        space is invisible, and it still stops the bar covering the last
+        rows of footer content. Hidden from lg up, where the bar is not
+        rendered. */}
+    <div aria-hidden="true" class="h-[84px] bg-navy-900 lg:hidden"></div>
     <StickyCallBar />
     <CouponWidget client:load />
     <AccessibilityWidget client:load />
