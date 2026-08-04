@@ -1,0 +1,527 @@
+---
+/**
+ * Premium interactive Colorado service-area map.
+ *
+ * Geometry: real Colorado state boundary (US Census cartographic boundary
+ * data via the public us-atlas states-10m TopoJSON), projected at build
+ * time to a static SVG path — see scripts/generate-service-area-map.mjs
+ * and src/data/serviceAreaMap.generated.ts. No mapping library, no
+ * geography payload ships to the browser; the SVG path is just markup.
+ *
+ * Markers come from the canonical serviceAreas dataset (src/data/business.ts)
+ * via the generated projection file, so this never drifts from the
+ * Service Area page, footer, or homepage strip.
+ *
+ * Interaction is vanilla JS (see the inline <script> below): hover/focus a
+ * marker to reveal a tooltip with a real link when a location page exists,
+ * or a "Request Service" CTA when it doesn't. Denver is rendered as a tiny
+ * muted geographic reference point only — never styled or labeled as a
+ * service marker.
+ */
+import { MapPin, Phone } from 'lucide-react';
+import { business } from '../../data/business';
+import { cityPages } from '../../data/cityPages';
+import { MAP_VIEW_BOX, coloradoPath, projectedMarkers, projectedReferences } from '../../data/serviceAreaMap.generated';
+
+const pagedSlugs = new Set(cityPages.map((c) => c.slug));
+
+const primary = projectedMarkers.find((m) => m.type === 'primary')!;
+const surrounding = projectedMarkers.filter((m) => m.type === 'surrounding');
+
+/** Colorado Springs sits in a genuinely dense real-world cluster with
+ * Cascade, Manitou Springs, Woodland Park, and Monument/Palmer Lake all
+ * within a few map-miles — the default "label centered above the dot"
+ * placement collides badly there. Rather than a general label-placement
+ * algorithm, these few markers get a manually tuned offset + anchor so
+ * the label reads outward, away from the cluster center. Every other
+ * marker uses the default above-center placement. Precise identification
+ * for every marker is still available via the tooltip (hover/focus) and
+ * the crawlable community list below the map. */
+const LABEL_OVERRIDES: Record<string, { dx: number; dy: number; anchor: 'start' | 'middle' | 'end' }> = {
+  cascade: { dx: -12, dy: -2, anchor: 'end' },
+  'manitou-springs': { dx: -12, dy: 14, anchor: 'end' },
+  'woodland-park': { dx: -10, dy: -6, anchor: 'end' },
+  monument: { dx: 10, dy: -10, anchor: 'start' },
+  'palmer-lake': { dx: -10, dy: -2, anchor: 'end' },
+  security: { dx: 12, dy: -4, anchor: 'start' },
+  widefield: { dx: 12, dy: 12, anchor: 'start' },
+  fountain: { dx: -10, dy: 4, anchor: 'end' }
+};
+
+function labelFor(slug: string) {
+  return LABEL_OVERRIDES[slug] ?? { dx: 0, dy: -12, anchor: 'middle' as const };
+}
+---
+
+<div class="service-area-map card-elevated relative overflow-hidden bg-white p-4 sm:p-6" data-reveal>
+  <svg
+    class="map-svg h-auto w-full"
+    viewBox={MAP_VIEW_BOX}
+    role="img"
+    aria-labelledby="service-map-title service-map-desc"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <title id="service-map-title">Map of the Affordable Plumbing, Heat &amp; Electrical service area in Colorado</title>
+    <desc id="service-map-desc">
+      A map of Colorado showing Colorado Springs as the primary service market, with {surrounding.length} verified surrounding
+      communities marked, and Denver shown only as a muted geographic reference point.
+    </desc>
+
+    <defs>
+      <radialGradient id="map-surface" cx="35%" cy="25%" r="85%">
+        <stop offset="0%" stop-color="var(--color-mist-100)"></stop>
+        <stop offset="100%" stop-color="#ffffff"></stop>
+      </radialGradient>
+      <filter id="marker-shadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#0a1830" flood-opacity="0.25"></feDropShadow>
+      </filter>
+    </defs>
+
+    <rect x="0" y="0" width="800" height="620" fill="url(#map-surface)"></rect>
+
+    <!-- Colorado outline: real state boundary, projected at build time -->
+    <path
+      class="map-outline"
+      d={coloradoPath}
+      fill="var(--color-navy-50)"
+      stroke="var(--color-navy-300)"
+      stroke-width="2"
+      stroke-linejoin="round"></path>
+
+    <!-- I-25 corridor indication: a subtle line through the primary north-south
+         service corridor (Castle Rock -> Monument -> Colorado Springs -> Fountain).
+         Decorative context only, not a literal highway trace. -->
+    <path
+      class="map-corridor"
+      d={`M${surrounding.find((m) => m.slug === 'castle-rock')!.x},${surrounding.find((m) => m.slug === 'castle-rock')!.y}
+          L${surrounding.find((m) => m.slug === 'monument')!.x},${surrounding.find((m) => m.slug === 'monument')!.y}
+          L${primary.x},${primary.y}
+          L${surrounding.find((m) => m.slug === 'fountain')!.x},${surrounding.find((m) => m.slug === 'fountain')!.y}`}
+      fill="none"
+      stroke="var(--color-orange-300)"
+      stroke-width="2.5"
+      stroke-dasharray="1 7"
+      stroke-linecap="round"
+      aria-hidden="true"></path>
+
+    <!-- Geographic reference points (e.g. Denver) — tiny, muted, clearly not service markers -->
+    {
+      projectedReferences.map((ref) => (
+        <g class="map-reference" transform={`translate(${ref.x} ${ref.y})`} aria-hidden="true">
+          <circle r="3.5" fill="var(--color-ink-300)" />
+          <text x="7" y="3.5" class="map-reference-label">
+            {ref.name}
+            <tspan class="map-reference-sublabel"> (reference)</tspan>
+          </text>
+        </g>
+      ))
+    }
+
+    <!-- Surrounding service-community markers -->
+    {
+      surrounding.map((m, i) => {
+        const hasPage = pagedSlugs.has(m.slug);
+        const href = hasPage ? `/service-area/${m.slug}/` : undefined;
+        const label = labelFor(m.slug);
+        return (
+          <g
+            class="map-marker map-marker--surrounding"
+            data-marker
+            data-name={m.name}
+            data-href={href ?? ''}
+            data-has-page={hasPage ? '1' : '0'}
+            transform={`translate(${m.x} ${m.y})`}
+            tabindex="0"
+            role="button"
+            aria-label={`${m.name}, verified service community${hasPage ? ' — view service details' : ' — request service'}`}
+          >
+            {/* Position (translate) lives on this outer <g>; the inner <g>
+                below carries the CSS enter/hover animation. SVG's
+                `transform` attribute and a CSS `transform` on the SAME
+                element don't compose — an animated CSS transform would
+                silently replace the translate and reposition every marker
+                to the SVG origin. Splitting them into two nested <g>s keeps
+                position and animation independent. */}
+            <g class="map-marker-inner" style={`--enter-delay:${80 + i * 45}ms`}>
+              <circle r="7" fill="var(--color-orange-500)" filter="url(#marker-shadow)" />
+              <circle r="7" fill="none" stroke="white" stroke-width="1.5" />
+              <text x={label.dx} y={label.dy} class="map-marker-label" text-anchor={label.anchor}>
+                {m.name}
+              </text>
+            </g>
+          </g>
+        );
+      })
+    }
+
+    <!-- Primary market marker: Colorado Springs, drawn last so it sits on top -->
+    <g
+      class="map-marker map-marker--primary"
+      data-marker
+      data-name={primary.name}
+      data-href="/service-area/"
+      data-has-page="0"
+      data-primary="1"
+      transform={`translate(${primary.x} ${primary.y})`}
+      tabindex="0"
+      role="button"
+      aria-label={`${primary.name}, primary service market`}
+    >
+      <g class="map-marker-inner">
+        <circle class="map-pulse" r="10" fill="var(--color-orange-500)" opacity="0.35"></circle>
+        <circle r="11" fill="var(--color-orange-600)" filter="url(#marker-shadow)"></circle>
+        <circle r="11" fill="none" stroke="white" stroke-width="2"></circle>
+        <text y="-18" class="map-marker-label map-marker-label--primary" text-anchor="middle">
+          {primary.name}
+        </text>
+        <text y="-6" class="map-marker-sublabel" text-anchor="middle"> Primary Market </text>
+      </g>
+    </g>
+  </svg>
+
+  <!-- Tooltip: positioned via JS on hover/focus. Kept outside the SVG so it
+       can hold real interactive HTML (a real link or button). -->
+  <div id="map-tooltip" class="map-tooltip" role="tooltip" hidden>
+    <p class="map-tooltip-city"></p>
+    <p class="map-tooltip-business">{business.name}</p>
+    <p class="map-tooltip-status">Service available in this area.</p>
+    <a class="map-tooltip-cta map-tooltip-cta--view" href="#">
+      View Area
+      <MapPin className="size-3.5" aria-hidden="true" />
+    </a>
+    <a class="map-tooltip-cta map-tooltip-cta--request" href="/contact-us/">
+      Request Service
+      <MapPin className="size-3.5" aria-hidden="true" />
+    </a>
+  </div>
+
+  <p class="text-ink-400 mt-4 flex items-center gap-1.5 text-center text-xs sm:justify-center">
+    <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+    Don&rsquo;t see your town? Call {business.hotline.display} — there&rsquo;s a good chance we still cover you.
+  </p>
+</div>
+
+<style>
+  /* Scoped to the map's own <svg> via .map-svg specifically — NOT a bare
+   * `:global(svg)` selector, which would also match the unrelated lucide
+   * <Phone>/<MapPin> icon <svg> elements rendered elsewhere in this same
+   * component and blow them up to the map's own pixel dimensions. */
+  .map-svg {
+    /* Matches the 800x620 viewBox exactly so the CSS box and the SVG's
+     * internal coordinate system always scale together. A `max-height`
+     * combined with a definite `width: 100%` breaks aspect-ratio (the
+     * browser clamps height but doesn't reduce width to match), which
+     * desyncs every marker's hit-test position from what's visually
+     * rendered. Capping `max-width` instead of `max-height` keeps a single
+     * definite axis, so `aspect-ratio` reliably derives the other. */
+    aspect-ratio: 800 / 620;
+    width: 100%;
+    max-width: 826px; /* 640px tall at this component's viewBox ratio */
+    height: auto;
+    display: block;
+    margin-inline: auto;
+  }
+
+  .map-outline {
+    opacity: 0;
+    animation: map-fade-in 0.7s ease-out 0.05s both;
+  }
+
+  .map-corridor {
+    opacity: 0;
+    animation: map-fade-in 0.6s ease-out 0.5s both;
+  }
+
+  .map-reference {
+    opacity: 0;
+    animation: map-fade-in 0.5s ease-out 0.7s both;
+  }
+
+  .map-reference-label {
+    font-family: var(--font-body);
+    font-size: 10px;
+    fill: var(--color-ink-300);
+  }
+
+  .map-reference-sublabel {
+    fill: var(--color-ink-300);
+    font-style: italic;
+  }
+
+  .map-marker {
+    cursor: pointer;
+  }
+
+  /* The inner <g> carries the enter animation + hover/focus scale — kept
+     separate from the outer <g>'s positional `transform="translate(...)"`
+     attribute so the CSS animation's `transform` never overwrites it. */
+  .map-marker-inner {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: marker-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) var(--enter-delay, 0.6s) both;
+  }
+
+  .map-marker--primary .map-marker-inner {
+    animation-delay: 0.75s;
+  }
+
+  .map-marker-label {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    fill: var(--color-navy-900);
+    paint-order: stroke;
+    stroke: white;
+    stroke-width: 3px;
+    stroke-linejoin: round;
+  }
+
+  .map-marker-label--primary {
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .map-marker-sublabel {
+    font-family: var(--font-display);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    fill: var(--color-orange-600);
+    text-transform: uppercase;
+    paint-order: stroke;
+    stroke: white;
+    stroke-width: 3px;
+  }
+
+  .map-marker:hover .map-marker-inner,
+  .map-marker:focus-visible .map-marker-inner {
+    transform: scale(1.18);
+  }
+
+  .map-marker--surrounding .map-marker-inner {
+    transition: transform 0.2s ease-out;
+  }
+
+  .map-marker--primary:hover .map-marker-inner,
+  .map-marker--primary:focus-visible .map-marker-inner {
+    transform: scale(1.08);
+  }
+
+  .map-marker:focus-visible {
+    outline: none;
+  }
+
+  .map-marker:focus-visible .map-marker-inner circle:nth-child(2) {
+    stroke: var(--color-orange-600);
+    stroke-width: 3px;
+  }
+
+  .map-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pulse-ring 2.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes map-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes marker-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .map-outline,
+    .map-corridor,
+    .map-reference,
+    .map-marker-inner {
+      animation: none !important;
+      opacity: 1 !important;
+    }
+    .map-pulse {
+      animation: none !important;
+      opacity: 0 !important;
+    }
+  }
+
+  .map-tooltip {
+    position: absolute;
+    z-index: 20;
+    max-width: 240px;
+    border-radius: 14px;
+    border: 1px solid var(--color-ink-100);
+    background: white;
+    padding: 12px 14px;
+    box-shadow:
+      0 1px 2px rgba(10, 24, 48, 0.06),
+      0 12px 28px -8px rgba(10, 24, 48, 0.22);
+    /* Always interactive: both tooltip CTAs ("View Area" and "Request
+     * Service") are real links a keyboard/mouse user can activate. */
+    pointer-events: auto;
+  }
+
+  .map-tooltip-city {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--color-navy-900);
+    margin: 0;
+  }
+
+  .map-tooltip-business {
+    font-size: 11px;
+    color: var(--color-ink-500);
+    margin: 2px 0 0;
+  }
+
+  .map-tooltip-status {
+    font-size: 12px;
+    color: var(--color-ink-700);
+    margin: 6px 0 0;
+  }
+
+  .map-tooltip-cta {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-orange-600);
+  }
+
+  .map-tooltip-cta--active {
+    display: inline-flex;
+  }
+
+  @media (max-width: 640px) {
+    .map-marker-label,
+    .map-marker-sublabel {
+      font-size: 10px;
+    }
+    .map-marker-label--primary {
+      font-size: 12px;
+    }
+  }
+</style>
+
+<script>
+  // Vanilla JS marker interaction: hover/focus shows a tooltip with either a
+  // real "View Area" link (only when a location page exists) or a
+  // "Request Service" link. No runtime mapping library — this just wires
+  // up the static SVG already rendered above.
+  function initServiceAreaMap() {
+    const root = document.querySelector<HTMLElement>('.service-area-map');
+    if (!root) return;
+
+    const tooltip = root.querySelector<HTMLElement>('#map-tooltip');
+    if (!tooltip) return;
+
+    const cityEl = tooltip.querySelector<HTMLElement>('.map-tooltip-city');
+    const viewCta = tooltip.querySelector<HTMLAnchorElement>('.map-tooltip-cta--view');
+    const requestCta = tooltip.querySelector<HTMLAnchorElement>('.map-tooltip-cta--request');
+    const markers = root.querySelectorAll<SVGGElement>('[data-marker]');
+
+    let hideTimeout: number | undefined;
+
+    function showTooltip(marker: SVGGElement) {
+      window.clearTimeout(hideTimeout);
+      const name = marker.dataset.name ?? '';
+      const href = marker.dataset.href ?? '';
+      const hasPage = marker.dataset.hasPage === '1';
+
+      if (cityEl) cityEl.textContent = name;
+
+      if (hasPage && href) {
+        viewCta?.setAttribute('href', href);
+        viewCta?.classList.add('map-tooltip-cta--active');
+        requestCta?.classList.remove('map-tooltip-cta--active');
+      } else {
+        viewCta?.classList.remove('map-tooltip-cta--active');
+        requestCta?.classList.add('map-tooltip-cta--active');
+      }
+
+      const svg = root!.querySelector('svg');
+      if (!svg) return;
+      const svgRect = svg.getBoundingClientRect();
+      const rootRect = root!.getBoundingClientRect();
+      const pt = (marker as unknown as SVGGraphicsElement).getBoundingClientRect();
+
+      const left = pt.left - rootRect.left + pt.width / 2;
+      const top = pt.top - rootRect.top;
+
+      const tooltipEl = tooltip!;
+      tooltipEl.hidden = false;
+
+      // Position above the marker with enough clearance that the tooltip
+      // box never overlaps the marker's own hit area (which would block
+      // re-hovering it or an adjacent marker). If there isn't enough room
+      // above (marker near the top of the card), place it below instead.
+      const tooltipWidth = 240;
+      const tooltipHeight = 132;
+      const markerClearance = 22;
+      let x = left - tooltipWidth / 2;
+      x = Math.max(8, Math.min(x, svgRect.width - tooltipWidth - 8));
+
+      const spaceAbove = top;
+      let y: number;
+      if (spaceAbove >= tooltipHeight + markerClearance) {
+        y = top - tooltipHeight - markerClearance / 2;
+      } else {
+        y = top + markerClearance + 14;
+      }
+
+      tooltipEl.style.left = `${x}px`;
+      tooltipEl.style.top = `${Math.max(0, y)}px`;
+    }
+
+    function hideTooltip(delay = 120) {
+      window.clearTimeout(hideTimeout);
+      hideTimeout = window.setTimeout(() => {
+        tooltip!.hidden = true;
+      }, delay);
+    }
+
+    markers.forEach((marker) => {
+      marker.addEventListener('mouseenter', () => showTooltip(marker));
+      marker.addEventListener('mouseleave', () => hideTooltip());
+      marker.addEventListener('focus', () => showTooltip(marker));
+      marker.addEventListener('blur', () => hideTooltip(0));
+      marker.addEventListener('click', () => {
+        const href = marker.dataset.href;
+        if (href) window.location.href = href;
+        else window.location.href = '/contact-us/';
+      });
+      marker.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const href = marker.dataset.href;
+          window.location.href = href || '/contact-us/';
+        }
+      });
+    });
+
+    tooltip.addEventListener('mouseenter', () => window.clearTimeout(hideTimeout));
+    tooltip.addEventListener('mouseleave', () => hideTooltip());
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initServiceAreaMap);
+  } else {
+    initServiceAreaMap();
+  }
+</script>

@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/sections/PageHero.astro';
+import ServiceAreaMap from '../../components/sections/ServiceAreaMap.astro';
+import ContactCTA from '../../components/sections/ContactCTA.astro';
 import Container from '../../components/ui/Container.astro';
 import Button from '../../components/ui/Button.astro';
 import Eyebrow from '../../components/ui/Eyebrow.astro';
-import { CircleCheck, Phone, MapPin } from 'lucide-react';
-import { business, serviceAreas } from '../../data/business';
+import { CircleCheck, Phone, MapPin, ArrowUpRight } from 'lucide-react';
+import { business, primaryServiceArea, surroundingServiceAreas, serviceAreaCount } from '../../data/business';
 import { cityPages } from '../../data/cityPages';
 import heroImage from '../../assets/images/hero/castle-rock-aerial.jpg';
 import { buildBreadcrumbSchema } from '../../lib/schema';
@@ -26,85 +28,41 @@ const trustPoints = [
 
 <BaseLayout
   title={`Service Area | Plumbing, HVAC & Electrical Near Colorado Springs, CO`}
-  description="Affordable Plumbing, Heat & Electrical serves Colorado Springs and the surrounding Pikes Peak region, including Castle Rock, Falcon, Fountain, Monument, and Woodland Park."
+  description={`Affordable Plumbing, Heat & Electrical serves Colorado Springs and ${surroundingServiceAreas.length} surrounding Colorado communities, including Castle Rock, Falcon, Fountain, Monument, and Woodland Park.`}
   schema={[breadcrumbSchema]}
 >
   <PageHero
     title="Service Area for Plumbing, HVAC & Electrical Services"
-    description="Colorado Springs and the surrounding area. If you're nearby, we can help."
+    description="Colorado Springs and select surrounding Colorado communities. If you're nearby, we can help."
     crumbs={[{ label: 'Home', href: '/' }, { label: 'Service Area' }]}
     image={heroImage}
     imageAlt="Aerial view of the Colorado Springs region"
   />
 
-  <section class="bg-white py-16 sm:py-24">
-    <Container class="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
-      <div data-reveal="left">
-        <Eyebrow>Local Coverage</Eyebrow>
-        <h2 class="font-display text-ink-900 mt-4 text-3xl leading-[1.1] font-bold text-balance sm:text-4xl">
-          Quality Heating, Cooling & Electrical from Colorado Springs to the Surrounding Area
-        </h2>
-        <p class="text-ink-600 mt-5 max-w-lg leading-relaxed text-balance">
-          We proudly serve our community with top-notch plumbing, heating, and electrical solutions that combine
-          quality workmanship with unbeatable value. Whether you need emergency repairs, routine maintenance, or
-          expert installations, we're here to help.
-        </p>
-        <ul class="mt-8 flex flex-col gap-3">
-          {
-            trustPoints.map((item) => (
-              <li class="text-ink-700 flex items-start gap-3 text-sm">
-                <CircleCheck className="mt-0.5 size-4 shrink-0 text-orange-600" aria-hidden="true" />
-                {item}
-              </li>
-            ))
-          }
-        </ul>
-        <div class="mt-9 flex flex-wrap gap-3">
-          <Button href="/contact-us/" size="lg">Get a Free Estimate</Button>
-          <Button href={`tel:${business.hotline.tel}`} variant="outline" size="lg" icon={Phone}>
-            {business.hotline.display}
-          </Button>
-        </div>
-      </div>
-
-      <div class="card-elevated overflow-hidden p-0" data-reveal="right">
-        <iframe
-          title={`Map of ${business.name} service area`}
-          src={`https://maps.google.com/maps?q=${encodeURIComponent(`${business.streetAddress}, ${business.addressLocality}, ${business.addressRegion} ${business.postalCode}`)}&z=9&output=embed`}
-          class="h-[380px] w-full border-0 sm:h-[440px]"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
-      </div>
-    </Container>
-  </section>
-
-  <section class="border-ink-100 border-t bg-mist-100 pb-20 sm:pb-28">
-    <Container class="mx-auto max-w-4xl pt-16 text-center" data-reveal>
-      <h2 class="font-display text-ink-900 text-2xl font-bold sm:text-3xl">Communities We Serve</h2>
-      <p class="text-ink-500 mx-auto mt-3 max-w-lg">
-        Don't see your community listed? Give us a call anyway, there's a good chance we still cover you.
+  <section class="bg-white py-16 sm:py-20">
+    <Container class="mx-auto max-w-3xl text-center" data-reveal>
+      <Eyebrow>Local Coverage</Eyebrow>
+      <h2 class="font-display text-ink-900 mt-4 text-3xl leading-[1.1] font-bold text-balance sm:text-4xl">
+        Serving Colorado Springs &amp; Surrounding Colorado Communities
+      </h2>
+      <p class="text-ink-600 mx-auto mt-5 max-w-2xl leading-relaxed text-balance">
+        We proudly serve our community with top-notch plumbing, heating, cooling, electrical, and sewer solutions that
+        combine quality workmanship with unbeatable value. Colorado Springs is our home base and primary market, and we
+        extend the same 24/7, licensed service to {surroundingServiceAreas.length} verified surrounding communities across
+        the Pikes Peak region and beyond. Whether you need emergency repairs, routine maintenance, or expert installations,
+        we&rsquo;re here to help.
       </p>
-      <ul class="mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-x-6 gap-y-3 text-left sm:grid-cols-3 md:grid-cols-4">
+      <ul class="mx-auto mt-8 flex max-w-xl flex-col gap-3 text-left sm:mx-0">
         {
-          serviceAreas.map((area) => {
-            const slug = featuredSlugs.get(area.name);
-            return (
-              <li class="border-ink-100 text-ink-700 shadow-card flex items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-sm">
-                <MapPin className="size-3.5 shrink-0 text-orange-500" aria-hidden="true" />
-                {slug ? (
-                  <a href={`/service-area/${slug}/`} class="transition-colors hover:text-orange-600">
-                    {area.name}
-                  </a>
-                ) : (
-                  area.name
-                )}
-              </li>
-            );
-          })
+          trustPoints.map((item) => (
+            <li class="text-ink-700 flex items-start gap-3 text-sm">
+              <CircleCheck className="mt-0.5 size-4 shrink-0 text-orange-600" aria-hidden="true" />
+              {item}
+            </li>
+          ))
         }
       </ul>
-      <div class="mt-12 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
         <Button href="/contact-us/" size="lg">Get a Free Estimate</Button>
         <Button href={`tel:${business.hotline.tel}`} variant="outline" size="lg" icon={Phone}>
           {business.hotline.display}
@@ -112,4 +70,89 @@ const trustPoints = [
       </div>
     </Container>
   </section>
+
+  <!-- Premium interactive Colorado service-area map -->
+  <section class="border-ink-100 border-t bg-mist-100 py-16 sm:py-20">
+    <Container>
+      <div class="mx-auto max-w-2xl text-center" data-reveal>
+        <Eyebrow>Where We Work</Eyebrow>
+        <h2 class="font-display text-ink-900 mt-4 text-2xl font-bold sm:text-3xl">Our Colorado Service Footprint</h2>
+        <p class="text-ink-500 mt-3">
+          Colorado Springs is our primary market. Hover or tap a marker to see coverage details for surrounding
+          communities.
+        </p>
+      </div>
+      <div class="mx-auto mt-10 max-w-4xl">
+        <ServiceAreaMap />
+      </div>
+    </Container>
+  </section>
+
+  <!-- Communities We Serve: crawlable HTML list, kept outside the SVG -->
+  <section class="border-ink-100 border-t bg-white pb-20 sm:pb-28">
+    <Container class="mx-auto max-w-4xl pt-16 text-center" data-reveal>
+      <h2 class="font-display text-ink-900 text-2xl font-bold sm:text-3xl">Communities We Serve</h2>
+      <p class="text-ink-500 mx-auto mt-3 max-w-lg">
+        Don't see your community listed? Give us a call anyway, there's a good chance we still cover you.
+      </p>
+
+      <div class="mt-10 text-left">
+        <p class="text-ink-900 text-xs font-bold tracking-wider uppercase">Primary Market</p>
+        <ul class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+          <li>
+            <a
+              href="/service-area/"
+              class="shadow-card flex items-center gap-2.5 rounded-xl border-2 border-orange-500/30 bg-orange-50 px-4 py-3 text-sm font-semibold text-orange-700 transition-colors hover:bg-orange-100"
+            >
+              <MapPin className="size-4 shrink-0 text-orange-600" aria-hidden="true" />
+              {primaryServiceArea.name}
+              <span class="text-ink-400 ml-auto text-[11px] font-medium uppercase">Home Base</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mt-10 text-left">
+        <p class="text-ink-500 text-xs font-semibold tracking-wide uppercase">
+          Surrounding Communities ({surroundingServiceAreas.length})
+        </p>
+        <ul class="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 md:grid-cols-4">
+          {
+            surroundingServiceAreas.map((area) => {
+              const slug = featuredSlugs.get(area.name);
+              return (
+                <li>
+                  {slug ? (
+                    <a
+                      href={`/service-area/${slug}/`}
+                      class="border-ink-100 text-ink-700 shadow-card flex h-full items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-sm transition-colors hover:border-orange-200 hover:text-orange-600"
+                    >
+                      <MapPin className="size-3.5 shrink-0 text-orange-500" aria-hidden="true" />
+                      {area.name}
+                      <ArrowUpRight className="text-ink-300 ml-auto size-3.5 shrink-0" aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <span class="border-ink-100 text-ink-700 shadow-card flex h-full items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-sm">
+                      <MapPin className="size-3.5 shrink-0 text-orange-500" aria-hidden="true" />
+                      {area.name}
+                    </span>
+                  )}
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+
+      <p class="text-ink-400 mt-8 text-xs">
+        Serving {business.addressLocality} as our primary market, plus {surroundingServiceAreas.length} surrounding Colorado
+        communities ({serviceAreaCount} total).
+      </p>
+    </Container>
+  </section>
+
+  <ContactCTA
+    title="Need Service in Your Area?"
+    description="Reach out today, we'll confirm coverage for your address and get a technician on the way."
+  />
 </BaseLayout>
