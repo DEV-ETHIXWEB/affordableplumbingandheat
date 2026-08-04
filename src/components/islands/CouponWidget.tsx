@@ -137,7 +137,7 @@ export default function CouponWidget() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.3, ease: EASE }}
-            className="border-ink-100 fixed inset-x-3 top-1/2 z-40 flex max-h-[min(600px,calc(100dvh-120px))] -translate-y-1/2 flex-col overflow-hidden rounded-3xl border bg-white shadow-2xl shadow-black/15 lg:inset-x-auto lg:top-1/2 lg:left-12 lg:max-h-[min(600px,calc(100dvh-160px))] lg:w-[calc(100vw-3rem)] lg:max-w-[400px] lg:rounded-l-none lg:rounded-r-3xl lg:border-l-0"
+            className="border-ink-100 fixed inset-x-3 top-16 bottom-16 z-[60] flex max-h-[600px] flex-col overflow-hidden rounded-3xl border bg-white shadow-2xl shadow-black/15 lg:inset-x-auto lg:top-1/2 lg:bottom-auto lg:left-12 lg:h-[min(600px,calc(100dvh-160px))] lg:max-h-none lg:w-[calc(100vw-3rem)] lg:max-w-[400px] lg:-translate-y-1/2"
           >
             <div className="border-ink-100 shrink-0 border-b bg-gradient-to-br from-orange-50 to-transparent px-6 py-5">
               <p className="font-display flex items-center gap-2 text-xs font-bold tracking-wider text-orange-600 uppercase">

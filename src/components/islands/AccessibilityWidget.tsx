@@ -240,7 +240,7 @@ export default function AccessibilityWidget() {
         {announcement}
       </div>
 
-      {/* Desktop edge tab */}
+      {/* Floating trigger, bottom-left on every screen size */}
       <button
         type="button"
         data-a11y-trigger
@@ -249,33 +249,12 @@ export default function AccessibilityWidget() {
         aria-controls="a11y-panel"
         aria-label={open ? 'Close accessibility menu' : 'Open accessibility menu (Alt+A)'}
         onClick={() => toggleA11yPanel()}
-        className="fixed top-[38%] right-0 z-40 hidden w-12 -translate-y-1/2 flex-col items-center gap-2 rounded-l-2xl border border-r-0 border-white/15 bg-navy-900 py-5 text-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)] transition-[width,padding] duration-300 hover:w-14 lg:flex"
+        className="fixed bottom-[21px] left-[21px] z-40 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-navy-900 text-white shadow-[0_8px_24px_-6px_rgba(0,0,0,0.4)] transition-transform active:scale-95"
       >
-        {open ? (
-          <X className="size-4 shrink-0" aria-hidden="true" />
-        ) : (
-          <Accessibility className="size-4 shrink-0" aria-hidden="true" />
-        )}
-        <span className="font-display [transform:rotate(180deg)] text-[11px] font-bold tracking-wider uppercase [writing-mode:vertical-rl]">
-          {open ? 'Close' : 'Accessibility'}
-        </span>
+        {open ? <X className="h-[19.2px] w-[19.2px]" /> : <Accessibility className="h-[19.2px] w-[19.2px]" />}
       </button>
 
-      {/* Mobile floating trigger (bottom-left, mirrors the chat launcher on the right) */}
-      <button
-        type="button"
-        data-a11y-trigger
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-controls="a11y-panel"
-        aria-label={open ? 'Close accessibility menu' : 'Open accessibility menu'}
-        onClick={() => toggleA11yPanel()}
-        className="fixed bottom-24 left-4 z-40 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-navy-900 text-white shadow-[0_8px_24px_-6px_rgba(0,0,0,0.4)] transition-transform active:scale-95 lg:hidden"
-      >
-        <Accessibility className="h-5 w-5" />
-      </button>
-
-      <div className="fixed bottom-40 left-3 z-40 lg:top-24 lg:right-20 lg:bottom-auto lg:left-auto">
+      <div className="fixed bottom-20 left-3 z-40">
         <AnimatePresence>
           {open && (
             <motion.div
