@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlug: "eco-friendly-plumbing-upgrades-for-your-colorado-home"
 ---
 
-As a Colorado homeowner, you likely appreciate the natural beauty of our state—from the majestic Rockies to our pristine waterways. But did you know that your plumbing system can significantly impact the environment? Eco-friendly plumbing upgrades not only help protect Colorado’s water resources but can also save you money on utility bills. At Affordable Plumbing, Heat & Electrical, we’re passionate about helping you create a sustainable home while maintaining top-notch comfort and efficiency.
+As a Colorado homeowner, you likely appreciate the natural beauty of our state - from the majestic Rockies to our pristine waterways. But did you know that your plumbing system can significantly impact the environment? Eco-friendly plumbing upgrades not only help protect Colorado’s water resources but can also save you money on utility bills. At Affordable Plumbing, Heat & Electrical, we’re passionate about helping you create a sustainable home while maintaining top-notch comfort and efficiency.
 
 Here’s a guide to the best eco-friendly plumbing upgrades for your Colorado home.
 
@@ -34,7 +34,7 @@ Upgrading to **energy-efficient dishwashers and washing machines** can save wate
 - **Energy Star Appliances**: Look for the Energy Star label, which guarantees efficiency.
 - **Smart Design**: Modern washing machines use sensors to adjust water levels based on the load size, preventing waste.
 
-**Did You Know?** Dishwashers often use less water than washing dishes by hand—especially if you avoid pre-rinsing!
+**Did You Know?** Dishwashers often use less water than washing dishes by hand - especially if you avoid pre-rinsing!
 
 ## 4. Greywater Systems: Recycle Water for Irrigation
 

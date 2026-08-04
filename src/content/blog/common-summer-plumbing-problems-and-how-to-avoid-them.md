@@ -7,13 +7,13 @@ author: "Adam O'Brien"
 oldSlug: "common-summer-plumbing-problems-and-how-to-avoid-them"
 ---
 
-Summer in Colorado Springs brings sunshine, backyard barbecues, and family vacations—but it can also bring unexpected plumbing problems. With increased water usage, outdoor activity, and seasonal changes, your plumbing system may face challenges that don't typically show up in colder months.
+Summer in Colorado Springs brings sunshine, backyard barbecues, and family vacations - but it can also bring unexpected plumbing problems. With increased water usage, outdoor activity, and seasonal changes, your plumbing system may face challenges that don't typically show up in colder months.
 
 At Affordable Plumbing, Heat & Electrical, we help local homeowners stay ahead of seasonal plumbing issues. Here are the most common summer plumbing problems and how to prevent them before they disrupt your summer plans.
 
 ## 1. Clogged Toilets (Thanks, Summer Guests)
 
-With kids home from school and more visitors in and out, toilets tend to get more use—and more abuse—during the summer months. That extra flushing can lead to clogs, especially if people aren’t careful about what goes down.
+With kids home from school and more visitors in and out, toilets tend to get more use - and more abuse - during the summer months. That extra flushing can lead to clogs, especially if people aren’t careful about what goes down.
 
 **How to avoid it:**
 
@@ -33,7 +33,7 @@ Your outdoor plumbing is vulnerable during summer, especially if it wasn’t pro
 
 ## 3. Overloaded Washing Machine
 
-Summertime means more laundry: swimsuits, beach towels, muddy clothes, and more. The extra load on your washer—and your plumbing—can lead to slow drains, hose failures, or even flooding if left unchecked.
+Summertime means more laundry: swimsuits, beach towels, muddy clothes, and more. The extra load on your washer - and your plumbing - can lead to slow drains, hose failures, or even flooding if left unchecked.
 
 **How to avoid it:**
 
@@ -53,7 +53,7 @@ Heavy rain and tree root growth during the summer can wreak havoc on your sewer 
 
 ## 5. Water Heater Strain
 
-While water heaters usually get more attention in the winter, they still work hard in the summer—especially with more people at home. Long showers and constant dishwashing can strain older units.
+While water heaters usually get more attention in the winter, they still work hard in the summer - especially with more people at home. Long showers and constant dishwashing can strain older units.
 
 **How to avoid it:**
 
@@ -63,7 +63,7 @@ While water heaters usually get more attention in the winter, they still work ha
 
 ## Keep Your Summer Stress-Free With Pro Plumbing Help
 
-Don’t let plumbing problems interrupt your summer fun. Whether it’s a small leak or a full-blown sewer issue, the team at **Affordable Plumbing, Heat & Electrical** is here to help—fast, reliable, and always affordable.
+Don’t let plumbing problems interrupt your summer fun. Whether it’s a small leak or a full-blown sewer issue, the team at **Affordable Plumbing, Heat & Electrical** is here to help - fast, reliable, and always affordable.
 
 **Contact us today** to schedule service or learn more about how we can help protect your home this summer.
 

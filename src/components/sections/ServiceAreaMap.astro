@@ -26,7 +26,8 @@
  * Two visual variants, one shared marker/tooltip/data engine:
  *  - `variant="full"` (default): the Service Area page — full relief map with
  *    legend, compass, shields and per-marker labels, paired with a
- *    "Communities We Serve" side panel and a bottom stat/CTA strip.
+ *    "Communities We Serve" side panel. The bottom trust/CTA strip lives in
+ *    TrustStrip.astro and is placed by the caller.
  *  - `variant="compact"`: the homepage — same geography and labels, but the
  *    legend and interstate shields are dropped so it reads cleanly smaller.
  *
@@ -120,13 +121,6 @@ const LABEL_OVERRIDES: Record<string, { dx: number; dy: number; anchor: 'start' 
 function labelFor(slug: string) {
   return LABEL_OVERRIDES[slug] ?? { dx: 0, dy: -13, anchor: 'middle' as const };
 }
-
-const trustTiles = [
-  { icon: 'shield', title: 'Licensed & Insured', copy: 'Your home is in safe hands.' },
-  { icon: 'users', title: 'Local Experts', copy: `We know ${business.addressLocality} & the surrounding areas.` },
-  { icon: 'clock', title: '24/7 Emergency Service', copy: "We're here when you need us most." },
-  { icon: 'thumb', title: '100% Satisfaction Guaranteed', copy: 'Quality work. Honest pricing. Every time.' }
-];
 ---
 
 <div class:list={['service-area-map-wrap', isCompact && 'is-compact']} data-reveal>
@@ -137,7 +131,7 @@ const trustTiles = [
            public-domain dataset (US Census counties, Natural Earth rivers and
            roads, a NOAA elevation grid traced into hypsometric contour bands).
            See scripts/generate-service-area-map.mjs. Nothing here is
-           hand-drawn, and no geodata reaches the browser — only these
+           hand-drawn, and no geodata reaches the browser - only these
            static strings. -->
       <div class="map-figure" style={`--map-ratio:${MAP_WIDTH} / ${MAP_HEIGHT}`}>
         <svg
@@ -252,7 +246,7 @@ const trustTiles = [
               ))
           }
 
-          <!-- Geographic reference only (Denver) — never a service marker. -->
+          <!-- Geographic reference only (Denver), never a service marker. -->
           {
             projectedReferences.map((ref) => (
               <g class="map-reference" transform={`translate(${ref.x} ${ref.y})`} aria-hidden="true">
@@ -280,11 +274,11 @@ const trustTiles = [
                   transform={`translate(${m.x} ${m.y})`}
                   tabindex="0"
                   role="button"
-                  aria-label={`${m.name}, service community${hasPage ? ' — view service details' : ' — request service'}`}
+                  aria-label={`${m.name}, service community${hasPage ? ' - view service details' : ' - request service'}`}
                 >
                   {/* Position lives on the outer <g>; the animation transform
                       lives on the inner one. An SVG `transform` attribute and a
-                      CSS `transform` on the SAME element don't compose — the CSS
+                      CSS `transform` on the SAME element don't compose - the CSS
                       one would silently replace the translate and stack every
                       marker at the origin. */}
                   <g class="map-marker-inner" style={`--enter-delay:${90 + i * 40}ms`}>
@@ -404,7 +398,7 @@ const trustTiles = [
         isCompact && (
           <p class="text-ink-400 mt-4 flex items-center gap-1.5 text-center text-xs sm:justify-center">
             <Phone className="size-3.5 shrink-0" aria-hidden="true" />
-            Don&rsquo;t see your town? Call {business.hotline.display} — there&rsquo;s a good chance we still cover
+            Don&rsquo;t see your town? Call {business.hotline.display} - there&rsquo;s a good chance we still cover
             you.
           </p>
         )
@@ -436,59 +430,6 @@ const trustTiles = [
       )
     }
   </div>
-
-  {
-    /* Bottom stat/CTA strip */
-    !isCompact && (
-      <div class="trust-strip">
-        {trustTiles.map((tile) => (
-          <div class="trust-tile">
-            <span class="trust-tile-icon" aria-hidden="true">
-              {tile.icon === 'shield' && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2 L20 6 V12 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 12 V6 Z" />
-                  <path d="M8.5 12 L11 14.5 L15.5 9.5" />
-                </svg>
-              )}
-              {tile.icon === 'users' && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="9" cy="8" r="3" />
-                  <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
-                  <circle cx="17" cy="9" r="2.5" />
-                  <path d="M15.5 14a4.5 4.5 0 0 1 5.5 4.4" />
-                </svg>
-              )}
-              {tile.icon === 'clock' && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 7v5l3.5 2" />
-                </svg>
-              )}
-              {tile.icon === 'thumb' && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M7 11v9H4a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1z" />
-                  <path d="M7 11l3-7a2 2 0 0 1 2 2v4h6.5a1.5 1.5 0 0 1 1.45 1.87l-1.5 6A1.5 1.5 0 0 1 17 19H9" />
-                </svg>
-              )}
-            </span>
-            <div>
-              <p class="trust-tile-title">{tile.title}</p>
-              <p class="trust-tile-copy">{tile.copy}</p>
-            </div>
-          </div>
-        ))}
-
-        <div class="trust-cta">
-          <p class="trust-cta-title">Need Service Today?</p>
-          <p class="trust-cta-copy">Call or request online in minutes.</p>
-          <a href={`tel:${business.hotline.tel}`} class="trust-cta-button">
-            <Phone className="size-4 shrink-0" aria-hidden="true" />
-            {business.hotline.display}
-          </a>
-        </div>
-      </div>
-    )
-  }
 </div>
 
 <style>
@@ -630,8 +571,15 @@ const trustTiles = [
     font-size: 34px;
     font-weight: 800;
     letter-spacing: 0.3em;
-    fill: var(--color-navy-900);
-    fill-opacity: 0.13;
+    fill: var(--color-navy-800);
+    fill-opacity: 0.42;
+    /* Halo, same trick as the marker labels: the watermark sits over mottled
+     * relief bands, and without it the letters muddy against the darker tans. */
+    paint-order: stroke;
+    stroke: #f6f4ec;
+    stroke-width: 5px;
+    stroke-opacity: 0.55;
+    stroke-linejoin: round;
   }
 
   .map-shield {
@@ -1032,104 +980,6 @@ const trustTiles = [
     margin-top: 0.1rem;
   }
 
-  /* ---- Bottom trust/CTA strip ---- */
-  .trust-strip {
-    margin-top: 1.5rem;
-    display: grid;
-    gap: 1px;
-    background: var(--color-ink-100);
-    border: 1px solid var(--color-ink-100);
-    border-radius: 1.25rem;
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-    grid-template-columns: 1fr;
-  }
-
-  @media (min-width: 768px) {
-    .trust-strip {
-      grid-template-columns: repeat(4, 1fr) 1.1fr;
-    }
-  }
-
-  .trust-tile {
-    background: white;
-    padding: 1.1rem 1.2rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  .trust-tile-icon {
-    flex-shrink: 0;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-orange-50);
-    color: var(--color-orange-600);
-  }
-
-  .trust-tile-icon svg {
-    width: 1.15rem;
-    height: 1.15rem;
-  }
-
-  .trust-tile-title {
-    font-family: var(--font-display);
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--color-navy-900);
-  }
-
-  .trust-tile-copy {
-    font-size: 0.75rem;
-    color: var(--color-ink-500);
-    margin-top: 0.15rem;
-    line-height: 1.4;
-  }
-
-  .trust-cta {
-    background: var(--color-navy-900);
-    color: white;
-    padding: 1.1rem 1.2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
-  .trust-cta-title {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 0.95rem;
-  }
-
-  .trust-cta-copy {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.65);
-  }
-
-  .trust-cta-button {
-    margin-top: 0.25rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 999px;
-    background: var(--color-orange-600);
-    color: white;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.85rem;
-    padding: 0.6rem 1rem;
-    transition: background-color 0.2s ease;
-  }
-
-  .trust-cta-button:hover {
-    background: var(--color-orange-700);
-  }
 </style>
 
 <script>

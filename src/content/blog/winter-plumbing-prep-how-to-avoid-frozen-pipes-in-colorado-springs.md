@@ -38,14 +38,14 @@ Maintaining a steady, warm temperature inside your home is one of the most effec
 
 A small drip from your faucets may seem counterintuitive, but it can prevent pipes from freezing. Here’s how this works:
 
-- **Relieve Pressure in the System:** Allowing a slow trickle of water through faucets—especially those connected to pipes in exterior walls—reduces pressure in the system. This keeps water moving, making it less likely to freeze.
+- **Relieve Pressure in the System:** Allowing a slow trickle of water through faucets - especially those connected to pipes in exterior walls - reduces pressure in the system. This keeps water moving, making it less likely to freeze.
 - **Target At-Risk Pipes:** If you know of pipes that have frozen in the past, prioritize letting those faucets drip during particularly cold nights.
 
 ## 5. Locate Your Main Water Shutoff Valve
 
 Knowing how to quickly turn off your water in the event of a burst pipe can save your home from significant water damage.
 
-- **Find the Valve Before You Need It:** In most homes, the main water shutoff is located near where the water line enters your home—often in a basement or utility room. Ensure all household members know where it is and how to use it.
+- **Find the Valve Before You Need It:** In most homes, the main water shutoff is located near where the water line enters your home - often in a basement or utility room. Ensure all household members know where it is and how to use it.
 - **Consider a Tag or Marker:** Place a visible tag or label on your shutoff valve to make it easy to find in an emergency.
 
 ## 6. Consider Installing Pipe Heaters

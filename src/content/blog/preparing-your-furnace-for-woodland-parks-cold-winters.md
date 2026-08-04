@@ -17,7 +17,7 @@ Our skilled team at Affordable Plumbing, Heat & Electrical performs thorough tun
 
 ## 2. Replace or Clean Your Air Filters
 
-Dirty air filters restrict airflow, making your furnace work harder and less efficiently. This not only increases your energy bills but also reduces your home's comfort. Check your furnace filter every month and replace it at least every 90 days—or more often if you have pets or allergies.
+Dirty air filters restrict airflow, making your furnace work harder and less efficiently. This not only increases your energy bills but also reduces your home's comfort. Check your furnace filter every month and replace it at least every 90 days - or more often if you have pets or allergies.
 
 A clean filter keeps your furnace running smoothly and helps improve indoor air quality, which is especially important in Colorado’s dry winter climate.
 

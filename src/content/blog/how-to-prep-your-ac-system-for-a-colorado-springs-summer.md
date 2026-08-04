@@ -9,7 +9,7 @@ oldSlug: "how-to-prep-your-ac-system-for-a-colorado-springs-summer"
 
 As the snow melts and temperatures start to climb in Colorado Springs, it's time to shift your focus from heating to cooling. Prepping your AC system before summer hits full force is one of the smartest things you can do to ensure your home stays cool, your energy bills stay low, and your system runs without costly breakdowns.
 
-At **Affordable Plumbing, Heat & Electrical**, we’ve been helping Colorado Springs homeowners keep their AC systems running strong for over 20 years. Here’s how to get your air conditioner ready for the heat—step by step.
+At **Affordable Plumbing, Heat & Electrical**, we’ve been helping Colorado Springs homeowners keep their AC systems running strong for over 20 years. Here’s how to get your air conditioner ready for the heat - step by step.
 
 ## 1. Replace or Clean Your Air Filter
 
@@ -27,7 +27,7 @@ Over the winter, leaves, sticks, and dirt can pile up around your AC's outdoor c
 - Trim back any plants at least 2–3 feet
 - Gently hose off the outside fins if dirty
 
-Avoid bending the fins or using high-pressure washers—they can damage the unit.
+Avoid bending the fins or using high-pressure washers - they can damage the unit.
 
 ## 3. Schedule a Professional AC Tune-Up
 

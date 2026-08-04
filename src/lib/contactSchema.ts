@@ -28,6 +28,22 @@ export const contactSchema = z
 
 export type ContactFormValues = z.infer<typeof contactSchema>;
 
+/** Homepage quick-enquiry form: deliberately the shortest set of fields that
+ * still lets the office call someone back. Email and the free-text detail are
+ * optional here — the full contact form is where we ask for everything. */
+export const quickLeadSchema = z.object({
+  name: z.string().trim().min(2, 'Please enter your name.').max(120),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^[\d\s()+-]{7,20}$/, 'Enter a valid phone number.'),
+  service: z.string().min(1, 'Please choose a service.'),
+  message: z.string().trim().max(2000).optional(),
+  company: z.string().max(0).optional().default('')
+});
+
+export type QuickLeadValues = z.infer<typeof quickLeadSchema>;
+
 /** Shape accepted by POST /api/lead. Covers both the full contact form and
  * the chatbot's shorter lead payload, hence every field but the honeypot is
  * optional except for a bare minimum of name/phone so the office can call

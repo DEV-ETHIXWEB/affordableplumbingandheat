@@ -28,9 +28,15 @@ export default defineConfig({
   image: {
     responsiveStyles: true
   },
+  // `prefetchAll` + the 'viewport' strategy fetched every in-view link on
+  // load — measured at ~1MB of extra HTML on the homepage at 1440px (blog,
+  // service-area, contact, financing, coupons all pulled before a single
+  // click), which competes with the hero for bandwidth on mobile data.
+  // 'hover' still makes navigation feel instant but only pays for links a
+  // visitor actually aims at.
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: 'viewport'
+    defaultStrategy: 'hover'
   },
   env: {
     schema: {

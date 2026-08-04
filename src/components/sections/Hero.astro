@@ -12,17 +12,37 @@ const badges = [
 
 <section class="relative overflow-hidden bg-navy-900">
   <div class="absolute inset-0" aria-hidden="true">
+    <!--
+      Decorative background only, so it is optimized hard for weight:
+
+      • Two encodes, picked by `media`: a 854px file (~624KB) for phones and
+        a 1280px file (~1.6MB) above that. The original 1920p/5.5Mbps master
+        was 7.8MB and the webm alternative 22MB — both were downloading in
+        full on every homepage view and dominating the page's byte budget.
+        At 80% opacity under two gradient overlays, the smaller encodes are
+        visually indistinguishable.
+      • `preload="none"`: the poster paints the hero, so no video bytes
+        compete with LCP. `autoplay` still begins the fetch once layout
+        settles, it just stops being a render-blocking cost.
+      • Reduced-motion visitors never download the clip at all. The real
+        URLs live in `data-src`, not `src`, so the browser's preload scanner
+        has nothing to fetch from the markup; the inline script below is
+        what promotes them to `src`, and it declines to do so under
+        `prefers-reduced-motion`. Removing sources after the fact does not
+        work — the scanner has already issued the request by then.
+    -->
     <video
+      id="hero-video"
       class="h-full w-full object-cover opacity-80"
       autoplay
       loop
       muted
       playsinline
-      preload="auto"
-      poster="/video/hero-cityscape-poster.jpg"
+      preload="none"
+      poster="/video/hero-cityscape-poster-opt.jpg"
     >
-      <source src="/video/hero-cityscape.mp4" type="video/mp4" />
-      <source src="/video/hero-cityscape.webm" type="video/webm" />
+      <source data-src="/video/hero-cityscape-854.mp4" type="video/mp4" media="(max-width: 767px)" />
+      <source data-src="/video/hero-cityscape-1280.mp4" type="video/mp4" />
     </video>
     <div class="absolute inset-0 bg-gradient-to-b from-navy-950/55 via-navy-900/35 to-navy-900/85"></div>
     <div class="absolute inset-0 bg-gradient-to-r from-navy-950/40 via-transparent to-transparent"></div>
@@ -37,7 +57,7 @@ const badges = [
           <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
           <span class="relative inline-flex size-2 rounded-full bg-orange-400"></span>
         </span>
-        Available 24/7 &mdash; Emergency Service
+        Available 24/7 - Emergency Service
       </span>
 
       <h1 class="font-display mt-6 text-[2.75rem] leading-[1.02] font-extrabold tracking-[-0.02em] text-balance text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-[3.75rem]">
@@ -69,3 +89,25 @@ const badges = [
     </div>
   </Container>
 </section>
+
+<script>
+  // Activates the hero background video by copying each <source>'s data-src
+  // into src. Holding the URLs in data-src until now is what keeps the
+  // preload scanner from downloading the clip before this check runs, so a
+  // "reduce motion" visitor pays zero video bytes and simply keeps the
+  // poster frame as a still backdrop.
+  const video = document.getElementById('hero-video') as HTMLVideoElement | null;
+  if (video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let activated = false;
+    video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach((s) => {
+      s.src = s.dataset.src!;
+      activated = true;
+    });
+    if (activated) {
+      video.load();
+      // Autoplay can still be refused (iOS Low Power Mode, data saver); the
+      // poster stays put in that case, so failure is silent by design.
+      void video.play().catch(() => {});
+    }
+  }
+</script>

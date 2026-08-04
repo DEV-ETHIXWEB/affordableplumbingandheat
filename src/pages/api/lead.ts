@@ -78,17 +78,17 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     });
   }
 
-  const subjectPrefix = lead.urgent ? 'URGENT — ' : '';
+  const subjectPrefix = lead.urgent ? 'URGENT - ' : '';
   const subject = `${subjectPrefix}New ${lead.source === 'chatbot' ? 'chatbot' : 'website'} lead: ${lead.name}${lead.service ? ` (${lead.service})` : ''}`;
 
   const rows: [string, string][] = [
     ['Source', lead.source === 'chatbot' ? 'Chatbot' : 'Contact form'],
     ['Name', lead.name],
     ['Phone', lead.phone],
-    ['Email', lead.email || '—'],
-    ['City', lead.city || '—'],
-    ['Service', lead.service || '—'],
-    ['Property type', lead.propertyType || '—'],
+    ['Email', lead.email || ' - '],
+    ['City', lead.city || ' - '],
+    ['Service', lead.service || ' - '],
+    ['Property type', lead.propertyType || ' - '],
     ['Urgent', lead.urgent ? 'Yes' : 'No']
   ];
   const html = `
@@ -120,7 +120,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     // This never reaches the client or a third party, only server-side
     // stdout/log storage, but whoever has access to that hosting platform's
     // log viewer can read it — treat server log access as PII-sensitive.
-    console.warn('[api/lead] RESEND_API_KEY not configured — lead captured but not emailed:', {
+    console.warn('[api/lead] RESEND_API_KEY not configured - lead captured but not emailed:', {
       name: lead.name,
       phone: lead.phone,
       source: lead.source

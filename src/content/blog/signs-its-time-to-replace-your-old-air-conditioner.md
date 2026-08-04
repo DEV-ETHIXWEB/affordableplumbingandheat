@@ -25,7 +25,7 @@ If you’re calling in HVAC repairs more than once a season, you may be throwing
 
 ## 3. Your Energy Bills Keep Climbing
 
-Older AC systems lose efficiency over time, even with maintenance. If your energy bills are higher this summer than last—without a major change in usage—it could mean your AC is working overtime to deliver the same cooling power.
+Older AC systems lose efficiency over time, even with maintenance. If your energy bills are higher this summer than last - without a major change in usage - it could mean your AC is working overtime to deliver the same cooling power.
 
 **Solution:** A new high-efficiency air conditioner can reduce your monthly energy bills significantly.
 
@@ -33,13 +33,13 @@ Older AC systems lose efficiency over time, even with maintenance. If your energ
 
 Is one room freezing while another barely cools down? Uneven temperatures or weak airflow are common signs your system is no longer functioning properly.
 
-**Cause:** Worn-out motors, dirty coils, or aging ductwork can all contribute—but in an older system, it often points to the need for replacement.
+**Cause:** Worn-out motors, dirty coils, or aging ductwork can all contribute - but in an older system, it often points to the need for replacement.
 
 ## 5. Strange Noises or Odors
 
-Grinding, squealing, or banging noises aren’t just annoying—they’re usually signs of internal issues. Likewise, musty or burning smells can indicate mold, burned-out wiring, or motor failure.
+Grinding, squealing, or banging noises aren’t just annoying - they’re usually signs of internal issues. Likewise, musty or burning smells can indicate mold, burned-out wiring, or motor failure.
 
-**Don’t ignore these signs**—they can lead to complete system failure if not addressed.
+**Don’t ignore these signs** - they can lead to complete system failure if not addressed.
 
 ## 6. Your AC Uses R-22 Freon
 
@@ -49,7 +49,7 @@ If your AC still uses R-22 refrigerant (also known as Freon), it’s definitely 
 
 ## 7. Your Home Just Doesn’t Feel Comfortable
 
-Sometimes the biggest sign is how your home feels. If your system runs constantly but never seems to keep up with the heat—or if humidity levels are out of control—your AC is likely underperforming.
+Sometimes the biggest sign is how your home feels. If your system runs constantly but never seems to keep up with the heat - or if humidity levels are out of control - your AC is likely underperforming.
 
 **Comfort should never be a compromise**, especially during a hot Colorado Springs summer.
 

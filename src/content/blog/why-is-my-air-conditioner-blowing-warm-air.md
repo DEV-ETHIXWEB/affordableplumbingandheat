@@ -7,11 +7,11 @@ author: "Adam O'Brien"
 oldSlugs: ["how-hard-water-affects-your-plumbing-system", "why-is-my-air-conditioner-blowing-warm-air"]
 ---
 
-There's nothing more frustrating than turning on your air conditioner during a hot Colorado Springs afternoon—only to feel warm air blowing from the vents. If you've found yourself asking, "Why is my AC blowing warm air?" you're not alone. The causes range from a simple setting you can fix yourself to more serious issues that need a licensed technician. Here's a breakdown of the most likely culprits and what you can do about each one.
+There's nothing more frustrating than turning on your air conditioner during a hot Colorado Springs afternoon - only to feel warm air blowing from the vents. If you've found yourself asking, "Why is my AC blowing warm air?" you're not alone. The causes range from a simple setting you can fix yourself to more serious issues that need a licensed technician. Here's a breakdown of the most likely culprits and what you can do about each one.
 
 ## Thermostat Settings Are Incorrect
 
-Before assuming there's a serious problem, check your thermostat. Make sure it's set to "cool" (not "heat") and that the target temperature is lower than the current room temperature. The fan should be set to "auto," not "on"—if the fan runs constantly, you'll feel warm air whenever the compressor isn't actively cooling. If your thermostat is battery-operated, weak batteries can also cause issues.
+Before assuming there's a serious problem, check your thermostat. Make sure it's set to "cool" (not "heat") and that the target temperature is lower than the current room temperature. The fan should be set to "auto," not "on" - if the fan runs constantly, you'll feel warm air whenever the compressor isn't actively cooling. If your thermostat is battery-operated, weak batteries can also cause issues.
 
 ## Clogged or Dirty Air Filter
 
@@ -21,7 +21,7 @@ A dirty air filter restricts airflow and reduces your system's efficiency. This 
 
 ## Low Refrigerant Levels
 
-Refrigerant is essential for cooling the air, and if your system is low—usually due to a leak—it won't cool properly. Signs of a refrigerant issue include ice buildup on the evaporator coils and a hissing noise from the unit.
+Refrigerant is essential for cooling the air, and if your system is low - usually due to a leak - it won't cool properly. Signs of a refrigerant issue include ice buildup on the evaporator coils and a hissing noise from the unit.
 
 **Fix:** Only a licensed HVAC technician can check, repair leaks, and recharge refrigerant safely. Don't attempt this yourself.
 
@@ -39,7 +39,7 @@ Faulty wiring, blown fuses, or a tripped circuit breaker can prevent your air co
 
 ## Leaking or Damaged Air Ducts
 
-Leaky ducts allow cool air to escape before it ever reaches your rooms—a common problem in older Colorado Springs homes.
+Leaky ducts allow cool air to escape before it ever reaches your rooms - a common problem in older Colorado Springs homes.
 
 **Fix:** A professional duct inspection can reveal leaks and significantly improve your home's comfort and efficiency.
 
@@ -62,12 +62,12 @@ The compressor is the heart of your air conditioning system, circulating refrige
 - Clear debris around the outdoor unit
 - Check for tripped breakers
 - Make sure vents are open and unobstructed
-- Don't attempt refrigerant or electrical repairs yourself—call a professional
+- Don't attempt refrigerant or electrical repairs yourself - call a professional
 
 ## When to Call a Professional
 
-Some issues, like changing air filters or checking thermostat settings, are easy for homeowners to handle. Others—refrigerant leaks, electrical problems, compressor failures—require professional expertise. If you've tried the basic troubleshooting steps and your AC is still blowing warm air, it's time to call in a professional HVAC technician.
+Some issues, like changing air filters or checking thermostat settings, are easy for homeowners to handle. Others - refrigerant leaks, electrical problems, compressor failures - require professional expertise. If you've tried the basic troubleshooting steps and your AC is still blowing warm air, it's time to call in a professional HVAC technician.
 
 ## Need Fast AC Repair in Colorado Springs?
 
-A warm-air-blowing air conditioner is more than an inconvenience—it can signal underlying issues that lead to bigger, more expensive repairs if left unaddressed. At Affordable Plumbing, Heat & Electrical, we specialize in fast, affordable AC repair for homeowners throughout Colorado Springs, Falcon, Castle Rock, Fountain, Monument, and the surrounding areas. If your AC is blowing warm air, we'll diagnose the issue and get your cool air flowing again—fast. Contact us today to schedule your AC repair.
+A warm-air-blowing air conditioner is more than an inconvenience - it can signal underlying issues that lead to bigger, more expensive repairs if left unaddressed. At Affordable Plumbing, Heat & Electrical, we specialize in fast, affordable AC repair for homeowners throughout Colorado Springs, Falcon, Castle Rock, Fountain, Monument, and the surrounding areas. If your AC is blowing warm air, we'll diagnose the issue and get your cool air flowing again - fast. Contact us today to schedule your AC repair.

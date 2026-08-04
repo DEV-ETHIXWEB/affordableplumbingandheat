@@ -28,7 +28,7 @@ Where you place your generator is crucial for safety. Here are some guidelines:
 
 ## **3. Hire a Professional for Installation**
 
-If you’re installing a standby generator, always hire a licensed electrician or a certified generator installer. Professional installation ensures that your generator is correctly connected to your home’s electrical system and meets all local codes and safety regulations. They’ll also install a transfer switch, which automatically disconnects your home from the utility grid when the generator is in use—this is vital to avoid backfeeding, which can be dangerous for utility workers.
+If you’re installing a standby generator, always hire a licensed electrician or a certified generator installer. Professional installation ensures that your generator is correctly connected to your home’s electrical system and meets all local codes and safety regulations. They’ll also install a transfer switch, which automatically disconnects your home from the utility grid when the generator is in use - this is vital to avoid backfeeding, which can be dangerous for utility workers.
 
 For portable generators, have a professional install a transfer switch if you plan to connect the generator directly to your home’s circuits.
 

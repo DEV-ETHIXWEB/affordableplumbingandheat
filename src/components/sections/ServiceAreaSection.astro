@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import ServiceAreaMap from './ServiceAreaMap.astro';
+import TrustStrip from './TrustStrip.astro';
 import { surroundingServiceAreas } from '../../data/business';
 ---
 
@@ -14,9 +15,13 @@ import { surroundingServiceAreas } from '../../data/business';
       description={`Fast, reliable plumbing, heating, cooling, and electrical service across Colorado Springs and ${surroundingServiceAreas.length} surrounding Colorado communities.`}
     />
 
-    <div class="mx-auto mt-14 max-w-5xl" data-reveal="scale">
+    {/* Map and strip both run the full container width so their edges line
+        up as one block. */}
+    <div class="mt-14 w-full" data-reveal="scale">
       <ServiceAreaMap variant="compact" />
     </div>
+
+    <TrustStrip class="mt-6" />
 
     <div class="mt-8 text-center">
       <a

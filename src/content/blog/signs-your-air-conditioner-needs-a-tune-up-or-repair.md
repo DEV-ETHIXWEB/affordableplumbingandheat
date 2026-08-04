@@ -19,7 +19,7 @@ Pay attention to any strange or loud sounds coming from your unit. While a subtl
 
 ## 3. Frequent Cycling On and Off
 
-An air conditioner that cycles on and off too frequently—known as short cycling—may be struggling to maintain the desired temperature. This can result from a faulty thermostat, refrigerant problems, dirty air filters, or an oversized unit. Short cycling reduces energy efficiency, causes uneven cooling, and puts unnecessary stress on the system.
+An air conditioner that cycles on and off too frequently - known as short cycling - may be struggling to maintain the desired temperature. This can result from a faulty thermostat, refrigerant problems, dirty air filters, or an oversized unit. Short cycling reduces energy efficiency, causes uneven cooling, and puts unnecessary stress on the system.
 
 ## 4. Leaking or Moisture Around the Unit
 

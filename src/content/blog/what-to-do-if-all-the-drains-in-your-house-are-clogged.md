@@ -7,17 +7,17 @@ author: "Adam O'Brien"
 oldSlug: "what-to-do-if-all-the-drains-in-your-house-are-clogged"
 ---
 
-Few plumbing problems are as stressful as having every drain in your house back up at once. Whether it’s the kitchen sink, shower, or toilet, a home-wide clog brings daily life to a screeching halt. So what does it mean—and more importantly, what can you do about it?
+Few plumbing problems are as stressful as having every drain in your house back up at once. Whether it’s the kitchen sink, shower, or toilet, a home-wide clog brings daily life to a screeching halt. So what does it mean - and more importantly, what can you do about it?
 
 At Affordable Plumbing, Heat & Electrical, we’ve seen it all when it comes to serious drain clogs in Colorado Springs homes. If all your drains are clogged, here’s what might be going on, and the steps you can take to fix it fast.
 
 ## First, Don’t Ignore the Problem
 
-Multiple clogged drains usually point to a deeper issue in your plumbing system—often in the main sewer line. Ignoring it could lead to sewage backing up into your home, water damage, or expensive repairs.
+Multiple clogged drains usually point to a deeper issue in your plumbing system - often in the main sewer line. Ignoring it could lead to sewage backing up into your home, water damage, or expensive repairs.
 
 ## Stop Using Water in the House
 
-Before doing anything else, turn off all water-using appliances—sinks, toilets, washing machines, dishwashers, and showers. Continuing to run water could worsen the blockage and increase the risk of overflow or flooding.
+Before doing anything else, turn off all water-using appliances - sinks, toilets, washing machines, dishwashers, and showers. Continuing to run water could worsen the blockage and increase the risk of overflow or flooding.
 
 ## Identify Common Warning Signs
 
@@ -33,7 +33,7 @@ If you notice any of these, it’s time to take action quickly.
 
 ## Try a Simple DIY Check (If You’re Comfortable)
 
-If you feel safe doing so, check your main sewer cleanout—a capped pipe usually located outside near your foundation. Remove the cap carefully. If water or sewage starts flowing out, you’ve confirmed a main line blockage, and it’s time to call in a pro.
+If you feel safe doing so, check your main sewer cleanout - a capped pipe usually located outside near your foundation. Remove the cap carefully. If water or sewage starts flowing out, you’ve confirmed a main line blockage, and it’s time to call in a pro.
 
 ## Don’t Use Chemical Drain Cleaners
 
@@ -43,7 +43,7 @@ It might be tempting to pour chemical cleaners down your drains, but these can c
 
 When every drain in your home is affected, DIY fixes usually won’t cut it. You’ll need help from an experienced plumber who can assess the issue, clear the blockage, and prevent future clogs.
 
-Our team at Affordable Plumbing, Heat & Electrical offers expert **Colorado Springs drain cleaning** using professional tools like hydro jetting and video camera inspections. We’ll quickly locate the source of the problem and restore proper flow—without guesswork.
+Our team at Affordable Plumbing, Heat & Electrical offers expert **Colorado Springs drain cleaning** using professional tools like hydro jetting and video camera inspections. We’ll quickly locate the source of the problem and restore proper flow - without guesswork.
 
 ## Prevent Future Whole-Home Clogs
 

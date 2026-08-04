@@ -7,7 +7,7 @@ export const business = {
   legalName: 'Affordable Plumbing, Heat, and Electrical',
   shortName: 'Affordable Plumbing & Heat',
   tagline: 'Plumbing, Heating, Cooling & Electrical',
-  shortPromise: "Colorado Springs' trusted plumber — available 24/7.",
+  shortPromise: "Colorado Springs' trusted plumber - available 24/7.",
   url: 'https://www.affordableplumbingandheat.com',
   hotline: { display: '(719) 733-3759', tel: '+17197333759' },
   email: 'contact@aphinc.net',

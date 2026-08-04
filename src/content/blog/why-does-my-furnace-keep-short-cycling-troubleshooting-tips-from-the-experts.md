@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlug: "why-does-my-furnace-keep-short-cycling-troubleshooting-tips-from-the-experts"
 ---
 
-There is nothing quite as frustrating as sitting in your living room during a Colorado Springs cold snap and hearing your furnace click on, run for three minutes, and then abruptly shut off—only to do the exact same thing ten minutes later.
+There is nothing quite as frustrating as sitting in your living room during a Colorado Springs cold snap and hearing your furnace click on, run for three minutes, and then abruptly shut off - only to do the exact same thing ten minutes later.
 
 In the HVAC world, we call this **short cycling**.
 
@@ -17,7 +17,7 @@ If your furnace is "stuttering," here is a guide to why it’s happening and wha
 
 ## What Exactly is Short Cycling?
 
-A normal heating cycle should last long enough to bring your entire home up to the temperature set on your thermostat—usually **10 to 15 minutes**. Short cycling occurs when the furnace shuts down prematurely, often before the house is warm, because a safety sensor has triggered a shutdown.
+A normal heating cycle should last long enough to bring your entire home up to the temperature set on your thermostat - usually **10 to 15 minutes**. Short cycling occurs when the furnace shuts down prematurely, often before the house is warm, because a safety sensor has triggered a shutdown.
 
 ### 1. The Most Likely Culprit: A Dirty Air Filter
 
@@ -62,6 +62,6 @@ This is a "hidden" problem that usually shows up in newer homes or after a recen
 
 If you’ve changed your filter and checked your thermostat but the short cycling continues, it’s time to call in the experts.
 
-Ignoring short cycling is like driving your car with the check engine light on—eventually, a small, cheap repair will turn into a major, expensive replacement. Our team can quickly diagnose the issue, whether it’s a faulty limit switch, a grimy flame sensor, or an airflow problem.
+Ignoring short cycling is like driving your car with the check engine light on - eventually, a small, cheap repair will turn into a major, expensive replacement. Our team can quickly diagnose the issue, whether it’s a faulty limit switch, a grimy flame sensor, or an airflow problem.
 
 **Is your furnace acting up?Contact ustoday, and let’s get your home back to a steady, reliable warmth!**

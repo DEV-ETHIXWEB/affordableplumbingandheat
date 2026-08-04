@@ -79,7 +79,11 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
+    {/* No canonical on noindex pages: the 404 template renders under every
+        unmatched URL, so a self-referencing canonical would mint a distinct
+        "canonical" URL for each miss and invite them into the index — the
+        exact opposite of what noindex is there to do. */}
+    {!noIndex && <link rel="canonical" href={canonicalURL} />}
     {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />

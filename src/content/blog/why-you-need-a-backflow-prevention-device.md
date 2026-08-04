@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlug: "why-you-need-a-backflow-prevention-device"
 ---
 
-When it comes to protecting your home’s plumbing, some issues are less obvious than leaky faucets or clogged drains—but just as important. One of the most critical safeguards for your drinking water is a backflow prevention device.
+When it comes to protecting your home’s plumbing, some issues are less obvious than leaky faucets or clogged drains - but just as important. One of the most critical safeguards for your drinking water is a backflow prevention device.
 
 Backflow may not be something you think about every day, but without proper protection, it can put your health and your plumbing system at risk. Here’s what you need to know.
 

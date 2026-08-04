@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlug: "lower-your-heating-bill-5-energy-saving-tips-for-your-colorado-springs-furnace"
 ---
 
-Winter in Colorado Springs is beautiful, but that beauty comes with a price—specifically, your utility bill. Here at Affordable Plumbing, Heat & Electrical, we see how quickly heating costs can climb when your furnace is fighting to keep up with those frigid Pikes Peak nights.
+Winter in Colorado Springs is beautiful, but that beauty comes with a price - specifically, your utility bill. Here at Affordable Plumbing, Heat & Electrical, we see how quickly heating costs can climb when your furnace is fighting to keep up with those frigid Pikes Peak nights.
 
 The good news? You don't have to choose between comfort and cost. By making a few simple, smart adjustments, you can significantly reduce the amount of natural gas or electricity your furnace consumes this season.
 

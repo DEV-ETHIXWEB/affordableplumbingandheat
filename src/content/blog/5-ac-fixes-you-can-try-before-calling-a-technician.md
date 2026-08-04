@@ -7,9 +7,9 @@ author: "Adam O'Brien"
 oldSlug: "5-ac-fixes-you-can-try-before-calling-a-technician"
 ---
 
-When your air conditioner suddenly stops cooling, it’s easy to panic—especially during the middle of a hot Colorado Springs summer. But before you reach for the phone to call in the pros, there are a few simple fixes you can try yourself.
+When your air conditioner suddenly stops cooling, it’s easy to panic - especially during the middle of a hot Colorado Springs summer. But before you reach for the phone to call in the pros, there are a few simple fixes you can try yourself.
 
-At **Affordable Plumbing, Heat & Electrical**, we believe in empowering homeowners with the knowledge to handle small AC issues on their own. Here are **5 common air conditioner problems you might be able to fix yourself**—and when it’s time to bring in the experts
+At **Affordable Plumbing, Heat & Electrical**, we believe in empowering homeowners with the knowledge to handle small AC issues on their own. Here are **5 common air conditioner problems you might be able to fix yourself** - and when it’s time to bring in the experts
 
 ## 1. Check Your Thermostat Settings
 
@@ -33,7 +33,7 @@ A clogged or dirty air filter is one of the most common reasons for poor airflow
 
 ## 3. Inspect Your Vents and Registers
 
-Blocked or closed vents can restrict airflow and make it feel like your AC isn’t working—when really, the cool air just can’t circulate properly.
+Blocked or closed vents can restrict airflow and make it feel like your AC isn’t working - when really, the cool air just can’t circulate properly.
 
 **DIY Fix:**
 
@@ -51,7 +51,7 @@ Your outdoor AC unit needs space and airflow to work properly. If it’s covered
 - Leave at least 2–3 feet of open space around the unit.
 - Make sure nothing is covering or sitting on top of it.
 
-> **Safety Tip:** Never stick your hands inside the unit or remove panels—leave that to a professional.
+> **Safety Tip:** Never stick your hands inside the unit or remove panels - leave that to a professional.
 
 ## 5. Reset the System at the Breaker
 
@@ -78,14 +78,14 @@ These problems require professional tools and expertise to diagnose and fix safe
 
 ## Call Colorado Springs’ Trusted AC Experts
 
-At **Affordable Plumbing, Heat & Electrical**, we’re here when DIY solutions aren’t enough. Our experienced, licensed HVAC technicians will get your system back up and running fast—so you can stay cool and comfortable all summer long.
+At **Affordable Plumbing, Heat & Electrical**, we’re here when DIY solutions aren’t enough. Our experienced, licensed HVAC technicians will get your system back up and running fast - so you can stay cool and comfortable all summer long.
 
 ✅ Fast AC repair in Colorado Springs  
 ✅ Upfront pricing, no surprise fees  
 ✅ Emergency service available  
 ✅ Trusted since 2001
 
-📞 Don’t Sweat It—Contact Us Today!
+📞 Don’t Sweat It - Contact Us Today!
 
 We offer professional AC repair in the following locations:
 

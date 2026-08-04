@@ -1,7 +1,9 @@
 ---
 import { Image } from 'astro:assets';
-import { Check } from 'lucide-react';
+import { Check, Phone } from 'lucide-react';
 import Container from '../ui/Container.astro';
+import QuickLeadForm from '../islands/QuickLeadForm.tsx';
+import { business } from '../../data/business';
 import heroImage from '../../assets/images/hero/castle-rock-aerial.jpg';
 
 const points = [
@@ -18,21 +20,73 @@ const points = [
 
 <section class="relative overflow-hidden bg-navy-900 py-16">
   <div class="absolute inset-0" aria-hidden="true">
-    <Image src={heroImage} alt="" width={1600} height={500} quality="high" class="h-full w-full object-cover opacity-25" loading="lazy" />
+    <!-- Decorative backdrop sitting at 25% opacity under a near-opaque
+         gradient, so it never needs full fidelity. `widths`/`sizes` let the
+         browser take a 640px file on a phone instead of the single 1600px
+         encode it was downloading at every breakpoint. -->
+    <Image
+      src={heroImage}
+      alt=""
+      width={1600}
+      height={500}
+      widths={[640, 1024, 1600]}
+      sizes="100vw"
+      quality="mid"
+      class="h-full w-full object-cover opacity-25"
+      loading="lazy"
+    />
     <div class="from-navy-950/95 via-navy-900/90 to-navy-950/95 absolute inset-0 bg-gradient-to-r"></div>
   </div>
+
   <Container class="relative">
-    <ul class="mx-auto grid max-w-4xl grid-cols-2 gap-x-10 gap-y-4 sm:grid-cols-2" data-reveal>
-      {
-        points.map((p) => (
-          <li class="flex items-center gap-3 text-base font-semibold text-white sm:text-lg">
-            <span class="grid size-6 shrink-0 place-items-center rounded-full bg-orange-500/20 text-orange-400">
-              <Check className="size-4" aria-hidden="true" strokeWidth={3} />
-            </span>
-            {p}
-          </li>
-        ))
-      }
-    </ul>
+    <!-- Two columns: the trust points used to sit alone in a narrow centred
+         block, leaving the full right half of the section empty. The quick
+         enquiry form fills it and puts a capture point directly below the
+         hero. -->
+    <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div data-reveal>
+        <h2 class="font-display text-2xl font-bold text-white sm:text-3xl">
+          One call handles it - plumbing, heating, cooling &amp; electrical.
+        </h2>
+        <p class="mt-3 text-white/60">
+          Licensed, insured and local to {business.addressLocality}. Tell us what&rsquo;s wrong and we&rsquo;ll get a
+          tech to you.
+        </p>
+
+        <ul class="mt-8 grid grid-cols-2 gap-x-8 gap-y-4">
+          {
+            points.map((p) => (
+              <li class="flex items-center gap-3 text-base font-semibold text-white">
+                <span class="grid size-6 shrink-0 place-items-center rounded-full bg-orange-500/20 text-orange-400">
+                  <Check className="size-4" aria-hidden="true" strokeWidth={3} />
+                </span>
+                {p}
+              </li>
+            ))
+          }
+        </ul>
+
+        <a
+          href={`tel:${business.hotline.tel}`}
+          class="mt-8 inline-flex items-center gap-2.5 text-lg font-bold text-white transition-colors hover:text-orange-300"
+        >
+          <span class="grid size-10 shrink-0 place-items-center rounded-full bg-orange-600">
+            <Phone className="size-4.5" aria-hidden="true" />
+          </span>
+          {business.hotline.display}
+        </a>
+      </div>
+
+      <div
+        class="rounded-3xl border border-white/10 bg-white/[0.07] p-6 shadow-2xl shadow-navy-950/40 backdrop-blur-sm sm:p-8"
+        data-reveal
+      >
+        <h3 class="font-display text-xl font-bold text-white">Request Service</h3>
+        <p class="mt-1.5 mb-6 text-sm text-white/60">
+          Takes under a minute - we&rsquo;ll call you right back.
+        </p>
+        <QuickLeadForm client:visible />
+      </div>
+    </div>
   </Container>
 </section>

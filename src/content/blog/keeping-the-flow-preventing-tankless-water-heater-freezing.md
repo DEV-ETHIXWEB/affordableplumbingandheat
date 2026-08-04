@@ -24,4 +24,4 @@ Unlike traditional water heaters with storage tanks, tankless water heaters heat
 
 ## Conclusion
 
-Protecting your tankless water heater from freezing is essential for maintaining reliable hot water supply and prolonging the lifespan of your unit. By implementing these preventive measures, you can safeguard your tankless water heater against freezing temperatures and ensure uninterrupted hot water flow, even during the coldest winter days. Don't let freezing weather leave you in the cold—take proactive steps to keep the flow of hot water going year-round.
+Protecting your tankless water heater from freezing is essential for maintaining reliable hot water supply and prolonging the lifespan of your unit. By implementing these preventive measures, you can safeguard your tankless water heater against freezing temperatures and ensure uninterrupted hot water flow, even during the coldest winter days. Don't let freezing weather leave you in the cold - take proactive steps to keep the flow of hot water going year-round.

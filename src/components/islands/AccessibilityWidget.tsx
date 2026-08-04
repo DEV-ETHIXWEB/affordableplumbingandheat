@@ -249,7 +249,11 @@ export default function AccessibilityWidget() {
         aria-controls="a11y-panel"
         aria-label={open ? 'Close accessibility menu' : 'Open accessibility menu (Alt+A)'}
         onClick={() => toggleA11yPanel()}
-        className="fixed bottom-[21px] left-[21px] z-40 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-navy-900 text-white shadow-[0_8px_24px_-6px_rgba(0,0,0,0.4)] transition-transform active:scale-95"
+        /* Below lg the sticky call bar owns the bottom ~77px of the screen,
+           so this trigger has to clear it (mirroring the chat launcher's
+           bottom-24) or it renders on top of the Call Now / Get Estimate
+           buttons. From lg up the call bar is hidden and it can sit low. */
+        className="fixed bottom-24 left-[21px] z-40 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-navy-900 text-white shadow-[0_8px_24px_-6px_rgba(0,0,0,0.4)] transition-transform active:scale-95 lg:bottom-[21px]"
       >
         {open ? <X className="h-[19.2px] w-[19.2px]" /> : <Accessibility className="h-[19.2px] w-[19.2px]" />}
       </button>

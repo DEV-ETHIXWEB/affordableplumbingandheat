@@ -370,7 +370,7 @@ function buildCouponEntries(): KnowledgeEntry[] {
     reply: () => (
       <>
         <p>
-          {coupon.title} — {coupon.description}
+          {coupon.title} - {coupon.description}
         </p>
         <p className="mt-1.5 text-xs">
           Mention code <strong>{coupon.code}</strong> when you schedule.

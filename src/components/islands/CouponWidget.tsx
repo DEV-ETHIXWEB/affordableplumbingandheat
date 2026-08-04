@@ -11,7 +11,7 @@ function printCoupon(coupon: (typeof coupons)[number]) {
   const win = window.open('', '_blank', 'width=480,height=640');
   if (!win) return;
   const doc = win.document;
-  doc.title = `${coupon.title} — ${business.shortName} Coupon`;
+  doc.title = `${coupon.title} - ${business.shortName} Coupon`;
   const style = doc.createElement('style');
   style.textContent = `
     body{font-family:system-ui,sans-serif;padding:32px;color:#16181e;}

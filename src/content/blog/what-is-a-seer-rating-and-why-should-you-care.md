@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlug: "what-is-a-seer-rating-and-why-should-you-care"
 ---
 
-If you’re in the market for a new air conditioner—or just trying to understand your current one—you’ve probably come across the term “SEER rating”. But what does SEER mean, and why is it important? At Affordable Plumbing, Heat & Electrical in Colorado Springs, we help homeowners understand their heating and cooling equipment every day. Here’s what you need to know about SEER ratings and why they matter.
+If you’re in the market for a new air conditioner - or just trying to understand your current one - you’ve probably come across the term “SEER rating”. But what does SEER mean, and why is it important? At Affordable Plumbing, Heat & Electrical in Colorado Springs, we help homeowners understand their heating and cooling equipment every day. Here’s what you need to know about SEER ratings and why they matter.
 
 ## What is a SEER Rating?
 
@@ -49,4 +49,4 @@ If your current AC is over 10–15 years old or has a SEER rating of 10 or lower
 
 Understanding SEER ratings is an important part of choosing the right air conditioning system for your Colorado Springs home. Higher SEER ratings mean lower energy costs, improved comfort, and a reduced environmental impact.
 
-If you’re considering an AC upgrade—or just want help finding the best unit for your needs—**Affordable Plumbing, Heat & Electrical** is here to help. **Contact us today** to learn more about SEER ratings and to schedule a consultation with one of our cooling experts!
+If you’re considering an AC upgrade - or just want help finding the best unit for your needs - **Affordable Plumbing, Heat & Electrical** is here to help. **Contact us today** to learn more about SEER ratings and to schedule a consultation with one of our cooling experts!

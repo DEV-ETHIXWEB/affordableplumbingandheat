@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/sections/PageHero.astro';
 import ServiceAreaMap from '../../components/sections/ServiceAreaMap.astro';
+import TrustStrip from '../../components/sections/TrustStrip.astro';
 import ContactCTA from '../../components/sections/ContactCTA.astro';
 import Container from '../../components/ui/Container.astro';
 import Button from '../../components/ui/Button.astro';
@@ -83,10 +84,11 @@ const trustPoints = [
       </div>
       <div class="mx-auto mt-10 w-full">
         <ServiceAreaMap variant="full" />
+        <TrustStrip class="mt-6" />
       </div>
       <p class="text-ink-400 mt-8 flex items-center justify-center gap-1.5 text-center text-xs">
         <Phone className="size-3.5 shrink-0" aria-hidden="true" />
-        Don&rsquo;t see your town? Call {business.hotline.display} — there&rsquo;s a good chance we still cover you
+        Don&rsquo;t see your town? Call {business.hotline.display} - there&rsquo;s a good chance we still cover you
         (serving {surroundingServiceAreas.length} verified surrounding communities today).
       </p>
     </Container>

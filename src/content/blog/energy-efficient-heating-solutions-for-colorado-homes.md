@@ -17,15 +17,15 @@ With Colorado's unpredictable weather and long winters, your heating system work
 
 ### High-Efficiency Furnaces
 
-Modern furnaces with a high Annual Fuel Utilization Efficiency (AFUE) rating are a great way to cut energy costs. Look for a furnace with an AFUE rating of 90% or higher—these systems convert nearly all the fuel they consume into heat, reducing waste. The result is lower monthly energy bills, more consistent warmth, and reduced emissions.
+Modern furnaces with a high Annual Fuel Utilization Efficiency (AFUE) rating are a great way to cut energy costs. Look for a furnace with an AFUE rating of 90% or higher - these systems convert nearly all the fuel they consume into heat, reducing waste. The result is lower monthly energy bills, more consistent warmth, and reduced emissions.
 
 ### Heat Pumps
 
-Heat pumps are a versatile, efficient option for Colorado's climate, providing both heating and cooling in a single system. Rather than generating heat directly, they transfer it from the outside air or ground into your home. Air-source and geothermal heat pumps are both options—geothermal systems require a higher upfront cost but offer long-term savings, with some homeowners seeing up to 50% energy savings compared to traditional heating systems.
+Heat pumps are a versatile, efficient option for Colorado's climate, providing both heating and cooling in a single system. Rather than generating heat directly, they transfer it from the outside air or ground into your home. Air-source and geothermal heat pumps are both options - geothermal systems require a higher upfront cost but offer long-term savings, with some homeowners seeing up to 50% energy savings compared to traditional heating systems.
 
 ### Radiant Floor Heating
 
-Radiant floor heating is an efficient, comfortable solution for homeowners who want even heat throughout their living space. Warm water circulates through tubes under the floor, or electric coils provide heat directly. It runs silently, requires no ductwork, and avoids the heat loss that comes with vented systems—making it well suited to Colorado's dry winters.
+Radiant floor heating is an efficient, comfortable solution for homeowners who want even heat throughout their living space. Warm water circulates through tubes under the floor, or electric coils provide heat directly. It runs silently, requires no ductwork, and avoids the heat loss that comes with vented systems - making it well suited to Colorado's dry winters.
 
 ### Programmable and Smart Thermostats
 

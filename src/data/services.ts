@@ -70,13 +70,13 @@ export const categoryMeta: Record<ServiceCategory, { label: string; hub: string;
     label: 'HVAC',
     hub: 'hvac-contractor-colorado-springs',
     description:
-      "Heating and cooling built for Colorado's swings — furnace, AC, boiler, and heat pump service that keeps your home comfortable year-round."
+      "Heating and cooling built for Colorado's swings - furnace, AC, boiler, and heat pump service that keeps your home comfortable year-round."
   },
   electrical: {
     label: 'Electrical',
     hub: 'electrician-colorado-springs',
     description:
-      'Licensed electricians for panel upgrades, EV chargers, generators, and everything in between — safe, code-compliant work every time.'
+      'Licensed electricians for panel upgrades, EV chargers, generators, and everything in between - safe, code-compliant work every time.'
   },
   sewer: {
     label: 'Sewer & Drain',

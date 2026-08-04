@@ -49,6 +49,6 @@ In colder climates, frozen pipes are a serious concern. When water freezes in a 
 
 A sump pump is vital for keeping your basement dry, especially during heavy rains or if you live in an area prone to flooding. Sump pump failures can occur due to power outages, improper installation, or a lack of maintenance. Regularly test your sump pump to ensure it’s working correctly, and consider a backup power source to protect your home during storms.
 
-Understanding these common plumbing issues can help you take preventive measures and know when to call in a professional. Regular maintenance and prompt attention to small problems can save you from larger headaches down the road. At Affordable Plumbing, Heat & Electrical, we’re here to help with all your plumbing needs—whether it’s fixing a leaky faucet or dealing with a sewer backup. Don’t hesitate to contact us for expert advice and service.
+Understanding these common plumbing issues can help you take preventive measures and know when to call in a professional. Regular maintenance and prompt attention to small problems can save you from larger headaches down the road. At Affordable Plumbing, Heat & Electrical, we’re here to help with all your plumbing needs - whether it’s fixing a leaky faucet or dealing with a sewer backup. Don’t hesitate to contact us for expert advice and service.
 
 By staying informed and proactive, you can keep your home’s plumbing system running smoothly, avoiding the stress and expense of unexpected repairs.

@@ -36,7 +36,7 @@ Some plumbing problems are simply too risky to handle on your own. A mistake can
 
 ### **1. No Hot Water:**
 
-- **The problem:** If your water heater isn’t producing hot water, it could be a number of issues—a broken heating element, a faulty pilot light, or a mineral build-up inside the tank.
+- **The problem:** If your water heater isn’t producing hot water, it could be a number of issues - a broken heating element, a faulty pilot light, or a mineral build-up inside the tank.
 - **Why to call a pro:** Water heaters involve gas lines and/or high-voltage electricity, which can be extremely dangerous. A professional can diagnose the problem safely and recommend the best solution, whether it's a repair or a full replacement.
 
 ### **2. Low Water Pressure:**

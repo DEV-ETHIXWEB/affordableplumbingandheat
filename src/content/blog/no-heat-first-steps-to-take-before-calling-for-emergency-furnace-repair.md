@@ -15,7 +15,7 @@ Here are the critical first steps to take when your furnace goes silent.
 
 ## Step 1: Check Your Thermostat Settings
 
-This is the most common reason for a service call—and the easiest to fix.
+This is the most common reason for a service call - and the easiest to fix.
 
 1. **Is it ON?** Ensure the thermostat is set to **"Heat"** or **"Auto"** and not "Cool" or "Off."
 2. **Raise the Temperature:** Set the temperature at least **5 degrees higher** than the current room temperature. This forces the unit to trigger the heating cycle.
@@ -46,11 +46,11 @@ This applies to many modern furnaces: the access panel door has a safety switch 
 
 If you have a gas furnace, a gas interruption can shut down your heat.
 
-- **Check the Gas Valve:** Look for the dedicated shut-off valve on the gas line leading directly into your furnace. Ensure the handle is parallel (running with) the pipe—this means it is **OPEN**. If the handle is perpendicular (crossing) the pipe, it’s closed.
+- **Check the Gas Valve:** Look for the dedicated shut-off valve on the gas line leading directly into your furnace. Ensure the handle is parallel (running with) the pipe - this means it is **OPEN**. If the handle is perpendicular (crossing) the pipe, it’s closed.
 - **Check Other Appliances:** Are your gas stove, water heater, or fireplace working? If all gas appliances are off, you may have a neighborhood-wide gas interruption, and you should contact your local utility company.
 
 ## When to Make the Call
 
-If you have walked through all five of these steps—checking the thermostat, power, filter, access door, and fuel source—and the furnace still refuses to start or immediately shuts off, it's time to call the professionals.
+If you have walked through all five of these steps - checking the thermostat, power, filter, access door, and fuel source - and the furnace still refuses to start or immediately shuts off, it's time to call the professionals.
 
 You may be dealing with a more complex issue, such as a faulty ignitor, a defective pressure switch, or a major component failure. For those serious repairs, you need the certified experts at **Affordable Plumbing, Heat & Electrical**. We're here to provide fast, reliable emergency furnace repair in Colorado Springs to get your warmth back quickly and safely.

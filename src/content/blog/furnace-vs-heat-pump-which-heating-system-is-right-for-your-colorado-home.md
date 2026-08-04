@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlugs: ["furnace-vs-heat-pump-which-heating-system-is-right-for-colorado-springs", "heat-pump-vs-furnace-which-is-right-for-your-colorado-home"]
 ---
 
-Choosing a new heating system for your Colorado home is less about picking the "best" one and more about finding the best fit for your home and your priorities. Our climate, with its deep winter chills and often sunny, mild days, presents a unique challenge—and opportunity—for homeowners. Let's cut through the noise and look at the straightforward facts about furnaces and heat pumps.
+Choosing a new heating system for your Colorado home is less about picking the "best" one and more about finding the best fit for your home and your priorities. Our climate, with its deep winter chills and often sunny, mild days, presents a unique challenge - and opportunity - for homeowners. Let's cut through the noise and look at the straightforward facts about furnaces and heat pumps.
 
 ## The Reliable Veteran: Natural Gas Furnace
 
@@ -26,7 +26,7 @@ The gas furnace is the traditional hero of a Colorado winter, and for good reaso
 
 ## The Efficient All-Rounder: Heat Pump
 
-A heat pump doesn't *create* heat; it *moves* it. In winter, it pulls warmth from the outdoor air (yes, even cold air holds heat energy) and transfers it inside. In summer, it reverses the process to act as an air conditioner—giving you heating and cooling in one system, powered entirely by electricity.
+A heat pump doesn't *create* heat; it *moves* it. In winter, it pulls warmth from the outdoor air (yes, even cold air holds heat energy) and transfers it inside. In summer, it reverses the process to act as an air conditioner - giving you heating and cooling in one system, powered entirely by electricity.
 
 **Advantages:**
 
@@ -36,7 +36,7 @@ A heat pump doesn't *create* heat; it *moves* it. In winter, it pulls warmth fro
 
 **Drawbacks:**
 
-- **Extreme cold performance.** Older heat pump models could struggle to extract heat from the air in sub-freezing temperatures. Today's cold-climate models are engineered to operate efficiently down to temperatures as low as -5°F or lower, making them genuinely viable in Colorado—but on the very coldest days, a heat pump may still lean on an electric resistance backup heater, which is less efficient and can temporarily raise your electric bill.
+- **Extreme cold performance.** Older heat pump models could struggle to extract heat from the air in sub-freezing temperatures. Today's cold-climate models are engineered to operate efficiently down to temperatures as low as -5°F or lower, making them genuinely viable in Colorado - but on the very coldest days, a heat pump may still lean on an electric resistance backup heater, which is less efficient and can temporarily raise your electric bill.
 - **Higher upfront cost.** Installation is typically pricier than a furnace alone, though you are installing both a heater and an AC unit in one system, and federal, state, and local rebates are often available to offset the difference.
 
 ## Key Factors to Consider

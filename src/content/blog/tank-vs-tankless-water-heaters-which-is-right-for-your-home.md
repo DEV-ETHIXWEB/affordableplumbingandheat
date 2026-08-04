@@ -11,7 +11,7 @@ When it's time to replace your water heater, you're faced with a key decision: t
 
 ## How They Work
 
-Traditional water heaters store a set amount of hot water—typically 30 to 80 gallons—in a tank and continuously keep it heated, ready for use whenever you need it. Tankless (or on-demand) water heaters skip the storage tank entirely, heating water only when you turn on a faucet or fixture.
+Traditional water heaters store a set amount of hot water - typically 30 to 80 gallons - in a tank and continuously keep it heated, ready for use whenever you need it. Tankless (or on-demand) water heaters skip the storage tank entirely, heating water only when you turn on a faucet or fixture.
 
 ## Traditional Tank Water Heaters
 
@@ -27,7 +27,7 @@ Traditional water heaters store a set amount of hot water—typically 30 to 80 g
 - **Higher standby energy costs.** The heater keeps water warm even when it's not being used, which adds up over time.
 - **Bulky size.** A storage tank takes up significant space in a utility room or basement.
 
-Tank systems typically last 8 to 12 years with regular maintenance, and they can handle heavy simultaneous demand well—like multiple showers or a shower and a laundry load running at once—since the water is already stored and ready.
+Tank systems typically last 8 to 12 years with regular maintenance, and they can handle heavy simultaneous demand well - like multiple showers or a shower and a laundry load running at once - since the water is already stored and ready.
 
 ## Tankless Water Heaters
 
@@ -47,7 +47,7 @@ Tank systems typically last 8 to 12 years with regular maintenance, and they can
 ## Which One Is Right for You?
 
 - **Choose a traditional tank water heater if** keeping upfront costs low is your top priority, your household's hot water needs are moderate, and you don't often run out of hot water.
-- **Choose a tankless water heater if** you want long-term energy savings, a virtually endless supply of hot water, and a compact, modern system—especially if you have a large or growing household.
+- **Choose a tankless water heater if** you want long-term energy savings, a virtually endless supply of hot water, and a compact, modern system - especially if you have a large or growing household.
 
 ## Ready for an Upgrade?
 

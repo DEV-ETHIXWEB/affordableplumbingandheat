@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlug: "common-causes-of-low-water-pressure"
 ---
 
-There’s nothing more frustrating than turning on the faucet or shower—only to be met with a weak trickle. Low water pressure isn’t just inconvenient; it can also be a sign of a bigger plumbing issue.
+There’s nothing more frustrating than turning on the faucet or shower - only to be met with a weak trickle. Low water pressure isn’t just inconvenient; it can also be a sign of a bigger plumbing issue.
 
 At **Affordable Plumbing, Heat & Electrical**, we help Colorado Springs homeowners diagnose and fix water pressure problems quickly and affordably. Let’s take a look at the most common causes of low water pressure and what you can do about them.
 
@@ -15,7 +15,7 @@ At **Affordable Plumbing, Heat & Electrical**, we help Colorado Springs homeowne
 
 Over time, mineral deposits from hard water (which is common in Colorado Springs) can build up inside your pipes. This narrows the pipe diameter and restricts water flow, leading to lower pressure throughout your home.
 
-**Solution:** A professional plumber can inspect and clean your pipes—or recommend replacement if buildup is severe.
+**Solution:** A professional plumber can inspect and clean your pipes - or recommend replacement if buildup is severe.
 
 ## 2. Partially Closed Shut-Off Valves
 
@@ -39,7 +39,7 @@ If only one fixture has low pressure, it might just be a local clog. Sediment an
 
 ## 5. Leaks in Your Plumbing System
 
-Leaks—especially hidden ones—can significantly reduce water pressure. If water is escaping from a broken pipe somewhere, there’s less available at the tap.
+Leaks - especially hidden ones - can significantly reduce water pressure. If water is escaping from a broken pipe somewhere, there’s less available at the tap.
 
 **Warning signs:** Damp walls, ceiling stains, or higher-than-usual water bills.
 
@@ -47,7 +47,7 @@ Leaks—especially hidden ones—can significantly reduce water pressure. If wat
 
 ## 6. Shared Water Lines or Peak Usage Times
 
-If you live in an older neighborhood or share water lines with other homes, pressure can drop when multiple homes are using water at the same time—like early morning or evening.
+If you live in an older neighborhood or share water lines with other homes, pressure can drop when multiple homes are using water at the same time - like early morning or evening.
 
 **What you can do:** Schedule showers and laundry during off-peak hours or talk to a plumber about pressure-boosting options.
 
@@ -59,6 +59,6 @@ Galvanized steel pipes, often found in older homes, are prone to corrosion and i
 
 ## Restore Proper Water Pressure in Your Home
 
-Low water pressure isn’t something you have to live with. Whether it’s a simple fix or a more complex plumbing issue, the licensed professionals at **Affordable Plumbing, Heat & Electrical** can help you find the cause—and the solution.
+Low water pressure isn’t something you have to live with. Whether it’s a simple fix or a more complex plumbing issue, the licensed professionals at **Affordable Plumbing, Heat & Electrical** can help you find the cause - and the solution.
 
 **Contact us** to schedule a plumbing inspection or water pressure diagnostic for your Colorado Springs home.

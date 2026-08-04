@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlugs: ["emergency-furnace-repair-in-colorado-springs-what-to-do-when-your-heat-goes-out", "emergency-furnace-repair-in-fountain-what-to-do-when-the-heat-goes-out"]
 ---
 
-When the frigid Colorado winter rolls in, a working furnace isn't just a luxury—it's a necessity. But what happens if your furnace suddenly stops working in the middle of the night, leaving your home uncomfortably cold? Knowing what to do in a heating emergency can make a big difference in both your comfort and safety. At Affordable Plumbing, Heat & Electrical, we understand how stressful this situation can be, so we've put together this guide to help you take the right steps when your heat goes out.
+When the frigid Colorado winter rolls in, a working furnace isn't just a luxury - it's a necessity. But what happens if your furnace suddenly stops working in the middle of the night, leaving your home uncomfortably cold? Knowing what to do in a heating emergency can make a big difference in both your comfort and safety. At Affordable Plumbing, Heat & Electrical, we understand how stressful this situation can be, so we've put together this guide to help you take the right steps when your heat goes out.
 
 ## 1. Stay Calm and Assess the Situation
 
@@ -15,7 +15,7 @@ Before you panic, take a moment to assess the problem. Is the furnace completely
 
 ## 2. Check for Safety Issues First
 
-If you smell gas or notice unusual sounds, like banging or rattling, from your furnace, safety should be your top priority. Turn off the furnace immediately and leave your home if necessary. These can be signs of a serious issue, like a gas leak or a cracked heat exchanger. In these cases, evacuate your home and call your gas company or emergency services right away. Never attempt to fix a gas-related issue on your own—it's a job for certified technicians.
+If you smell gas or notice unusual sounds, like banging or rattling, from your furnace, safety should be your top priority. Turn off the furnace immediately and leave your home if necessary. These can be signs of a serious issue, like a gas leak or a cracked heat exchanger. In these cases, evacuate your home and call your gas company or emergency services right away. Never attempt to fix a gas-related issue on your own - it's a job for certified technicians.
 
 ## 3. Inspect the Furnace Power Supply
 
@@ -23,7 +23,7 @@ Your furnace needs a steady supply of power to operate. Check that it's plugged 
 
 ## 4. Check for Gas or Pilot Light Issues
 
-If you have a gas furnace, the issue may be with the pilot light or gas supply. Ensure the gas valve is open, then check the pilot light—if it's out, follow the manufacturer's instructions to relight it. Be cautious: if you smell gas or hear hissing, there could be a gas leak. Leave your home immediately and contact your gas company or emergency services.
+If you have a gas furnace, the issue may be with the pilot light or gas supply. Ensure the gas valve is open, then check the pilot light - if it's out, follow the manufacturer's instructions to relight it. Be cautious: if you smell gas or hear hissing, there could be a gas leak. Leave your home immediately and contact your gas company or emergency services.
 
 ## 5. Replace or Clean the Furnace Filter
 
@@ -51,4 +51,4 @@ Once your furnace is up and running again, consider scheduling regular maintenan
 
 ## Call Affordable Plumbing, Heat & Electrical
 
-When your heat goes out in the middle of winter, it's easy to feel overwhelmed, but knowing the steps to take can help you manage the situation calmly. Whether it's a simple thermostat adjustment or a more complex furnace malfunction, getting prompt and professional help is key. Affordable Plumbing, Heat & Electrical is here to provide reliable, fast, and expert furnace repair when you need it most. Don't hesitate to contact us day or night—we're just a call away from restoring comfort to your home.
+When your heat goes out in the middle of winter, it's easy to feel overwhelmed, but knowing the steps to take can help you manage the situation calmly. Whether it's a simple thermostat adjustment or a more complex furnace malfunction, getting prompt and professional help is key. Affordable Plumbing, Heat & Electrical is here to provide reliable, fast, and expert furnace repair when you need it most. Don't hesitate to contact us day or night - we're just a call away from restoring comfort to your home.

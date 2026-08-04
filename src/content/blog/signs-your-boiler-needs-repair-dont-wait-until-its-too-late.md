@@ -7,11 +7,11 @@ author: "Adam O'Brien"
 oldSlug: "signs-your-boiler-needs-repair-dont-wait-until-its-too-late"
 ---
 
-As winter approaches in Colorado Springs, homeowners rely heavily on their boilers to keep their homes warm and comfortable. But like any essential home system, boilers don’t last forever, and when they start to show signs of wear and tear, timely repairs can prevent bigger, more expensive issues. Ignoring the early warning signs of boiler trouble can leave you facing a cold home and emergency repair costs in the middle of winter. Here are the top signs that your boiler needs repair—don’t wait until it's too late!
+As winter approaches in Colorado Springs, homeowners rely heavily on their boilers to keep their homes warm and comfortable. But like any essential home system, boilers don’t last forever, and when they start to show signs of wear and tear, timely repairs can prevent bigger, more expensive issues. Ignoring the early warning signs of boiler trouble can leave you facing a cold home and emergency repair costs in the middle of winter. Here are the top signs that your boiler needs repair - don’t wait until it's too late!
 
 ## 1. Unusual Noises
 
-A properly functioning boiler should operate quietly. If you start hearing strange noises—like banging, clunking, or whistling—this could indicate a mechanical issue. Common causes include air trapped in the system, low water pressure, or worn-out components. If your boiler is making odd sounds, it’s best to call a professional for boiler repair in Colorado Springs, CO, before the problem worsens.
+A properly functioning boiler should operate quietly. If you start hearing strange noises - like banging, clunking, or whistling - this could indicate a mechanical issue. Common causes include air trapped in the system, low water pressure, or worn-out components. If your boiler is making odd sounds, it’s best to call a professional for boiler repair in Colorado Springs, CO, before the problem worsens.
 
 ## 2. Inconsistent Heating
 

@@ -26,7 +26,7 @@ These are the most common culprits. Unlike toilet paper, which is designed to br
 It might seem obvious, but what happens in your kitchen often impacts your bathroom, especially if you have an older or undersized sewer line.
 
 - **Cooking Grease and Oil:** Never, ever dump grease down the sink, and definitely don't try to dilute it by flushing it down the toilet. When hot grease cools, it solidifies. This sticky substance coats the inside of your pipes and catches *everything* else that flows by (wipes, hair, food scraps), leading to those costly, stubborn clogs.
-- **Food Scraps:** Your stomach—or the garbage disposal—is the right place for food, not the toilet.
+- **Food Scraps:** Your stomach - or the garbage disposal - is the right place for food, not the toilet.
 
 ## The Chemical and Medicinal Hazards
 

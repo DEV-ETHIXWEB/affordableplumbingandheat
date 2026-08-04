@@ -198,7 +198,7 @@ function buildLeadPayload(lead: LeadState, ctx: ChatContext, transcript: Transcr
 function buildLeadMailto(lead: LeadState, ctx: ChatContext, transcript: TranscriptLine[]): string {
   const urgent = lead.wizardUrgent || ctx.urgent;
   const subject = lead.wizard
-    ? `Estimate request: ${lead.wizardService ?? 'Service'} (${lead.name})${urgent ? ' — URGENT' : ''}`
+    ? `Estimate request: ${lead.wizardService ?? 'Service'} (${lead.name})${urgent ? ' - URGENT' : ''}`
     : `Chatbot lead: ${lead.name} (${business.name} site)`;
   const topics = ctx.topicsDiscussed.map(topicLabel).join(', ') || 'General chat';
   const body = [

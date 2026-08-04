@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlugs: ["energy-efficient-cooling-tips-for-colorado-homes", "home-energy-efficiency-tips-for-hot-colorado-summers", "how-to-reduce-your-air-conditioning-costs-this-summer"]
 ---
 
-Keeping your Colorado home cool during the summer months doesn't have to mean sky-high utility bills. With dry heat, high altitude, and sunny days, Colorado homes face unique cooling challenges—but also unique opportunities for energy savings. At Affordable Plumbing, Heat & Electrical, we help homeowners stay comfortable and save money all summer long. Here are our top energy-efficient cooling tips.
+Keeping your Colorado home cool during the summer months doesn't have to mean sky-high utility bills. With dry heat, high altitude, and sunny days, Colorado homes face unique cooling challenges - but also unique opportunities for energy savings. At Affordable Plumbing, Heat & Electrical, we help homeowners stay comfortable and save money all summer long. Here are our top energy-efficient cooling tips.
 
 ## 1. Use a Programmable or Smart Thermostat
 
@@ -15,7 +15,7 @@ A programmable thermostat lets you regulate your home's temperature based on you
 
 ## 2. Replace Air Filters Regularly
 
-A clogged air filter makes your air conditioner work harder, reducing efficiency and airflow. Replace or clean your filter every 1–3 months, especially during peak summer usage—this improves performance, lowers your energy bills, and extends the life of your system. Clean filters also improve indoor air quality, which can help with allergies and respiratory issues.
+A clogged air filter makes your air conditioner work harder, reducing efficiency and airflow. Replace or clean your filter every 1–3 months, especially during peak summer usage - this improves performance, lowers your energy bills, and extends the life of your system. Clean filters also improve indoor air quality, which can help with allergies and respiratory issues.
 
 ## 3. Block Out the Sun
 
@@ -27,7 +27,7 @@ Ceiling fans don't actually cool the air, but they create a wind-chill effect th
 
 ## 5. Seal Leaks and Insulate
 
-Drafty doors, leaky windows, gaps around electrical outlets, and poorly insulated attics all let cool air escape. Sealing these leaks with weather stripping and caulk, and adding insulation where needed, keeps cool air in and hot air out—reducing the load on your AC.
+Drafty doors, leaky windows, gaps around electrical outlets, and poorly insulated attics all let cool air escape. Sealing these leaks with weather stripping and caulk, and adding insulation where needed, keeps cool air in and hot air out - reducing the load on your AC.
 
 ## 6. Keep Outdoor Units Clear
 
@@ -35,7 +35,7 @@ Make sure your outdoor AC unit has at least two feet of clearance on all sides. 
 
 ## 7. Schedule Seasonal Maintenance
 
-Just like a car, your cooling system runs better with regular tune-ups. A professional AC inspection—including cleaning the evaporator and condenser coils—can catch small issues before they become costly repairs and keep your unit running efficiently. We recommend scheduling a maintenance check each spring before temperatures start to climb.
+Just like a car, your cooling system runs better with regular tune-ups. A professional AC inspection - including cleaning the evaporator and condenser coils - can catch small issues before they become costly repairs and keep your unit running efficiently. We recommend scheduling a maintenance check each spring before temperatures start to climb.
 
 ## 8. Avoid Heat-Building Activities During Peak Hours
 

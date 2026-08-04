@@ -52,10 +52,10 @@ Chemical drain cleaners may seem convenient, but they can corrode your pipes ove
 Once your drain is clear, take steps to avoid clogs down the road:
 
 - **Use drain screens.** Install screens or strainers to catch hair, food scraps, and other debris.
-- **Avoid pouring grease.** Never pour grease, oil, or fat down the drain—it solidifies and causes clogs.
+- **Avoid pouring grease.** Never pour grease, oil, or fat down the drain - it solidifies and causes clogs.
 - **Flush with hot water regularly.** Pour hot water down your drains weekly to help prevent buildup.
 - **Dispose of waste properly.** Put coffee grounds, eggshells, and fibrous foods in the trash, not the sink.
 
 ## When to Call a Professional
 
-If your efforts don't resolve the clog, or if water backs up repeatedly, it's time to call in the pros. A stubborn clog could indicate a deeper issue, such as a blockage in your main sewer line, which requires professional equipment and expertise to fix. At Affordable Plumbing, Heat & Electrical, we're here to help with all your plumbing needs in Colorado Springs. If you're dealing with a persistent clog or need advice, contact our experienced team today—let us keep your pipes flowing smoothly.
+If your efforts don't resolve the clog, or if water backs up repeatedly, it's time to call in the pros. A stubborn clog could indicate a deeper issue, such as a blockage in your main sewer line, which requires professional equipment and expertise to fix. At Affordable Plumbing, Heat & Electrical, we're here to help with all your plumbing needs in Colorado Springs. If you're dealing with a persistent clog or need advice, contact our experienced team today - let us keep your pipes flowing smoothly.

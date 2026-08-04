@@ -1,17 +1,14 @@
 ---
-import { Phone, Mail, MapPin, Clock, ArrowRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import Container from '../ui/Container.astro';
-import Button from '../ui/Button.astro';
 import SocialIcon from '../ui/SocialIcon.astro';
-import { business, surroundingServiceAreas } from '../../data/business';
+import { business } from '../../data/business';
 import { services, categoryMeta, type ServiceCategory } from '../../data/services';
-import { cityPages } from '../../data/cityPages';
 import logo from '../../assets/images/brand/logo.png';
 import energyStarBadge from '../../assets/images/badges/energy-star.png';
 import equalHousingBadge from '../../assets/images/badges/equal-housing-lender.png';
 import { Image } from 'astro:assets';
 
-const featuredSlugs = new Map(cityPages.map((c) => [c.name, c.slug]));
 const categories: ServiceCategory[] = ['plumbing', 'hvac', 'electrical', 'sewer'];
 const trustBadges = [
   { name: 'Energy Star Partner', image: energyStarBadge },
@@ -32,25 +29,12 @@ const companyLinks = [
 ];
 ---
 
-<footer class="bg-navy-900 text-white/60">
-  <!-- Closing CTA -->
-  <div class="border-b border-white/10 bg-white">
-    <Container class="flex flex-col items-center gap-6 py-14 text-center sm:py-16">
-      <h2 class="font-display text-ink-900 text-3xl font-bold text-balance sm:text-4xl">
-        One call does it all. Let&rsquo;s fix it today.
-      </h2>
-      <p class="text-ink-500 max-w-xl text-balance">
-        Licensed, insured technicians on call 24/7 across Colorado Springs and the surrounding area.
-      </p>
-      <div class="flex flex-col gap-3 sm:flex-row">
-        <Button href="/contact-us/" size="lg">Request Service</Button>
-        <Button href={`tel:${business.hotline.tel}`} variant="secondary" size="lg">
-          Call {business.hotline.display}
-        </Button>
-      </div>
-    </Container>
-  </div>
-
+<!-- No closing CTA here: ContactCTA.astro is rendered by the pages themselves
+     and sits directly above this footer, so a second heading-plus-two-buttons
+     block repeated the same offer and the same phone number twice in a row. -->
+<!-- The border matters: ContactCTA is also navy-900, so without it the two
+     would merge into one undifferentiated navy field. -->
+<footer class="bg-navy-900 border-t border-white/10 text-white/60">
   <Container class="grid grid-cols-2 gap-x-8 gap-y-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.1fr]">
     <div class="col-span-2 lg:col-span-1">
       <a href="/" aria-label={`${business.name} - Home`}>
@@ -88,7 +72,7 @@ const companyLinks = [
     </div>
 
     <div>
-      <h3 class="font-display text-sm font-bold tracking-wider text-white uppercase">Services</h3>
+      <h2 class="font-display text-sm font-bold tracking-wider text-white uppercase">Services</h2>
       {
         categories.map((cat) => (
           <div class="mt-4">
@@ -114,7 +98,7 @@ const companyLinks = [
     </div>
 
     <div>
-      <h3 class="font-display text-sm font-bold tracking-wider text-white uppercase">Company</h3>
+      <h2 class="font-display text-sm font-bold tracking-wider text-white uppercase">Company</h2>
       <ul class="mt-4 space-y-2.5">
         {
           companyLinks.map((link) => (
@@ -129,7 +113,7 @@ const companyLinks = [
     </div>
 
     <div class="col-span-2 sm:col-span-1">
-      <h3 class="font-display text-sm font-bold tracking-wider text-white uppercase">Get In Touch</h3>
+      <h2 class="font-display text-sm font-bold tracking-wider text-white uppercase">Get In Touch</h2>
       <ul class="mt-4 space-y-3 text-sm">
         <li>
           <a
@@ -158,40 +142,6 @@ const companyLinks = [
       </p>
     </div>
   </Container>
-
-  <!-- Service area -->
-  <div class="border-t border-white/5 py-10">
-    <Container>
-      <p class="font-display text-center text-sm font-bold tracking-wider text-white/70 uppercase">
-        Proudly Serving Colorado Springs &amp; the Surrounding Area
-      </p>
-      <ul class="mx-auto mt-5 flex max-w-4xl flex-wrap justify-center gap-x-5 gap-y-2.5">
-        {
-          surroundingServiceAreas.map((area) => {
-            const slug = featuredSlugs.get(area.name);
-            return (
-              <li class="text-xs text-white/60">
-                <a
-                  href={slug ? `/service-area/${slug}/` : '/service-area/'}
-                  class="transition-colors hover:text-orange-400"
-                >
-                  {area.name}
-                </a>
-              </li>
-            );
-          })
-        }
-      </ul>
-      <div class="mt-5 flex justify-center">
-        <a
-          href="/service-area/"
-          class="inline-flex items-center gap-1 text-xs font-semibold text-orange-300 hover:text-orange-200"
-        >
-          View full service area <ArrowRight className="size-3.5" aria-hidden="true" />
-        </a>
-      </div>
-    </Container>
-  </div>
 
   <div class="border-t border-white/5 py-6">
     <Container

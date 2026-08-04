@@ -7,7 +7,7 @@ author: "Adam O'Brien"
 oldSlug: "keep-warm-this-winter-furnace-maintenance-tips-for-colorado-springs"
 ---
 
-We know that the second those temperatures start dropping into the teens and single digits, your furnace isn't just a machine—it's the most important piece of equipment in your home. At **Affordable Plumbing, Heat & Electrical**, we're not just about fixing problems; we're about preventing them.
+We know that the second those temperatures start dropping into the teens and single digits, your furnace isn't just a machine - it's the most important piece of equipment in your home. At **Affordable Plumbing, Heat & Electrical**, we're not just about fixing problems; we're about preventing them.
 
 When winter hits El Paso County, you need confidence that your heating system won't quit on the coldest night of the year. That's why we put together this essential list of **furnace maintenance tips** you can handle yourself, along with a reminder about the professional service that keeps your warranty valid and your family safe.
 
@@ -62,6 +62,6 @@ Did you know that most furnace manufacturers **require annual professional maint
 
 ## Don't Wait for the Breakdown!
 
-A furnace will almost always break down when it’s working hardest—which is usually during the coldest week of the year. When that happens, you’re stuck waiting for emergency service when every HVAC company in Colorado Springs is overwhelmed.
+A furnace will almost always break down when it’s working hardest - which is usually during the coldest week of the year. When that happens, you’re stuck waiting for emergency service when every HVAC company in Colorado Springs is overwhelmed.
 
 Be proactive. Take care of your filter, clear your vents, and trust the local experts. **Call Affordable Plumbing, Heat & Electrical today** to schedule your furnace tune-up. We’ll make sure your system is ready to keep you warm, safe, and comfortable all winter long!

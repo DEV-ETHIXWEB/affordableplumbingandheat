@@ -46,4 +46,4 @@ If you’re installing high-power appliances like an EV charger, hot tub, or HVA
 
 If you’re experiencing any of these warning signs, **Affordable Plumbing, Heating & Electrical** is here to help! Our licensed electricians in Colorado Springs can assess your system and recommend the best upgrade options for your home.
 
-**Don’t wait until it’s too late—schedule your electrical panel inspection today!**
+**Don’t wait until it’s too late - schedule your electrical panel inspection today!**
