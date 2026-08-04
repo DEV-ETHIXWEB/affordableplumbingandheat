@@ -334,7 +334,134 @@ const projectedReferences = geographicReferences.map((ref) => {
   return { name: ref.name, x: fmt(x), y: fmt(y) };
 });
 
-// ---- 4. Write the generated TS module -------------------------------------
+// ---- 4. Coverage-area hull -------------------------------------------------
+//
+// A shaded shape communicating "this is the service footprint" at a glance,
+// derived from the REAL projected marker coordinates (not hand-drawn). We
+// compute a convex hull (monotone chain) over every service-area marker
+// (primary + surrounding, NOT the Denver reference point — Denver must
+// never visually read as inside the coverage area), then expand it outward
+// by a fixed padding distance so the shape reads as a soft coverage region
+// around the markers rather than a tight polygon touching each dot, and
+// finally round the corners with quadratic bezier smoothing so it renders
+// as an organic blob (matching the reference art) instead of an angular
+// polygon.
+
+function crossProduct(o, a, b) {
+  return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+}
+
+/** Standard monotone-chain convex hull, O(n log n). Returns points in
+ * counter-clockwise order (screen space, y-down). */
+function convexHull(points) {
+  const pts = [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  if (pts.length <= 2) return pts;
+
+  const lower = [];
+  for (const p of pts) {
+    while (lower.length >= 2 && crossProduct(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
+      lower.pop();
+    }
+    lower.push(p);
+  }
+
+  const upper = [];
+  for (let i = pts.length - 1; i >= 0; i--) {
+    const p = pts[i];
+    while (upper.length >= 2 && crossProduct(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
+      upper.pop();
+    }
+    upper.push(p);
+  }
+
+  lower.pop();
+  upper.pop();
+  return lower.concat(upper);
+}
+
+/** Expands a convex polygon outward from its centroid by `padding` SVG
+ * units along each vertex's radial direction. Simple and sufficient for a
+ * soft "coverage blob" — a true Minkowski-sum offset isn't needed here
+ * since the hull is small and convex. */
+function expandHull(hull, padding) {
+  const cx = hull.reduce((sum, p) => sum + p[0], 0) / hull.length;
+  const cy = hull.reduce((sum, p) => sum + p[1], 0) / hull.length;
+  return hull.map(([x, y]) => {
+    const dx = x - cx;
+    const dy = y - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    const scale = (dist + padding) / dist;
+    return [cx + dx * scale, cy + dy * scale];
+  });
+}
+
+/** Renders a closed polygon as a smooth path using quadratic bezier curves
+ * through the midpoint of each edge — a cheap, dependency-free way to turn
+ * a faceted hull into an organic "coverage blob" outline matching the
+ * reference art, without pulling in a spline library. */
+function smoothPolygonPath(points) {
+  const n = points.length;
+  const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const start = mid(points[n - 1], points[0]);
+  let d = `M${fmt(start[0])},${fmt(start[1])} `;
+  for (let i = 0; i < n; i++) {
+    const curr = points[i];
+    const next = points[(i + 1) % n];
+    const m = mid(curr, next);
+    d += `Q${fmt(curr[0])},${fmt(curr[1])} ${fmt(m[0])},${fmt(m[1])} `;
+  }
+  return d.trim() + ' Z';
+}
+
+const hullSourcePoints = projectedMarkers.map((m) => [m.x, m.y]);
+const rawHull = convexHull(hullSourcePoints);
+// Padding sized relative to the marker spread, matching the same
+// relative-sizing principle used for the viewBox fit margins above.
+const hullPadding = Math.max(28, Math.min(clusterSpanX, clusterSpanY) * fitScale * 0.14);
+const paddedHull = expandHull(rawHull, hullPadding);
+const coverageAreaPath = smoothPolygonPath(paddedHull);
+
+// ---- 5. Decorative road corridor lines + interstate shield anchors --------
+//
+// I-25 runs north-south through the service corridor; I-70 runs east-west,
+// well north, near Denver. These are decorative context lines (not
+// survey-accurate highway traces), extended from the existing I-25 corridor
+// concept to span the full viewBox so they read as through-routes, plus
+// anchor points for small interstate shield icons drawn in the component.
+
+const castleRock = projectedMarkers.find((m) => m.slug === 'castle-rock');
+const monument = projectedMarkers.find((m) => m.slug === 'monument');
+const primaryMarker = projectedMarkers.find((m) => m.type === 'primary');
+const fountain = projectedMarkers.find((m) => m.slug === 'fountain');
+const denver = projectedReferences.find((r) => r.name === 'Denver');
+
+// I-25: from north edge (above Denver/Highlands Ranch) down through Castle
+// Rock -> Monument -> Colorado Springs -> Fountain -> south edge.
+const i25Points = [
+  [primaryMarker.x - 8, -20],
+  [denver.x - 4, denver.y + 15],
+  [castleRock.x, castleRock.y],
+  [monument.x, monument.y],
+  [primaryMarker.x, primaryMarker.y],
+  [fountain.x, fountain.y],
+  [fountain.x + 6, VIEW_H + 20]
+];
+const i25Path = 'M' + i25Points.map(([x, y]) => `${fmt(x)},${fmt(y)}`).join(' L');
+
+// I-70: a broad east-west sweep passing just north of Denver, spanning the
+// full viewBox width for a "through route" feel.
+const i70Y = denver.y + 18;
+const i70Path = `M-20,${fmt(i70Y - 10)} L${fmt(denver.x - 30)},${fmt(i70Y)} L${fmt(denver.x + 60)},${fmt(i70Y + 4)} L${VIEW_W + 20},${fmt(i70Y + 10)}`;
+
+// Shield icon anchors: one per interstate, placed at a clear, uncluttered
+// point along each line (not on top of a marker or label).
+const roadShields = [
+  { interstate: 'I-25', x: fmt(primaryMarker.x - 8 + (denver.x - 4 - (primaryMarker.x - 8)) * 0.35), y: fmt(-20 + (denver.y + 15 - -20) * 0.35) },
+  { interstate: 'I-25', x: fmt(fountain.x + 3), y: fmt(fountain.y + 60) },
+  { interstate: 'I-70', x: fmt(denver.x + 62), y: fmt(i70Y + 4) }
+];
+
+// ---- 6. Write the generated TS module -------------------------------------
 
 const banner = `/**
  * GENERATED FILE — do not hand-edit.
@@ -355,6 +482,13 @@ const out =
   banner +
   `export const MAP_VIEW_BOX = '0 0 ${VIEW_W} ${VIEW_H}';\n` +
   `export const coloradoPath = ${JSON.stringify(coloradoPath)};\n\n` +
+  `/** Soft coverage-area "blob" — a padded convex hull around every real\n * service-area marker (primary + surrounding, excluding geographic\n * reference points like Denver), smoothed into an organic outline. Shows\n * the service footprint at a glance without implying statewide coverage;\n * always fully inside the Colorado outline and never touches the state's\n * outer edge. Computed in scripts/generate-service-area-map.mjs from\n * projectedMarkers — not hand-drawn. */\n` +
+  `export const coverageAreaPath = ${JSON.stringify(coverageAreaPath)};\n\n` +
+  `/** Decorative interstate corridor lines (I-25 north-south through the\n * service corridor, I-70 east-west near Denver). Context only, not\n * survey-accurate highway traces. */\n` +
+  `export const i25Path = ${JSON.stringify(i25Path)};\n` +
+  `export const i70Path = ${JSON.stringify(i70Path)};\n\n` +
+  `export interface RoadShield {\n  interstate: 'I-25' | 'I-70';\n  x: number;\n  y: number;\n}\n\n` +
+  `export const roadShields: RoadShield[] = ${JSON.stringify(roadShields, null, 2)};\n\n` +
   `export interface ProjectedMarker {\n  name: string;\n  slug: string;\n  type: 'primary' | 'surrounding';\n  hasLocationPage: boolean;\n  x: number;\n  y: number;\n}\n\n` +
   `export interface ProjectedReference {\n  name: string;\n  x: number;\n  y: number;\n}\n\n` +
   `export const projectedMarkers: ProjectedMarker[] = ${JSON.stringify(projectedMarkers, null, 2)};\n\n` +
@@ -366,6 +500,7 @@ console.log(`Wrote ${outPath}`);
 console.log(
   `Colorado path length: ${coloradoPath.length} chars, ${projectedMarkers.length} markers, ${projectedReferences.length} reference points.`
 );
+console.log(`Coverage hull: ${rawHull.length} hull points, padding ${fmt(hullPadding)}px.`);
 for (const m of projectedMarkers) {
   console.log(`  ${m.name.padEnd(18)} (${m.type}) -> x=${m.x} y=${m.y}`);
 }

@@ -75,6 +75,10 @@ export type ServiceArea = {
   /** True when a dedicated /service-area/[slug]/ page exists for this
    * community (see src/data/cityPages.ts). */
   hasLocationPage: boolean;
+  /** One-line, non-keyword-stuffed description used in the "Communities We
+   * Serve" map side panel and similar listings. Kept here on the canonical
+   * dataset so no component hardcodes a separate copy of the city list. */
+  blurb: string;
 };
 
 export const serviceAreas: ServiceArea[] = [
@@ -84,7 +88,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'primary',
     latitude: business.geo.latitude,
     longitude: business.geo.longitude,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Our home base and primary market.'
   },
   {
     name: 'Black Forest',
@@ -92,7 +97,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 39.013,
     longitude: -104.7008,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Proudly serving Black Forest and the surrounding acreages.'
   },
   {
     name: 'Cascade',
@@ -100,7 +106,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 38.8966,
     longitude: -104.9722,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Plumbing, HVAC & electrical service up the pass in Cascade.'
   },
   {
     name: 'Castle Rock',
@@ -108,7 +115,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 39.3722,
     longitude: -104.8561,
-    hasLocationPage: true
+    hasLocationPage: true,
+    blurb: 'Reliable service for Castle Rock homes and businesses.'
   },
   {
     name: 'Falcon',
@@ -116,7 +124,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 38.933,
     longitude: -104.6086,
-    hasLocationPage: true
+    hasLocationPage: true,
+    blurb: 'Expert solutions for Falcon residents, day or night.'
   },
   {
     name: 'Fountain',
@@ -124,7 +133,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 38.6822,
     longitude: -104.7008,
-    hasLocationPage: true
+    hasLocationPage: true,
+    blurb: 'Serving Fountain with quality you can count on.'
   },
   {
     name: 'Highlands Ranch',
@@ -132,7 +142,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 39.5439,
     longitude: -104.9878,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Professional home services in Highlands Ranch.'
   },
   {
     name: 'Manitou Springs',
@@ -140,7 +151,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 38.854,
     longitude: -104.906,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Keeping Manitou Springs comfortable in every season.'
   },
   {
     name: 'Monument',
@@ -148,7 +160,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 39.0917,
     longitude: -104.8728,
-    hasLocationPage: true
+    hasLocationPage: true,
+    blurb: 'Proud to serve the Monument community.'
   },
   {
     name: 'Palmer Lake',
@@ -156,7 +169,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 39.115,
     longitude: -104.905,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Plumbing, HVAC & electrical service in Palmer Lake.'
   },
   {
     name: 'Parker',
@@ -164,7 +178,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 39.5186,
     longitude: -104.7614,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Trusted home services for Parker families.'
   },
   {
     name: 'Peyton',
@@ -172,7 +187,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 39.0289,
     longitude: -104.483,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Serving Peyton and the surrounding communities.'
   },
   {
     name: 'Security',
@@ -180,7 +196,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 38.7492,
     longitude: -104.7256,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Dependable plumbing, HVAC & electrical service in Security.'
   },
   {
     name: 'Widefield',
@@ -188,7 +205,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 38.7047,
     longitude: -104.7136,
-    hasLocationPage: false
+    hasLocationPage: false,
+    blurb: 'Serving Widefield with care and expertise.'
   },
   {
     name: 'Woodland Park',
@@ -196,7 +214,8 @@ export const serviceAreas: ServiceArea[] = [
     type: 'surrounding',
     latitude: 38.9939,
     longitude: -105.0569,
-    hasLocationPage: true
+    hasLocationPage: true,
+    blurb: 'Quality plumbing, heating & electrical service in beautiful Woodland Park.'
   }
 ];
 
