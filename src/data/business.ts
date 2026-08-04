@@ -41,29 +41,179 @@ export const trustPoints = [
   'Water Heaters'
 ] as const;
 
-/** Communities named on the old site's service-area page. `hasHub` marks the
- * five with a dedicated page on the old site; all are legitimate coverage
- * per the source material — none were fabricated. Coordinates are
- * approximate town-center values used only for map embeds, not schema claims. */
+/** Canonical service-area dataset — the single source of truth for every
+ * community shown on the Service Area page/map, the homepage strip, the
+ * footer, the chatbot, and schema. Verified against the live production
+ * site (https://www.affordableplumbingandheat.com/service-area, which
+ * lists 14 surrounding communities) plus the old site's redirect map
+ * (which confirms which five communities had a dedicated hub page).
+ *
+ * Colorado Springs is the PRIMARY MARKET (business hub), not a peer
+ * "surrounding community" — see `type: 'primary'` below. Security and
+ * Widefield are listed separately per the live site (they were previously
+ * merged into "Security-Widefield" in this rebuild with no supporting
+ * source; that merge has been reverted).
+ *
+ * "Lone Tree" / "Lonetree" was investigated and intentionally excluded:
+ * it appears on the live site only inside the page's rhetorical subheading
+ * ("...from Lonetree to Colorado Springs") and nowhere else — not in the
+ * live community list, not linked, not referenced on any other page. It
+ * does not meet the bar for a verified service-area entry.
+ *
+ * Coordinates are town-center values sourced from public geographic
+ * references (Wikipedia / standard gazetteer coordinates), used for the
+ * service-area map projection only — not a claim of business schema
+ * boundaries. */
 export type ServiceArea = {
   name: string;
   slug: string;
-  hasHub: boolean;
+  /** 'primary' = home market (Colorado Springs); 'surrounding' = verified
+   * surrounding service community. */
+  type: 'primary' | 'surrounding';
+  latitude: number;
+  longitude: number;
+  /** True when a dedicated /service-area/[slug]/ page exists for this
+   * community (see src/data/cityPages.ts). */
+  hasLocationPage: boolean;
 };
 
 export const serviceAreas: ServiceArea[] = [
-  { name: 'Colorado Springs', slug: 'colorado-springs', hasHub: true },
-  { name: 'Black Forest', slug: 'black-forest', hasHub: false },
-  { name: 'Cascade', slug: 'cascade', hasHub: false },
-  { name: 'Castle Rock', slug: 'castle-rock', hasHub: true },
-  { name: 'Falcon', slug: 'falcon', hasHub: true },
-  { name: 'Fountain', slug: 'fountain', hasHub: true },
-  { name: 'Manitou Springs', slug: 'manitou-springs', hasHub: false },
-  { name: 'Monument', slug: 'monument', hasHub: true },
-  { name: 'Palmer Lake', slug: 'palmer-lake', hasHub: false },
-  { name: 'Peyton', slug: 'peyton', hasHub: false },
-  { name: 'Security-Widefield', slug: 'security-widefield', hasHub: false },
-  { name: 'Woodland Park', slug: 'woodland-park', hasHub: true }
+  {
+    name: 'Colorado Springs',
+    slug: 'colorado-springs',
+    type: 'primary',
+    latitude: business.geo.latitude,
+    longitude: business.geo.longitude,
+    hasLocationPage: false
+  },
+  {
+    name: 'Black Forest',
+    slug: 'black-forest',
+    type: 'surrounding',
+    latitude: 39.013,
+    longitude: -104.7008,
+    hasLocationPage: false
+  },
+  {
+    name: 'Cascade',
+    slug: 'cascade',
+    type: 'surrounding',
+    latitude: 38.8966,
+    longitude: -104.9722,
+    hasLocationPage: false
+  },
+  {
+    name: 'Castle Rock',
+    slug: 'castle-rock',
+    type: 'surrounding',
+    latitude: 39.3722,
+    longitude: -104.8561,
+    hasLocationPage: true
+  },
+  {
+    name: 'Falcon',
+    slug: 'falcon',
+    type: 'surrounding',
+    latitude: 38.933,
+    longitude: -104.6086,
+    hasLocationPage: true
+  },
+  {
+    name: 'Fountain',
+    slug: 'fountain',
+    type: 'surrounding',
+    latitude: 38.6822,
+    longitude: -104.7008,
+    hasLocationPage: true
+  },
+  {
+    name: 'Highlands Ranch',
+    slug: 'highlands-ranch',
+    type: 'surrounding',
+    latitude: 39.5439,
+    longitude: -104.9878,
+    hasLocationPage: false
+  },
+  {
+    name: 'Manitou Springs',
+    slug: 'manitou-springs',
+    type: 'surrounding',
+    latitude: 38.854,
+    longitude: -104.906,
+    hasLocationPage: false
+  },
+  {
+    name: 'Monument',
+    slug: 'monument',
+    type: 'surrounding',
+    latitude: 39.0917,
+    longitude: -104.8728,
+    hasLocationPage: true
+  },
+  {
+    name: 'Palmer Lake',
+    slug: 'palmer-lake',
+    type: 'surrounding',
+    latitude: 39.115,
+    longitude: -104.905,
+    hasLocationPage: false
+  },
+  {
+    name: 'Parker',
+    slug: 'parker',
+    type: 'surrounding',
+    latitude: 39.5186,
+    longitude: -104.7614,
+    hasLocationPage: false
+  },
+  {
+    name: 'Peyton',
+    slug: 'peyton',
+    type: 'surrounding',
+    latitude: 39.0289,
+    longitude: -104.483,
+    hasLocationPage: false
+  },
+  {
+    name: 'Security',
+    slug: 'security',
+    type: 'surrounding',
+    latitude: 38.7492,
+    longitude: -104.7256,
+    hasLocationPage: false
+  },
+  {
+    name: 'Widefield',
+    slug: 'widefield',
+    type: 'surrounding',
+    latitude: 38.7047,
+    longitude: -104.7136,
+    hasLocationPage: false
+  },
+  {
+    name: 'Woodland Park',
+    slug: 'woodland-park',
+    type: 'surrounding',
+    latitude: 38.9939,
+    longitude: -105.0569,
+    hasLocationPage: true
+  }
 ];
 
-export const hubServiceAreas = serviceAreas.filter((a) => a.hasHub && a.slug !== 'colorado-springs');
+/** Colorado Springs alone, as the primary market. */
+export const primaryServiceArea = serviceAreas.find((a) => a.type === 'primary')!;
+
+/** Every verified surrounding community (excludes the primary market). */
+export const surroundingServiceAreas = serviceAreas.filter((a) => a.type === 'surrounding');
+
+/** Surrounding communities that have a dedicated /service-area/[slug]/ page. */
+export const hubServiceAreas = surroundingServiceAreas.filter((a) => a.hasLocationPage);
+
+/** Total count of communities served (primary market + surrounding),
+ * derived programmatically so no component hardcodes this number. */
+export const serviceAreaCount = serviceAreas.length;
+
+/** Geographic reference points shown on the map for context only — never
+ * service locations. Kept visually muted and clearly labeled as reference
+ * points, never claimed as coverage. */
+export const geographicReferences = [{ name: 'Denver', latitude: 39.7392, longitude: -104.9903 }];

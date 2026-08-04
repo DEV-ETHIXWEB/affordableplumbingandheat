@@ -4,7 +4,7 @@ import { services, type Service } from '../../data/services';
 import { cityPages, type CityPage } from '../../data/cityPages';
 import { coupons } from '../../data/coupons';
 import { generalFaq } from '../../data/faq';
-import { business, serviceAreas } from '../../data/business';
+import { business, surroundingServiceAreas } from '../../data/business';
 
 // Keyword-scored knowledge base built directly from the same content that
 // drives the services/, service-area/, and FAQ sections, so chatbot answers
@@ -195,7 +195,12 @@ const SERVICE_SYNONYMS: Record<string, string[]> = {
     'toilet wobbles'
   ],
   'toilet-replacement-colorado-springs': ['new toilet', 'replace toilet', 'install a toilet'],
-  'garbage-disposal-replacement-colorado-springs': ['garbage disposal', 'disposal', 'disposal jammed', 'disposal leaking'],
+  'garbage-disposal-replacement-colorado-springs': [
+    'garbage disposal',
+    'disposal',
+    'disposal jammed',
+    'disposal leaking'
+  ],
   'sump-pump-repair-colorado-springs': ['sump pump', 'sump pump not working', 'basement flooding', 'sump pump failed'],
   'sump-pump-installation-colorado-springs': ['new sump pump', 'install sump pump', 'battery backup pump'],
   'water-filtration-colorado-springs': ['water filtration', 'filter', 'water quality', 'water taste'],
@@ -233,7 +238,14 @@ const SERVICE_SYNONYMS: Record<string, string[]> = {
   'boiler-replacement-colorado-springs': ['new boiler', 'replace boiler'],
   'mini-split-repair-colorado-springs': ['mini split', 'ductless', 'mini split not working'],
   'mini-split-replacement-colorado-springs': ['new mini split', 'install mini split'],
-  'indoor-air-quality-colorado-springs': ['air quality', 'air purifier', 'allergens', 'dusty air', 'dry air', 'humidity'],
+  'indoor-air-quality-colorado-springs': [
+    'air quality',
+    'air purifier',
+    'allergens',
+    'dusty air',
+    'dry air',
+    'humidity'
+  ],
   'commercial-hvac-colorado-springs': ['commercial hvac', 'business hvac', 'office ac', 'rooftop unit'],
   'electrician-colorado-springs': ['electrician', 'electrical', 'electrical problem', 'flickering lights'],
   'electrical-panel-upgrade-colorado-springs': [
@@ -245,7 +257,12 @@ const SERVICE_SYNONYMS: Record<string, string[]> = {
     'not enough power'
   ],
   'electric-vehicle-charger-colorado-springs': ['ev charger', 'electric vehicle', 'car charger', 'tesla charger'],
-  'back-up-generator-installation-colorado-springs': ['generator', 'backup generator', 'standby generator', 'power outage'],
+  'back-up-generator-installation-colorado-springs': [
+    'generator',
+    'backup generator',
+    'standby generator',
+    'power outage'
+  ],
   'surge-storm-protection-colorado-springs': ['surge protection', 'power surge', 'storm damage', 'lightning'],
   'wiring-rewiring-colorado-springs': ['wiring', 'rewiring', 'rewire', 'old wiring', 'exposed wires'],
   'lighting-installation-colorado-springs': ['lighting', 'light fixture', 'recessed lighting', 'landscape lighting'],
@@ -326,9 +343,7 @@ function buildServiceEntries(): KnowledgeEntry[] {
         >
           More on {service.title} <ArrowUpRight className="h-3 w-3" />
         </a>
-        {isFirstMention && SERVICE_FOLLOWUPS[service.slug] && (
-          <p className="mt-2">{SERVICE_FOLLOWUPS[service.slug]}</p>
-        )}
+        {isFirstMention && SERVICE_FOLLOWUPS[service.slug] && <p className="mt-2">{SERVICE_FOLLOWUPS[service.slug]}</p>}
       </>
     )
   }));
@@ -354,7 +369,9 @@ function buildCouponEntries(): KnowledgeEntry[] {
     logLabel: `Mentioned coupon ${coupon.code}`,
     reply: () => (
       <>
-        <p>{coupon.title} — {coupon.description}</p>
+        <p>
+          {coupon.title} — {coupon.description}
+        </p>
         <p className="mt-1.5 text-xs">
           Mention code <strong>{coupon.code}</strong> when you schedule.
         </p>
@@ -390,7 +407,7 @@ function buildLocationEntries(): KnowledgeEntry[] {
 // yet, matched loosely so "do you serve Cascade" still gets a confident yes.
 function buildBroadServiceAreaEntries(): KnowledgeEntry[] {
   const pagedSlugs = new Set(cityPages.map((c) => c.slug));
-  return serviceAreas
+  return surroundingServiceAreas
     .filter((area) => !pagedSlugs.has(area.slug))
     .map((area) => ({
       id: `area:${area.slug}`,
@@ -440,8 +457,8 @@ const STATIC_ENTRIES: KnowledgeEntry[] = [
     logLabel: 'Listed service categories',
     reply: () => (
       <>
-        We handle plumbing, heating & cooling (HVAC), electrical, and sewer & drain work, everything from a leaky
-        faucet to a full panel upgrade.{' '}
+        We handle plumbing, heating & cooling (HVAC), electrical, and sewer & drain work, everything from a leaky faucet
+        to a full panel upgrade.{' '}
         <a href="/services/" className="font-semibold text-orange-600 hover:text-orange-700">
           See all services
         </a>
@@ -478,8 +495,8 @@ const STATIC_ENTRIES: KnowledgeEntry[] = [
     logLabel: 'Listed service area coverage',
     reply: () => (
       <>
-        We&rsquo;re based in {business.addressLocality} and serve {serviceAreas.length}+ communities across the Pikes
-        Peak region, including {joinWithAnd(cityPages.map((c) => c.name))}.{' '}
+        We&rsquo;re based in {business.addressLocality} and serve {surroundingServiceAreas.length}+ surrounding
+        communities across the Pikes Peak region, including {joinWithAnd(cityPages.map((c) => c.name))}.{' '}
         <a href="/service-area/" className="font-semibold text-orange-600 hover:text-orange-700">
           Check your city
         </a>
@@ -578,8 +595,8 @@ const STATIC_ENTRIES: KnowledgeEntry[] = [
     reply: () => (
       <>
         We&rsquo;re fully licensed and insured, electrical (#{business.license.electrical}), plumbing (#
-        {business.license.plumbing}), and mechanical (#{business.license.mechanical}). Every technician is trained
-        and experienced before they&rsquo;re sent to your home.
+        {business.license.plumbing}), and mechanical (#{business.license.mechanical}). Every technician is trained and
+        experienced before they&rsquo;re sent to your home.
       </>
     )
   },
@@ -609,8 +626,8 @@ const STATIC_ENTRIES: KnowledgeEntry[] = [
     logLabel: 'Explained why customers choose us',
     reply: () => (
       <>
-        Colorado Springs homeowners choose us because we&rsquo;re licensed, available 24/7, and quote every job
-        upfront before work begins.{' '}
+        Colorado Springs homeowners choose us because we&rsquo;re licensed, available 24/7, and quote every job upfront
+        before work begins.{' '}
         <a href="/about-us/" className="font-semibold text-orange-600 hover:text-orange-700">
           More about us
         </a>

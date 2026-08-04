@@ -1,3 +1,18 @@
+import { surroundingServiceAreas } from './business';
+
+/** Joins names with a natural "a, b, and c" list — kept local so this file
+ * has no dependency on the chatbot's copy of the same helper. */
+function joinWithAnd(items: string[]): string {
+  if (items.length <= 1) return items.join('');
+  if (items.length === 2) return items.join(' and ');
+  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+}
+
+// Community names are pulled from the canonical serviceAreas dataset
+// (src/data/business.ts) so this answer never drifts from the Service
+// Area page, footer, or homepage strip.
+const surroundingNames = surroundingServiceAreas.map((a) => a.name);
+
 export const generalFaq = [
   {
     question: 'Are you available for emergencies?',
@@ -11,8 +26,7 @@ export const generalFaq = [
   },
   {
     question: 'What areas do you serve?',
-    answer:
-      'We serve Colorado Springs and the surrounding area, including Castle Rock, Falcon, Fountain, Monument, and Woodland Park, along with Black Forest, Cascade, Manitou Springs, Palmer Lake, Peyton, and Security-Widefield. See our full service area for details.'
+    answer: `We're based in Colorado Springs and serve the surrounding area, including ${joinWithAnd(surroundingNames)}. See our full service area for details.`
   },
   {
     question: 'Do you offer financing?',
