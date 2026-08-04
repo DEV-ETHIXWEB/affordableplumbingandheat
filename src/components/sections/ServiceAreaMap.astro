@@ -27,8 +27,8 @@
  *  - `variant="full"` (default): the Service Area page — full relief map with
  *    legend, compass, shields and per-marker labels, paired with a
  *    "Communities We Serve" side panel and a bottom stat/CTA strip.
- *  - `variant="compact"`: the homepage — same geography, but labels, legend,
- *    compass and shields are dropped so it reads cleanly at a smaller size.
+ *  - `variant="compact"`: the homepage — same geography and labels, but the
+ *    legend and interstate shields are dropped so it reads cleanly smaller.
  *
  * Interaction is vanilla JS (see the inline <script> below): hover/focus a
  * marker to reveal a tooltip with a real link when a location page exists, or
@@ -40,7 +40,9 @@ import { MapPin, Phone } from 'lucide-react';
 import { business, serviceAreas } from '../../data/business';
 import { cityPages } from '../../data/cityPages';
 import {
+  MAP_HEIGHT,
   MAP_VIEW_BOX,
+  MAP_WIDTH,
   coloradoPath,
   countyPath,
   coverageAreaPath,
@@ -77,14 +79,14 @@ function hrefFor(slug: string) {
  * rock grey, matching the reference artwork's palette. Index-matched to
  * `reliefBands` (ascending elevation). */
 const RELIEF_FILLS = [
-  '#e9ecdf',
-  '#e2e7d4',
-  '#dbe1c9',
-  '#d9dcc0',
-  '#dcd8b8',
-  '#dcd2b0',
-  '#d8cbaa',
-  '#d3c5a6'
+  '#e4ebd9',
+  '#d9e5cb',
+  '#cddcbb',
+  '#cfd8ac',
+  '#d6d29e',
+  '#d8c992',
+  '#d3bd89',
+  '#cbb185'
 ];
 
 /** Colorado Springs sits in a genuinely dense real-world cluster — Cascade,
@@ -94,21 +96,25 @@ const RELIEF_FILLS = [
  * these get a hand-tuned offset + anchor that pushes each label outward,
  * away from the cluster centre. Every other marker uses the default. */
 const LABEL_OVERRIDES: Record<string, { dx: number; dy: number; anchor: 'start' | 'middle' | 'end' }> = {
-  'colorado-springs': { dx: 16, dy: 5, anchor: 'start' },
-  cascade: { dx: -13, dy: -1, anchor: 'end' },
-  'manitou-springs': { dx: -13, dy: 9, anchor: 'end' },
-  'woodland-park': { dx: -13, dy: 4, anchor: 'end' },
-  monument: { dx: 13, dy: 4, anchor: 'start' },
-  'palmer-lake': { dx: -13, dy: -2, anchor: 'end' },
-  security: { dx: 13, dy: 0, anchor: 'start' },
-  widefield: { dx: 13, dy: 9, anchor: 'start' },
-  fountain: { dx: 13, dy: 5, anchor: 'start' },
-  'black-forest': { dx: -13, dy: -4, anchor: 'end' },
-  falcon: { dx: 13, dy: 5, anchor: 'start' },
-  peyton: { dx: 13, dy: 4, anchor: 'start' },
-  'castle-rock': { dx: 13, dy: 4, anchor: 'start' },
-  'highlands-ranch': { dx: 13, dy: 0, anchor: 'start' },
-  parker: { dx: 13, dy: 5, anchor: 'start' }
+  'colorado-springs': { dx: 20, dy: 0, anchor: 'start' },
+  // West of the primary market, pushed left so they clear the coverage shape.
+  cascade: { dx: -16, dy: -3, anchor: 'end' },
+  'manitou-springs': { dx: -16, dy: 10, anchor: 'end' },
+  'woodland-park': { dx: -16, dy: 4, anchor: 'end' },
+  'palmer-lake': { dx: -16, dy: 1, anchor: 'end' },
+  // East / north-east of it, pushed right.
+  monument: { dx: 16, dy: 4, anchor: 'start' },
+  // Black Forest and Peyton sit almost level with each other; Black Forest
+  // reads left so the two never overlap.
+  'black-forest': { dx: -16, dy: 3, anchor: 'end' },
+  falcon: { dx: 16, dy: 5, anchor: 'start' },
+  peyton: { dx: 16, dy: 4, anchor: 'start' },
+  security: { dx: 16, dy: 1, anchor: 'start' },
+  widefield: { dx: 16, dy: 10, anchor: 'start' },
+  fountain: { dx: 16, dy: 5, anchor: 'start' },
+  'castle-rock': { dx: 16, dy: 4, anchor: 'start' },
+  'highlands-ranch': { dx: 16, dy: 0, anchor: 'start' },
+  parker: { dx: 16, dy: 5, anchor: 'start' }
 };
 
 function labelFor(slug: string) {
@@ -133,7 +139,7 @@ const trustTiles = [
            See scripts/generate-service-area-map.mjs. Nothing here is
            hand-drawn, and no geodata reaches the browser — only these
            static strings. -->
-      <div class="map-figure">
+      <div class="map-figure" style={`--map-ratio:${MAP_WIDTH} / ${MAP_HEIGHT}`}>
         <svg
           class="map-svg"
           viewBox={MAP_VIEW_BOX}
@@ -156,9 +162,9 @@ const trustTiles = [
               <stop offset="0%" stop-color="#f4f2ea"></stop>
               <stop offset="100%" stop-color="#eceadf"></stop>
             </linearGradient>
-            <radialGradient id={`coverage-fill-${variant}`} cx="45%" cy="42%" r="62%">
-              <stop offset="0%" stop-color="var(--color-orange-400)" stop-opacity="0.45"></stop>
-              <stop offset="100%" stop-color="var(--color-orange-500)" stop-opacity="0.22"></stop>
+            <radialGradient id={`coverage-fill-${variant}`} cx="45%" cy="45%" r="60%">
+              <stop offset="0%" stop-color="var(--color-orange-400)" stop-opacity="0.5"></stop>
+              <stop offset="100%" stop-color="var(--color-orange-500)" stop-opacity="0.34"></stop>
             </radialGradient>
             <filter id={`marker-shadow-${variant}`} x="-60%" y="-60%" width="220%" height="220%">
               <feDropShadow dx="0" dy="1.5" stdDeviation="1.4" flood-color="#0a1830" flood-opacity="0.3"></feDropShadow>
@@ -168,7 +174,7 @@ const trustTiles = [
             </clipPath>
           </defs>
 
-          <rect x="0" y="0" width="1024" height="678" fill={`url(#map-sky-${variant})`}></rect>
+          <rect x="0" y="0" width={MAP_WIDTH} height={MAP_HEIGHT} fill={`url(#map-sky-${variant})`}></rect>
 
           <!-- Everything geographic is clipped to the real state boundary, so
                detail never bleeds outside Colorado. -->
@@ -203,9 +209,10 @@ const trustTiles = [
               class="map-coverage"
               d={coverageAreaPath}
               fill={`url(#coverage-fill-${variant})`}
-              stroke="var(--color-orange-500)"
-              stroke-width="1.6"
-              stroke-opacity="0.55"></path>
+              stroke="var(--color-orange-600)"
+              stroke-width="2.2"
+              stroke-opacity="0.9"
+              stroke-linejoin="round"></path>
           </g>
 
           <!-- State border sits above the clip so it reads as a crisp edge. -->
@@ -217,19 +224,28 @@ const trustTiles = [
             stroke-width="2.4"
             stroke-linejoin="round"></path>
 
-          <text x="300" y="368" class="map-watermark" text-anchor="middle" aria-hidden="true">COLORADO</text>
+          <text x={MAP_WIDTH * 0.29} y={MAP_HEIGHT * 0.55} class="map-watermark" text-anchor="middle" aria-hidden="true">COLORADO</text>
 
           {
             !isCompact &&
               roadShields.map((s) => (
                 <g class="map-shield" transform={`translate(${s.x} ${s.y})`} aria-hidden="true">
+                  {/* Interstate shield: white outline, red crown, blue body —
+                      the familiar badge, drawn as simple shapes rather than
+                      official artwork. */}
                   <path
-                    d="M0,-10 L9,-6.5 L9,2.5 C9,8 4.5,11.5 0,13.5 C-4.5,11.5 -9,8 -9,2.5 L-9,-6.5 Z"
-                    fill="var(--color-navy-800)"
-                    stroke="white"
-                    stroke-width="1.4"
+                    d="M0,-13 L11.5,-8.5 L11.5,3 C11.5,10 5.5,14.5 0,17 C-5.5,14.5 -11.5,10 -11.5,3 L-11.5,-8.5 Z"
+                    fill="#ffffff"
                   />
-                  <text y="4" text-anchor="middle" class="map-shield-text">
+                  <path
+                    d="M0,-11 L9.7,-7.2 L9.7,-4.2 L-9.7,-4.2 L-9.7,-7.2 Z"
+                    fill="#c8102e"
+                  />
+                  <path
+                    d="M-9.7,-4.2 L9.7,-4.2 L9.7,2.6 C9.7,8.4 4.7,12.4 0,14.6 C-4.7,12.4 -9.7,8.4 -9.7,2.6 Z"
+                    fill="#0b3c8c"
+                  />
+                  <text y="7" text-anchor="middle" class="map-shield-text">
                     {s.interstate.replace('I-', '')}
                   </text>
                 </g>
@@ -272,13 +288,11 @@ const trustTiles = [
                       one would silently replace the translate and stack every
                       marker at the origin. */}
                   <g class="map-marker-inner" style={`--enter-delay:${90 + i * 40}ms`}>
-                    <circle r="7" fill="var(--color-orange-500)" filter={`url(#marker-shadow-${variant})`} />
-                    <circle r="7" fill="none" stroke="white" stroke-width="1.8" />
-                    {!isCompact && (
-                      <text x={label.dx} y={label.dy} class="map-marker-label" text-anchor={label.anchor}>
-                        {m.name}
-                      </text>
-                    )}
+                    <circle r="8.5" fill="white" filter={`url(#marker-shadow-${variant})`} />
+                    <circle r="6.2" fill="var(--color-orange-500)" />
+                    <text x={label.dx} y={label.dy} class="map-marker-label" text-anchor={label.anchor}>
+                      {m.name}
+                    </text>
                   </g>
                 </g>
               );
@@ -299,32 +313,26 @@ const trustTiles = [
             aria-label={`${primary.name}, primary service market`}
           >
             <g class="map-marker-inner">
-              <circle class="map-pulse" r="12" fill="var(--color-orange-500)" opacity="0.32"></circle>
-              <circle r="11" fill="var(--color-orange-600)" filter={`url(#marker-shadow-${variant})`}></circle>
-              <circle r="11" fill="none" stroke="white" stroke-width="2.4"></circle>
-              <circle r="4" fill="white"></circle>
-              {
-                !isCompact && (
-                  <>
-                    <text
-                      x={labelFor('colorado-springs').dx}
-                      y={labelFor('colorado-springs').dy - 6}
-                      class="map-marker-label map-marker-label--primary"
-                      text-anchor="start"
-                    >
-                      {primary.name}
-                    </text>
-                    <text
-                      x={labelFor('colorado-springs').dx}
-                      y={labelFor('colorado-springs').dy + 7}
-                      class="map-marker-sublabel"
-                      text-anchor="start"
-                    >
-                      Primary Market
-                    </text>
-                  </>
-                )
-              }
+              <circle class="map-pulse" r="15" fill="var(--color-orange-500)" opacity="0.3"></circle>
+              <circle r="14" fill="white" filter={`url(#marker-shadow-${variant})`}></circle>
+              <circle r="11" fill="none" stroke="var(--color-orange-600)" stroke-width="3.2"></circle>
+              <circle r="6" fill="var(--color-orange-600)"></circle>
+              <text
+                x={labelFor('colorado-springs').dx}
+                y={labelFor('colorado-springs').dy - 6}
+                class="map-marker-label map-marker-label--primary"
+                text-anchor="start"
+              >
+                {primary.name}
+              </text>
+              <text
+                x={labelFor('colorado-springs').dx}
+                y={labelFor('colorado-springs').dy + 7}
+                class="map-marker-sublabel"
+                text-anchor="start"
+              >
+                Primary Market
+              </text>
             </g>
           </g>
         </svg>
@@ -355,20 +363,24 @@ const trustTiles = [
           )
         }
 
-        {
-          !isCompact && (
-            <div class="map-compass" aria-hidden="true">
-              <svg viewBox="0 0 40 40">
-                <circle cx="20" cy="20" r="18" fill="white" fill-opacity="0.85" stroke="var(--color-navy-200)" />
-                <path d="M20 5 L23.5 20 L20 17.5 L16.5 20 Z" fill="var(--color-orange-600)" />
-                <path d="M20 35 L16.5 20 L20 22.5 L23.5 20 Z" fill="var(--color-navy-700)" />
-                <text x="20" y="13" text-anchor="middle" class="map-compass-n">
-                  N
-                </text>
-              </svg>
-            </div>
-          )
-        }
+        <!-- Compass: a four-point rose with the north arm split light/dark,
+             like the reference. Shown on both variants. -->
+        <div class="map-compass" aria-hidden="true">
+          <svg viewBox="0 0 44 52">
+            <text x="22" y="9" text-anchor="middle" class="map-compass-n">N</text>
+            <g transform="translate(22 30)">
+              <!-- East / west / south arms, muted -->
+              <path d="M0,0 L18,0 L0,4 Z" fill="var(--color-navy-400)"></path>
+              <path d="M0,0 L-18,0 L0,4 Z" fill="var(--color-navy-600)"></path>
+              <path d="M0,0 L4,0 L0,18 Z" fill="var(--color-navy-400)"></path>
+              <path d="M0,0 L-4,0 L0,18 Z" fill="var(--color-navy-600)"></path>
+              <!-- North arm, emphasised -->
+              <path d="M0,0 L4,0 L0,-20 Z" fill="var(--color-navy-800)"></path>
+              <path d="M0,0 L-4,0 L0,-20 Z" fill="var(--color-navy-600)"></path>
+              <circle r="2.6" fill="var(--color-navy-900)"></circle>
+            </g>
+          </svg>
+        </div>
       </div>
 
 
@@ -487,8 +499,31 @@ const trustTiles = [
 
   @media (min-width: 1024px) {
     .map-poster-grid--full {
-      grid-template-columns: minmax(0, 1fr) 320px;
-      align-items: start;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      /* `stretch`, not `start`: the communities list is taller than the map
+       * card, and starting both at the top left a large dead gap under the
+       * map. Stretching lets the map card fill the row height and the list
+       * scroll within it, so the two columns end level. */
+      align-items: stretch;
+    }
+
+    .map-poster-grid--full > .service-area-map {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Cap the list to the row height and let it scroll — it holds 15 entries
+     * and would otherwise dictate the whole section's height. */
+    .map-poster-grid--full > .communities-panel {
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .map-poster-grid--full > .communities-panel .communities-panel-list {
+      overflow-y: auto;
+      min-height: 0;
     }
   }
 
@@ -497,7 +532,6 @@ const trustTiles = [
   .map-figure {
     position: relative;
     width: 100%;
-    max-width: 1024px;
     margin-inline: auto;
   }
 
@@ -508,7 +542,7 @@ const trustTiles = [
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 1024 / 678;
+    aspect-ratio: var(--map-ratio, 1024 / 620);
     border-radius: 1rem;
     overflow: hidden;
   }
@@ -586,7 +620,9 @@ const trustTiles = [
 
   .map-coverage {
     opacity: 0;
-    animation: map-fade-in 0.7s ease-out 0.42s both;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: coverage-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.42s both;
   }
 
   .map-watermark {
@@ -605,9 +641,10 @@ const trustTiles = [
 
   .map-shield-text {
     font-family: var(--font-display);
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 800;
     fill: white;
+    letter-spacing: -0.02em;
   }
 
   .map-reference {
@@ -706,8 +743,18 @@ const trustTiles = [
     to { opacity: 1; }
   }
 
+  /* Markers settle in rather than just fading: a slight overshoot reads as
+   * pins being placed, which is what the reference's styling implies. */
   @keyframes marker-enter {
-    from { opacity: 0; transform: scale(0.4); }
+    0% { opacity: 0; transform: scale(0.2) translateY(-6px); }
+    60% { opacity: 1; transform: scale(1.12) translateY(0); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* The coverage region sweeps up from the primary market, so the eye lands
+   * on Colorado Springs first and the footprint grows outward from it. */
+  @keyframes coverage-enter {
+    from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
   }
 
@@ -722,9 +769,11 @@ const trustTiles = [
     .map-coverage,
     .map-shield,
     .map-reference,
+    .map-compass,
     .map-marker-inner {
       animation: none !important;
       opacity: 1 !important;
+      transform: none !important;
     }
     .map-pulse {
       animation: none !important;
@@ -798,11 +847,22 @@ const trustTiles = [
 
   .map-compass {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    /* Inset from the figure's own edge — the card clips overflow, so a
+     * smaller offset crops the rose's north point. */
+    top: 1.75rem;
+    right: 2rem;
     z-index: 5;
-    width: 2.6rem;
-    height: 2.6rem;
+    width: 2.4rem;
+    height: 2.9rem;
+    opacity: 0;
+    animation: map-fade-in 0.6s ease-out 0.75s both;
+  }
+
+  .is-compact .map-compass {
+    top: 1.25rem;
+    right: 1.5rem;
+    width: 1.9rem;
+    height: 2.3rem;
   }
 
   .map-compass svg {
@@ -812,7 +872,7 @@ const trustTiles = [
 
   .map-compass-n {
     font-family: var(--font-display);
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 800;
     fill: var(--color-navy-900);
   }

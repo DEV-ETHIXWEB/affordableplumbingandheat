@@ -119,7 +119,7 @@ function albers(lon, lat) {
 // hand.
 
 const VIEW_W = 1024;
-const VIEW_H = 678; // matches the reference artwork's 1024x678 aspect
+const VIEW_H = 620; // wider than tall so the map fills a full-width card
 
 const projectedRings = coloradoRings.map((ring) => ring.map(([lon, lat]) => albers(lon, lat)));
 const allStatePoints = projectedRings.flat();
@@ -145,9 +145,14 @@ const spanY = (stateMaxY - stateMinY) * (1 + MARGIN * 2);
 const stateFitScale = Math.min(VIEW_W / spanX, VIEW_H / spanY);
 
 /** How much tighter than a full-state fit to frame. 1 = whole state visible.
- * Tuned so the corridor fills the frame while the state's north and east
- * borders stay visible as framing edges (see the clamp below). */
-const ZOOM = 1.42;
+ *
+ * The reference artwork crops close: Denver sits near the top edge and
+ * Woodland Park near the bottom, so the ~90-mile service corridor fills the
+ * frame and every label has room to sit beside its dot. A looser fit shrinks
+ * the corridor into a cluster in the middle and the labels collide. The east
+ * border stays visible as a framing edge (clamped below); the west and south
+ * run off, exactly as they do in the reference. */
+const ZOOM = 2.55;
 const fitScale = stateFitScale * ZOOM;
 
 // Centre on the midpoint between the state's centre and the marker cluster's
@@ -168,17 +173,20 @@ const clusterMidY = (Math.min(...markerPoints.map((p) => p[1])) + Math.max(...ma
 const stateMidX = (stateMinX + stateMaxX) / 2;
 const stateMidY = (stateMinY + stateMaxY) / 2;
 
-const CLUSTER_BIAS = 0.82;
+// At this zoom the corridor is the subject, so centre almost entirely on it.
+const CLUSTER_BIAS = 0.97;
 let midX = stateMidX + (clusterMidX - stateMidX) * CLUSTER_BIAS;
 let midY = stateMidY + (clusterMidY - stateMidY) * CLUSTER_BIAS;
 
-// Clamp: keep the state's east edge and north edge inside the frame, so the
-// border still reads as a border rather than running off every side.
+// Nudge east so the corridor sits right-of-centre like the reference, leaving
+// the western mountains as visible context on the left.
 const halfW = VIEW_W / 2 / fitScale;
-const halfH = VIEW_H / 2 / fitScale;
-const EDGE_GAP = 0.02 * (stateMaxX - stateMinX); // breathing room past the border
+midX -= halfW * 0.16;
+
+// Clamp only the east edge: keep the state border in frame as a framing line
+// on the right. North/west/south are allowed to run off, as in the reference.
+const EDGE_GAP = 0.015 * (stateMaxX - stateMinX);
 midX = Math.min(midX, stateMaxX + EDGE_GAP - halfW);
-midY = Math.min(midY, stateMaxY + EDGE_GAP - halfH);
 
 const offsetX = VIEW_W / 2 - midX * fitScale;
 const offsetY = VIEW_H / 2 + midY * fitScale;
