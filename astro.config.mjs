@@ -22,6 +22,14 @@ export default defineConfig({
   adapter: vercel(),
   integrations: [react(), sitemap()],
   redirects: legacyRedirects,
+  // Inline every stylesheet into the HTML instead of Astro's default
+  // "only under 4kB". The two sheets this page emits (~19kB combined) were
+  // two extra round trips blocking first render — 580ms of it on throttled
+  // mobile. Inlined, they cost bytes in an HTML response the browser is
+  // already reading, and the render-blocking requests disappear entirely.
+  build: {
+    inlineStylesheets: 'always'
+  },
   vite: {
     plugins: [tailwindcss()]
   },

@@ -147,6 +147,13 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
     }
     <div aria-hidden="true" class="bg-navy-900 h-[84px] lg:hidden"></div>
     <StickyCallBar />
+    {
+      /* `client:idle`, deliberately. These are fixed-position overlays, so
+         they are all "visible" from the first frame - `client:visible` fires
+         every one of them at once in a single blocking chunk and measured
+         4,130ms TBT against 300ms for idle. Idle spreads them across separate
+         idle callbacks instead. */
+    }
     <CouponWidget client:idle />
     <AccessibilityWidget client:idle />
     <ChatWidget client:idle />

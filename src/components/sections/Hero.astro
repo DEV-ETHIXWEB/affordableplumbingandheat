@@ -33,16 +33,42 @@ const badges = [
         play, and every target browser plays this H.264 mp4, so listing webm
         only risked a far heavier download for no visual gain.
     -->
+    <!--
+      The poster is a real <img>, not the video's `poster` attribute, so it can
+      ship as WebP with a srcset. `poster` takes a single URL, which forced one
+      648KB JPEG on every device and made it the LCP element on mobile; phones
+      now pull an 82KB 900w file instead. fetchpriority="high" keeps it ahead
+      of the CSS in the queue. The video fades in over it once playing.
+    -->
+    <img
+      id="hero-poster"
+      src="/video/hero-poster-1600.webp"
+      srcset="/video/hero-poster-900.webp 900w, /video/hero-poster-1600.webp 1600w"
+      sizes="100vw"
+      alt=""
+      width="1600"
+      height="900"
+      fetchpriority="high"
+      decoding="async"
+      class="absolute inset-0 h-full w-full object-cover opacity-80"
+    />
     <video
       id="hero-video"
-      class="h-full w-full object-cover opacity-80"
+      class="relative h-full w-full object-cover opacity-0 transition-opacity duration-700"
       autoplay
       loop
       muted
       playsinline
       preload="none"
-      poster="/video/hero-cityscape-poster.jpg"
     >
+      <!--
+        854w for phones, 1280w for laptops, full 1920p master for large
+        screens. The master is still what desktop visitors get - the brand
+        impression it buys is the reason it exists - but a 7.8MB download on a
+        phone was never buying that, just costing data.
+      -->
+      <source data-src="/video/hero-cityscape-854.mp4" type="video/mp4" media="(max-width: 767px)" />
+      <source data-src="/video/hero-cityscape-1280.mp4" type="video/mp4" media="(max-width: 1439px)" />
       <source data-src="/video/hero-cityscape.mp4" type="video/mp4" />
     </video>
     <div class="absolute inset-0 bg-gradient-to-b from-navy-950/55 via-navy-900/35 to-navy-900/85"></div>
@@ -98,17 +124,47 @@ const badges = [
   // "reduce motion" visitor pays zero video bytes and simply keeps the
   // poster frame as a still backdrop.
   const video = document.getElementById('hero-video') as HTMLVideoElement | null;
-  if (video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+
+  // Connection-aware: on save-data or a 2g/3g link the clip is pure cost, so
+  // those visitors keep the poster. `connection` is Chromium-only; absent it,
+  // we proceed.
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  const frugal = Boolean(conn?.saveData) || /(^|-)2g$|^3g$/.test(conn?.effectiveType ?? '');
+
+  const activate = () => {
+    if (!video) return;
     let activated = false;
     video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach((s) => {
       s.src = s.dataset.src!;
       activated = true;
     });
     if (activated) {
+      // Only reveal the video once it actually has frames to show, so it never
+      // flashes an empty box over the poster. If autoplay is refused (iOS Low
+      // Power Mode, data saver) this simply never fires and the poster stays -
+      // which is why the poster, not the video, carries the opacity-80.
+      video.addEventListener(
+        'playing',
+        () => {
+          video.classList.remove('opacity-0');
+          video.classList.add('opacity-80');
+        },
+        { once: true }
+      );
       video.load();
-      // Autoplay can still be refused (iOS Low Power Mode, data saver); the
-      // poster stays put in that case, so failure is silent by design.
       void video.play().catch(() => {});
     }
+  };
+
+  if (video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !frugal) {
+    // Wait for `load`, then for an idle moment. Starting the fetch at parse
+    // time made a 624KB clip compete with the poster for bandwidth and pushed
+    // LCP past 6s on throttled mobile; the hero is fully painted by the time
+    // this runs, so the video costs nothing that the user is waiting on.
+    const idle = (window as Window).requestIdleCallback;
+    const schedule = () => (idle ? idle.call(window, activate, { timeout: 2500 }) : window.setTimeout(activate, 900));
+
+    if (document.readyState === 'complete') schedule();
+    else window.addEventListener('load', schedule, { once: true });
   }
 </script>

@@ -38,6 +38,11 @@
   --color-orange-400: #fb7638;
   --color-orange-500: #ec5713;
   --color-orange-600: #d3440a;
+  /* Text-only orange. #d3440a is the brand fill and stays that way on
+     buttons, but as small text it lands at 4.16:1 on mist-100 - just under
+     AA. This darker step clears it (4.80:1 on mist, 5.27:1 on white) and is
+     what `text-orange-600` resolves to; `bg-orange-600` is untouched. */
+  --color-orange-text: #c23e09;
   --color-orange-700: #ae350a;
   --color-orange-800: #8b2c10;
   --color-orange-900: #712710;
@@ -49,7 +54,9 @@
   --color-ink-100: #e9eaec;
   --color-ink-200: #cfd2d7;
   --color-ink-300: #a6acb5;
-  --color-ink-400: #7a8290;
+  /* Darkened from #7a8290 to clear WCAG AA (4.5:1) as small uppercase text:
+     it was 3.87:1 on white and 3.53:1 on mist-100. Now 5.31:1 / 4.83:1. */
+  --color-ink-400: #646c78;
   --color-ink-500: #5b6270;
   --color-ink-600: #434955;
   --color-ink-700: #313640;
@@ -158,6 +165,13 @@
 }
 
 @layer utilities {
+  /* Redirect the text utility to the AA-safe orange. Done here rather than by
+     rewriting 72 call sites so the two roles - brand fill vs readable text -
+     stay separated by intent: `bg-orange-600` keeps the vivid brand color,
+     `text-orange-600` gets the darker one that passes contrast. */
+  .text-orange-600 {
+    color: var(--color-orange-text);
+  }
   .text-balance {
     text-wrap: balance;
   }

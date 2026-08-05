@@ -37,15 +37,18 @@ const navLinks = [
   <div id="main-nav" class="border-b border-white/5 bg-navy-900/95 backdrop-blur-xl transition-shadow duration-300">
     <Container class="flex h-[76px] items-center justify-between gap-4">
       <a href="/" class="shrink-0" aria-label={`${business.name} - Home`}>
+        {/* quality 82, not "max": the logo renders at ~184x77 CSS px, where
+            "max" bought 44.5KB of detail no one can resolve. */}
         <Image
           src={logo}
           alt={business.name}
           width={210}
           height={88}
           densities={[1, 2]}
-          quality="max"
+          quality={82}
           class="h-11 w-auto sm:h-12"
           loading="eager"
+          fetchpriority="high"
         />
       </a>
 
@@ -148,7 +151,7 @@ const navLinks = [
   class="m-0 h-dvh max-h-none w-full max-w-none border-0 bg-navy-900 p-0 backdrop:bg-black/60 backdrop:backdrop-blur-sm open:flex open:flex-col"
 >
   <div class="flex h-16 items-center justify-between border-b border-white/10 px-5">
-    <Image src={logo} alt={business.name} width={170} height={71} densities={[1, 2]} quality="max" class="h-9 w-auto" />
+    <Image src={logo} alt={business.name} width={170} height={71} densities={[1, 2]} quality={82} class="h-9 w-auto" />
     <button
       id="mobile-menu-close"
       type="button"

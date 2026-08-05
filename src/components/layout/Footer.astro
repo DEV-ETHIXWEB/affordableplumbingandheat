@@ -76,7 +76,8 @@ const companyLinks = [
       {
         categories.map((cat) => (
           <div class="mt-4">
-            <p class="text-xs font-semibold tracking-wide text-white/40 uppercase">{categoryMeta[cat].label}</p>
+            {/* white/55 not /40: at 40% these labels were 3.76:1 on navy-900, below AA. */}
+            <p class="text-xs font-semibold tracking-wide text-white/55 uppercase">{categoryMeta[cat].label}</p>
             <ul class="mt-2 space-y-2">
               {services
                 .filter((s) => s.category === cat)
