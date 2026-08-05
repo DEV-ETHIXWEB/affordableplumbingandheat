@@ -32,7 +32,7 @@ const featured = categories.flatMap((cat) => services.filter((s) => s.category =
             <a
               href={`/services/${s.slug}/`}
               data-reveal
-              class="card-elevated group hover:border-orange-300/60 relative flex flex-col gap-4 p-6"
+              class="card-elevated group relative flex flex-col gap-4 p-6 hover:border-orange-300/60"
             >
               <div class="flex items-start justify-between">
                 <ServiceIcon icon={Icon} svg={customIcon} tone="orange" />

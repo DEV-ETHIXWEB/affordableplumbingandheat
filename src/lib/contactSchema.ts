@@ -56,7 +56,7 @@ export const leadApiSchema = z.object({
     .string()
     .trim()
     .regex(/^[\d\s()+-]{7,20}$/),
-  email: z.string().trim().max(200).optional().or(z.literal('')),
+  email: z.string().trim().email('Enter a valid email address.').max(200).optional().or(z.literal('')),
   city: z.string().trim().max(100).optional().or(z.literal('')),
   service: z.string().trim().max(120).optional().or(z.literal('')),
   propertyType: z.string().trim().max(40).optional().or(z.literal('')),

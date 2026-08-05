@@ -23,8 +23,17 @@ interface Props {
 const { title, description, schema = [], noIndex = false, ogImage } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const defaultOg = await getImage({ src: logo, width: 1200, height: 630, format: 'png', fit: 'contain', background: '#0a1830' });
-const ogImageURL = ogImage ? new URL(ogImage.src, Astro.site).toString() : new URL(defaultOg.src, Astro.site).toString();
+const defaultOg = await getImage({
+  src: logo,
+  width: 1200,
+  height: 630,
+  format: 'png',
+  fit: 'contain',
+  background: '#0a1830'
+});
+const ogImageURL = ogImage
+  ? new URL(ogImage.src, Astro.site).toString()
+  : new URL(defaultOg.src, Astro.site).toString();
 
 const localBusinessSchema = {
   '@context': 'https://schema.org',
@@ -79,10 +88,12 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {/* No canonical on noindex pages: the 404 template renders under every
+    {
+      /* No canonical on noindex pages: the 404 template renders under every
         unmatched URL, so a self-referencing canonical would mint a distinct
         "canonical" URL for each miss and invite them into the index — the
-        exact opposite of what noindex is there to do. */}
+        exact opposite of what noindex is there to do. */
+    }
     {!noIndex && <link rel="canonical" href={canonicalURL} />}
     {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
@@ -113,7 +124,7 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
       import '../scripts/reveal.ts';
     </script>
   </head>
-  <body class="bg-white font-body text-ink-600 antialiased">
+  <body class="font-body text-ink-600 bg-white antialiased">
     <a
       href="#main-content"
       class="skip-link fixed top-0 left-4 z-[100] rounded-b-lg bg-orange-600 px-5 py-3 font-semibold text-white"
@@ -125,17 +136,19 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
       <slot />
     </main>
     <Footer />
-    {/* Clearance for the fixed mobile call bar. This has to sit AFTER the
+    {
+      /* Clearance for the fixed mobile call bar. This has to sit AFTER the
         footer, not as bottom padding on <main>: main is transparent, so
         padding there painted the white <body> as a band between the navy
         ContactCTA and the navy footer. Below the footer the same reserved
         space is invisible, and it still stops the bar covering the last
         rows of footer content. Hidden from lg up, where the bar is not
-        rendered. */}
-    <div aria-hidden="true" class="h-[84px] bg-navy-900 lg:hidden"></div>
+        rendered. */
+    }
+    <div aria-hidden="true" class="bg-navy-900 h-[84px] lg:hidden"></div>
     <StickyCallBar />
-    <CouponWidget client:load />
-    <AccessibilityWidget client:load />
-    <ChatWidget client:load />
+    <CouponWidget client:idle />
+    <AccessibilityWidget client:idle />
+    <ChatWidget client:idle />
   </body>
 </html>

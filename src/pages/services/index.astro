@@ -41,7 +41,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       <section class="border-ink-100 border-t bg-white py-16 sm:py-20">
         <Container>
           <div class="flex items-center gap-4" data-reveal>
-            <IconBadge icon={cat === 'sewer' ? Wrench : iconMap[services.find((s) => s.category === cat)!.icon]} tone="orange" />
+            <IconBadge
+              icon={cat === 'sewer' ? Wrench : iconMap[services.find((s) => s.category === cat)!.icon]}
+              tone="orange"
+            />
             <div>
               <h2 class="font-display text-ink-900 text-2xl font-bold sm:text-3xl">{categoryMeta[cat].label}</h2>
               <p class="text-ink-500 mt-1 max-w-xl text-sm leading-relaxed">{categoryMeta[cat].description}</p>
@@ -57,7 +60,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
                 return (
                   <article
                     data-reveal
-                    class="group hover:shadow-card-hover border-ink-100 shadow-card hover:border-orange-300/60 flex flex-col overflow-hidden rounded-3xl border bg-white transition-all duration-300 hover:-translate-y-1"
+                    class="group hover:shadow-card-hover border-ink-100 shadow-card flex flex-col overflow-hidden rounded-3xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:border-orange-300/60"
                   >
                     {s.image ? (
                       <div class="relative h-[180px] overflow-hidden">
@@ -94,7 +97,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
                         href={`/services/${s.slug}/`}
                         class="font-display mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-orange-600 transition-colors hover:text-orange-700"
                       >
-                        Learn More<span class="sr-only"> about {s.title}</span> <ArrowRight className="size-4" aria-hidden="true" />
+                        Learn More<span class="sr-only"> about {s.title}</span>{' '}
+                        <ArrowRight className="size-4" aria-hidden="true" />
                       </a>
                     </div>
                   </article>

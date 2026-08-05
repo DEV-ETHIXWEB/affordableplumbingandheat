@@ -36,13 +36,7 @@ const tones = {
     className
   )}
 >
-  {
-    svg ? (
-      <Fragment set:html={svg} />
-    ) : Icon ? (
-      <Icon aria-hidden="true" strokeWidth={2} className="size-[85%]" />
-    ) : null
-  }
+  {svg ? <Fragment set:html={svg} /> : Icon ? <Icon aria-hidden="true" strokeWidth={2} className="size-[85%]" /> : null}
 </span>
 
 <style>
