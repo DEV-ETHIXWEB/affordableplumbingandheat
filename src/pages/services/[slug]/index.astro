@@ -5,12 +5,13 @@ import FAQ from '../../../components/sections/FAQ.astro';
 import ContactCTA from '../../../components/sections/ContactCTA.astro';
 import Container from '../../../components/ui/Container.astro';
 import Button from '../../../components/ui/Button.astro';
-import IconBadge from '../../../components/ui/IconBadge.astro';
+import ServiceIcon from '../../../components/ui/ServiceIcon.astro';
 import Eyebrow from '../../../components/ui/Eyebrow.astro';
 import { CircleCheck, Phone } from 'lucide-react';
 import { services, categoryMeta } from '../../../data/services';
 import { business } from '../../../data/business';
 import { serviceIconMap } from '../../../lib/serviceIcons';
+import { getCustomServiceIcon } from '../../../lib/customServiceIcons';
 import { buildBreadcrumbSchema, buildServiceSchema, buildFaqSchema } from '../../../lib/schema';
 
 export function getStaticPaths() {
@@ -22,6 +23,7 @@ export function getStaticPaths() {
 
 const { service } = Astro.props;
 const Icon = serviceIconMap[service.icon];
+const customIcon = getCustomServiceIcon(service.slug);
 
 const related = services.filter((s) => s.category === service.category && s.slug !== service.slug).slice(0, 3);
 
@@ -76,7 +78,7 @@ const faqSchema = buildFaqSchema(faqItems);
       <div data-reveal="left">
         <Eyebrow>{service.eyebrow}</Eyebrow>
         <div class="mt-4 flex items-center gap-4">
-          <IconBadge icon={Icon} size="lg" />
+          <ServiceIcon icon={Icon} svg={customIcon} size="lg" />
           <h2 class="font-display text-ink-900 text-2xl font-bold sm:text-3xl">{service.title}</h2>
         </div>
         <p class="text-ink-600 mt-6 max-w-xl leading-relaxed text-balance">{service.description}</p>
@@ -142,13 +144,14 @@ const faqSchema = buildFaqSchema(faqItems);
           <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3" data-reveal-group>
             {related.map((s) => {
               const RelIcon = serviceIconMap[s.icon];
+              const relCustomIcon = getCustomServiceIcon(s.slug);
               return (
                 <a
                   href={`/services/${s.slug}/`}
                   data-reveal
                   class="group border-navy-700 bg-navy-950/45 hover:bg-navy-950/60 flex items-start gap-4 rounded-2xl border p-5 transition-colors"
                 >
-                  <IconBadge icon={RelIcon} tone="navy" />
+                  <ServiceIcon icon={RelIcon} svg={relCustomIcon} tone="white" size="sm" />
                   <span>
                     <span class="font-display block text-sm font-bold text-white">{s.title}</span>
                     <span class="mt-1 flex items-center gap-1 text-xs text-orange-300">View service</span>

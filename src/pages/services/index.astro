@@ -5,11 +5,13 @@ import ContactCTA from '../../components/sections/ContactCTA.astro';
 import Container from '../../components/ui/Container.astro';
 import Reveal from '../../components/shared/Reveal.astro';
 import IconBadge from '../../components/ui/IconBadge.astro';
+import ServiceIcon from '../../components/ui/ServiceIcon.astro';
 import { Image } from 'astro:assets';
 import { ArrowRight, CircleCheck, Wrench } from 'lucide-react';
 import { services, categoryMeta, type ServiceCategory } from '../../data/services';
 import waterHeaterImg from '../../assets/images/services/water-heater-leak.jpg';
 import { serviceIconMap as iconMap } from '../../lib/serviceIcons';
+import { getCustomServiceIcon } from '../../lib/customServiceIcons';
 import { buildBreadcrumbSchema } from '../../lib/schema';
 
 const categories: ServiceCategory[] = ['plumbing', 'hvac', 'electrical', 'sewer'];
@@ -51,6 +53,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
               .filter((s) => s.category === cat)
               .map((s) => {
                 const Icon = iconMap[s.icon];
+                const customIcon = getCustomServiceIcon(s.slug);
                 return (
                   <article
                     data-reveal
@@ -73,7 +76,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
                       </div>
                     ) : (
                       <div class="bg-navy-900 flex h-[100px] items-center px-6">
-                        <IconBadge icon={Icon} tone="white" />
+                        <ServiceIcon icon={Icon} svg={customIcon} tone="white" size="sm" />
                       </div>
                     )}
                     <div class="flex flex-1 flex-col p-6">

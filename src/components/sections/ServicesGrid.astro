@@ -2,11 +2,12 @@
 import { ArrowUpRight } from 'lucide-react';
 import Container from '../ui/Container.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
-import IconBadge from '../ui/IconBadge.astro';
+import ServiceIcon from '../ui/ServiceIcon.astro';
 import Button from '../ui/Button.astro';
 import Reveal from '../shared/Reveal.astro';
 import { services, categoryMeta, type ServiceCategory } from '../../data/services';
 import { serviceIconMap as iconMap } from '../../lib/serviceIcons';
+import { getCustomServiceIcon } from '../../lib/customServiceIcons';
 
 const categories: ServiceCategory[] = ['plumbing', 'hvac', 'electrical', 'sewer'];
 // Feature the first 2 services per category on the homepage (8 total) so the
@@ -26,6 +27,7 @@ const featured = categories.flatMap((cat) => services.filter((s) => s.category =
       {
         featured.map((s) => {
           const Icon = iconMap[s.icon];
+          const customIcon = getCustomServiceIcon(s.slug);
           return (
             <a
               href={`/services/${s.slug}/`}
@@ -33,7 +35,7 @@ const featured = categories.flatMap((cat) => services.filter((s) => s.category =
               class="card-elevated group hover:border-orange-300/60 relative flex flex-col gap-4 p-6"
             >
               <div class="flex items-start justify-between">
-                <IconBadge icon={Icon} tone="orange" />
+                <ServiceIcon icon={Icon} svg={customIcon} tone="orange" />
                 <ArrowUpRight
                   className="size-5 text-ink-300 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-orange-600"
                   aria-hidden="true"

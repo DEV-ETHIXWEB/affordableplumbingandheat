@@ -1,0 +1,69 @@
+---
+import { cn } from '../../lib/utils';
+import type { LucideIcon } from 'lucide-react';
+
+interface Props {
+  /** Lucide fallback, used when `svg` is not supplied. */
+  icon?: LucideIcon;
+  /** Raw brand SVG markup (from `?raw`), takes priority over `icon`. */
+  svg?: string;
+  class?: string;
+  tone?: 'orange' | 'white';
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { icon: Icon, svg, class: className, tone = 'orange', size = 'md' } = Astro.props;
+
+// Bare icon treatment - no badge, so the mark itself carries the size.
+const sizes = {
+  sm: 'size-10',
+  md: 'size-14',
+  lg: 'size-16'
+};
+
+const tones = {
+  orange: 'text-orange-600',
+  white: 'text-white'
+};
+---
+
+<span
+  data-tone={tone}
+  class={cn(
+    'service-icon inline-flex shrink-0 items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-0.5 group-hover:scale-105',
+    sizes[size],
+    tones[tone],
+    className
+  )}
+>
+  {
+    svg ? (
+      <Fragment set:html={svg} />
+    ) : Icon ? (
+      <Icon aria-hidden="true" strokeWidth={2} className="size-[85%]" />
+    ) : null
+  }
+</span>
+
+<style>
+  /* Brand SVGs are authored with a square viewBox and no intrinsic size, so
+     stretch them to fill the box the size class sets. */
+  .service-icon > :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Knockout shapes inside the brand marks are authored as #fff. On a white
+     card that is exactly right, so they are left alone - but on the dark
+     `white` tone the surrounding art is white too, so invert them to navy
+     to keep the cutouts readable. */
+  .service-icon[data-tone='white'] > :global(svg [fill='#fff']) {
+    fill: var(--color-navy-900);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-icon {
+      transition: none;
+    }
+  }
+</style>
