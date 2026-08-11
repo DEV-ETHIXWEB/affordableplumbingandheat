@@ -19,6 +19,10 @@ import { zodResolver } from '../../lib/zodResolver';
 import { business } from '../../data/business';
 import { services } from '../../data/services';
 import { serviceIconMap } from '../../lib/serviceIcons';
+import { Turnstile } from './Turnstile';
+import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
+
+const turnstileRequired = Boolean(PUBLIC_TURNSTILE_SITE_KEY);
 
 const serviceTiles = [
   ...services.slice(0, 11).map((s) => ({ title: s.title, icon: serviceIconMap[s.icon] })),
@@ -34,6 +38,7 @@ const errorText = 'mt-1.5 text-xs font-medium text-red-600';
 
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sent' | 'error'>('idle');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -58,12 +63,14 @@ export default function ContactForm() {
           service: serviceLine,
           message: data.message,
           urgent: data.service === 'Emergency / Not Sure',
-          company: data.company ?? ''
+          company: data.company ?? '',
+          turnstileToken
         })
       });
       if (!res.ok) throw new Error('Request failed');
       setStatus('sent');
     } catch {
+      setTurnstileToken(null);
       setStatus('error');
     }
   });
@@ -300,9 +307,13 @@ export default function ContactForm() {
       </div>
 
       <div>
+        <Turnstile onVerify={setTurnstileToken} onExpire={() => setTurnstileToken(null)} theme="light" />
+      </div>
+
+      <div>
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || (turnstileRequired && !turnstileToken)}
           className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-orange-600/20 transition-transform active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? (

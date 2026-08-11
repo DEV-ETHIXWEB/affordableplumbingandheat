@@ -5,6 +5,10 @@ import { Send, CheckCircle2, Phone, Loader2, User, AlertTriangle } from 'lucide-
 import { quickLeadSchema, type QuickLeadValues } from '../../lib/contactSchema';
 import { zodResolver } from '../../lib/zodResolver';
 import { business } from '../../data/business';
+import { Turnstile } from './Turnstile';
+import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
+
+const turnstileRequired = Boolean(PUBLIC_TURNSTILE_SITE_KEY);
 
 /**
  * Short homepage enquiry form: name, phone, service, optional detail.
@@ -35,6 +39,7 @@ const errorText = 'mt-1.5 text-xs font-medium text-red-300';
 
 export default function QuickLeadForm() {
   const [status, setStatus] = useState<'idle' | 'sent' | 'error'>('idle');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -53,12 +58,14 @@ export default function QuickLeadForm() {
           service: data.service,
           message: data.message ?? '',
           urgent: data.service === 'Emergency - Need Help Now',
-          company: data.company ?? ''
+          company: data.company ?? '',
+          turnstileToken
         })
       });
       if (!res.ok) throw new Error('Request failed');
       setStatus('sent');
     } catch {
+      setTurnstileToken(null);
       setStatus('error');
     }
   });
@@ -205,9 +212,11 @@ export default function QuickLeadForm() {
         />
       </div>
 
+      <Turnstile onVerify={setTurnstileToken} onExpire={() => setTurnstileToken(null)} theme="dark" />
+
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={isSubmitting || (turnstileRequired && !turnstileToken)}
         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-orange-900/30 transition-transform hover:bg-orange-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? (

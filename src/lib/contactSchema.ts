@@ -65,7 +65,11 @@ export const leadApiSchema = z.object({
   topicsDiscussed: z.string().trim().max(500).optional().or(z.literal('')),
   transcript: z.string().trim().max(6000).optional().or(z.literal('')),
   // Honeypot, must always arrive empty.
-  company: z.string().max(0).optional().default('')
+  company: z.string().max(0).optional().default(''),
+  // Cloudflare Turnstile token, verified server-side in api/lead.ts. Not
+  // required at the schema level (verifyTurnstile handles the missing/empty
+  // case) so the honeypot and shape checks above still run first.
+  turnstileToken: z.string().optional()
 });
 
 export type LeadApiPayload = z.infer<typeof leadApiSchema>;
