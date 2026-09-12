@@ -35,6 +35,9 @@ const fieldBase =
   'w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-[15px] text-white placeholder:text-white/45 outline-none transition-colors focus:border-orange-400 focus:bg-white/15 focus:ring-4 focus:ring-orange-500/20';
 const errorBase = 'border-red-400/70 focus:border-red-400';
 const labelBase = 'mb-1.5 block text-xs font-semibold tracking-wide text-white/70 uppercase';
+/* Each of these carries role="alert": validation runs in JS on submit, so
+   without a live region a screen-reader user gets no announcement that
+   anything failed - focus just lands back in the form. */
 const errorText = 'mt-1.5 text-xs font-medium text-red-300';
 
 export default function QuickLeadForm() {
@@ -137,7 +140,7 @@ export default function QuickLeadForm() {
             />
           </div>
           {errors.name && (
-            <p id="quick-name-error" className={errorText}>
+            <p id="quick-name-error" role="alert" className={errorText}>
               {errors.name.message}
             </p>
           )}
@@ -164,7 +167,7 @@ export default function QuickLeadForm() {
             />
           </div>
           {errors.phone && (
-            <p id="quick-phone-error" className={errorText}>
+            <p id="quick-phone-error" role="alert" className={errorText}>
               {errors.phone.message}
             </p>
           )}
@@ -193,7 +196,7 @@ export default function QuickLeadForm() {
           ))}
         </select>
         {errors.service && (
-          <p id="quick-service-error" className={errorText}>
+          <p id="quick-service-error" role="alert" className={errorText}>
             {errors.service.message}
           </p>
         )}

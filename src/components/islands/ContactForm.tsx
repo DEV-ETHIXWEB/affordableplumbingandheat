@@ -34,6 +34,9 @@ const fieldBase =
   'w-full rounded-2xl border border-ink-200 bg-white py-3.5 text-[15px] text-ink-900 placeholder:text-ink-400 outline-none transition-colors focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10';
 const errorBase = 'border-red-500/60 focus:border-red-500';
 const labelBase = 'mb-1.5 block text-sm font-semibold text-ink-700';
+/* Each of these carries role="alert": validation runs in JS on submit, so
+   without a live region a screen-reader user gets no announcement that
+   anything failed - focus just lands back in the form. */
 const errorText = 'mt-1.5 text-xs font-medium text-red-600';
 
 export default function ContactForm() {
@@ -44,7 +47,14 @@ export default function ContactForm() {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting }
-  } = useForm<ContactFormValues>({ resolver: zodResolver(contactSchema) });
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+    // With no defaults, an untouched radio group reports `null`, which fails
+    // Zod's *type* check before `.min(1)` is ever reached - so the visitor
+    // was shown the raw "Invalid input: expected string, received null"
+    // instead of "Please select a service."
+    defaultValues: { name: '', phone: '', email: '', city: '', service: '', otherService: '', message: '' }
+  });
 
   const selectedService = watch('service');
 
@@ -143,7 +153,7 @@ export default function ContactForm() {
             />
           </div>
           {errors.name && (
-            <p id="name-error" className={errorText}>
+            <p id="name-error" role="alert" className={errorText}>
               {errors.name.message}
             </p>
           )}
@@ -169,7 +179,7 @@ export default function ContactForm() {
             />
           </div>
           {errors.phone && (
-            <p id="phone-error" className={errorText}>
+            <p id="phone-error" role="alert" className={errorText}>
               {errors.phone.message}
             </p>
           )}
@@ -197,7 +207,7 @@ export default function ContactForm() {
             />
           </div>
           {errors.email && (
-            <p id="email-error" className={errorText}>
+            <p id="email-error" role="alert" className={errorText}>
               {errors.email.message}
             </p>
           )}
@@ -223,7 +233,7 @@ export default function ContactForm() {
             />
           </div>
           {errors.city && (
-            <p id="city-error" className={errorText}>
+            <p id="city-error" role="alert" className={errorText}>
               {errors.city.message}
             </p>
           )}
@@ -236,7 +246,10 @@ export default function ContactForm() {
           {serviceTiles.map(({ title, icon: Icon }) => (
             <label
               key={title}
-              className="has-checked:shadow-glow-orange group border-ink-200 hover:border-ink-300 hover:bg-ink-50 relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border bg-white px-2.5 py-4 text-center transition-colors has-checked:border-orange-500 has-checked:bg-orange-50"
+              /* The radio itself is sr-only, so without a `has-focus-visible`
+                 ring on the label a keyboard user tabbing through these tiles
+                 sees nothing move at all (WCAG 2.4.7). */
+              className="has-checked:shadow-glow-orange group border-ink-200 hover:border-ink-300 hover:bg-ink-50 relative flex cursor-pointer flex-col items-center gap-2 rounded-2xl border bg-white px-2.5 py-4 text-center transition-colors has-checked:border-orange-500 has-checked:bg-orange-50 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-orange-500"
             >
               <input type="radio" value={title} className="sr-only" {...register('service')} />
               <CircleCheck
@@ -251,7 +264,11 @@ export default function ContactForm() {
             </label>
           ))}
         </div>
-        {errors.service && <p className={errorText}>{errors.service.message}</p>}
+        {errors.service && (
+          <p role="alert" className={errorText}>
+            {errors.service.message}
+          </p>
+        )}
       </fieldset>
 
       <AnimatePresence initial={false}>
@@ -276,7 +293,7 @@ export default function ContactForm() {
               {...register('otherService')}
             />
             {errors.otherService && (
-              <p id="otherService-error" className={errorText}>
+              <p id="otherService-error" role="alert" className={errorText}>
                 {errors.otherService.message}
               </p>
             )}
@@ -300,7 +317,7 @@ export default function ContactForm() {
           />
         </div>
         {errors.message && (
-          <p id="message-error" className={errorText}>
+          <p id="message-error" role="alert" className={errorText}>
             {errors.message.message}
           </p>
         )}
