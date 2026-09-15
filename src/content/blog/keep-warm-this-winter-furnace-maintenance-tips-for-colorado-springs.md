@@ -1,10 +1,10 @@
 ---
-title: "Keep Warm This Winter: Furnace Maintenance Tips for Colorado Springs"
-description: "Keep your furnace running reliably all winter with these maintenance tips designed for Colorado Springs homeowners facing cold-weather heating demands."
-category: "HVAC"
+title: 'Keep Warm This Winter: Furnace Maintenance Tips for Colorado Springs'
+description: 'Keep your furnace running reliably all winter with these maintenance tips designed for Colorado Springs homeowners facing cold-weather heating demands.'
+category: 'HVAC'
 publishDate: 2026-09-26
 author: "Adam O'Brien"
-oldSlug: "keep-warm-this-winter-furnace-maintenance-tips-for-colorado-springs"
+oldSlug: 'keep-warm-this-winter-furnace-maintenance-tips-for-colorado-springs'
 ---
 
 We know that the second those temperatures start dropping into the teens and single digits, your furnace isn't just a machine - it's the most important piece of equipment in your home. At **Affordable Plumbing, Heat & Electrical**, we're not just about fixing problems; we're about preventing them.
@@ -13,7 +13,7 @@ When winter hits El Paso County, you need confidence that your heating system wo
 
 ## Your DIY Pre-Winter Furnace Checklist
 
-These are the three things every homeowner in Colorado Springs should do *before* the constant cold sets in. They’re simple, fast, and will save you money.
+These are the three things every homeowner in Colorado Springs should do _before_ the constant cold sets in. They’re simple, fast, and will save you money.
 
 ### 1. Change That Dirty Air Filter (Seriously!)
 

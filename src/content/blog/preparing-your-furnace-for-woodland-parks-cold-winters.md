@@ -1,10 +1,10 @@
 ---
-title: "Preparing Your Furnace for Woodland Park’s Cold Winters"
+title: 'Preparing Your Furnace for Woodland Park’s Cold Winters'
 description: "Woodland Park's high elevation and harsh winters put extra demand on furnaces. Learn how to prepare your heating system before the cold sets in."
-category: "Colorado"
+category: 'Colorado'
 publishDate: 2026-12-09
 author: "Adam O'Brien"
-oldSlug: "preparing-your-furnace-for-woodland-parks-cold-winters"
+oldSlug: 'preparing-your-furnace-for-woodland-parks-cold-winters'
 ---
 
 As the temperatures begin to drop in Woodland Park, Colorado, ensuring your furnace is ready to handle the winter chill is essential. Living in a mountain town means we experience some of the harshest winters, and your heating system needs to be up to the task. At Affordable Plumbing, Heat & Electrical, we know how to help you prepare your furnace for reliable and efficient performance during the cold months. Follow these tips to keep your home cozy and safe all winter long.

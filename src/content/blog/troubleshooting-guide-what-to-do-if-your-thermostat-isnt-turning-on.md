@@ -1,10 +1,10 @@
 ---
 title: "Troubleshooting Guide: What to Do If Your Thermostat Isn't Turning On"
 description: "A thermostat that won't turn on can leave your home without heat or cooling. Follow this troubleshooting guide to diagnose and fix the problem."
-category: "Thermostat"
+category: 'Thermostat'
 publishDate: 2026-03-27
-author: "MacShayne Walpole-Molinar"
-oldSlug: "troubleshooting-guide-what-to-do-if-your-thermostat-isnt-turning-on"
+author: 'MacShayne Walpole-Molinar'
+oldSlug: 'troubleshooting-guide-what-to-do-if-your-thermostat-isnt-turning-on'
 ---
 
 A malfunctioning thermostat can throw a wrench into your daily routine, especially when you rely on it to keep your home comfortable. Whether it's the dead of winter or the height of summer, a thermostat that refuses to turn on can be frustrating. However, before you panic and call in a professional, there are several troubleshooting steps you can take to potentially resolve the issue yourself. In this guide, we'll walk you through some simple troubleshooting tips to help you get your thermostat up and running again without breaking the bank.

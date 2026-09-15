@@ -19,9 +19,7 @@ export async function getStaticPaths() {
 const { post, allPosts } = Astro.props;
 const { Content } = await render(post);
 
-const related = allPosts
-  .filter((p) => p.id !== post.id && p.data.category === post.data.category)
-  .slice(0, 3);
+const related = allPosts.filter((p) => p.id !== post.id && p.data.category === post.data.category).slice(0, 3);
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', path: '/' },
@@ -36,7 +34,8 @@ const articleSchema = {
   description: post.data.description,
   datePublished: post.data.publishDate.toISOString(),
   author: { '@type': 'Person', name: post.data.author },
-  publisher: { '@type': 'Organization', name: business.name },
+  publisher: { '@id': `${business.url}/#business`, name: business.name },
+  image: new URL('/apple-touch-icon.png', business.url).toString(),
   mainEntityOfPage: `${business.url}/blog/${post.id}/`
 };
 
@@ -46,7 +45,7 @@ function formatDate(d: Date) {
 ---
 
 <BaseLayout
-  title={`${post.data.title} | ${business.name} Blog`}
+  title={`${post.data.title} | ${business.name}`}
   description={post.data.description}
   schema={[breadcrumbSchema, articleSchema]}
 >

@@ -30,7 +30,7 @@ const related = services.filter((s) => s.category === service.category && s.slug
 const faqItems = [
   {
     question: `How quickly can you get to my home for ${service.title.toLowerCase()}?`,
-    answer: `We're available 24/7, and most ${service.title.toLowerCase()} calls in Colorado Springs are scheduled the same day, often within a few hours.`
+    answer: `We're available 24 hours a day, 7 days a week. Call ${business.hotline.display} and a real person will get a technician scheduled for your ${service.title.toLowerCase()} as quickly as possible.`
   },
   {
     question: 'Is the estimate free?',
@@ -60,7 +60,7 @@ const faqSchema = buildFaqSchema(faqItems);
 
 <BaseLayout
   title={`${service.title} in Colorado Springs, CO | ${business.name}`}
-  description={service.short}
+  description={`${service.short} Licensed & insured, available 24/7 in Colorado Springs, CO. Call ${business.hotline.display}.`}
   schema={[breadcrumbSchema, serviceSchema, faqSchema]}
 >
   <PageHero

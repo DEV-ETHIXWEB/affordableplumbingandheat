@@ -1,10 +1,10 @@
 ---
-title: "Common Boiler Problems and How to Solve Them"
-description: "From kettling noises to cold radiators, learn the most common boiler problems homeowners encounter and practical solutions to fix or prevent them."
-category: "HVAC"
+title: 'Common Boiler Problems and How to Solve Them'
+description: 'From kettling noises to cold radiators, learn the most common boiler problems homeowners encounter and practical solutions to fix or prevent them.'
+category: 'HVAC'
 publishDate: 2026-12-30
 author: "Adam O'Brien"
-oldSlug: "common-boiler-problems-and-how-to-solve-them"
+oldSlug: 'common-boiler-problems-and-how-to-solve-them'
 ---
 
 A well-functioning boiler is essential for keeping your home warm and comfortable, especially during the cold Colorado winters. However, like any mechanical system, boilers can develop issues over time. Understanding common boiler problems and knowing how to address them can save you time, money, and stress. Here are some typical boiler issues and solutions to help you stay ahead of potential breakdowns.

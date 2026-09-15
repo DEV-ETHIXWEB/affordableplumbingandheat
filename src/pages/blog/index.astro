@@ -59,7 +59,7 @@ function formatDate(d: Date) {
             {categories.map((cat) => (
               <a
                 href={`#${categoryId(cat)}`}
-                class="border-ink-200 text-ink-600 hover:border-orange-400 hover:text-orange-600 inline-flex min-h-11 items-center rounded-full border bg-white px-4 text-xs font-semibold transition-colors"
+                class="border-ink-200 text-ink-600 inline-flex min-h-11 items-center rounded-full border bg-white px-4 text-xs font-semibold transition-colors hover:border-orange-400 hover:text-orange-600"
               >
                 {cat}
               </a>
@@ -100,11 +100,7 @@ function formatDate(d: Date) {
         ))
       }
 
-      {
-        posts.length === 0 && (
-          <p class="text-ink-500 py-20 text-center">New posts are on the way. Check back soon.</p>
-        )
-      }
+      {posts.length === 0 && <p class="text-ink-500 py-20 text-center">New posts are on the way. Check back soon.</p>}
     </Container>
   </section>
 

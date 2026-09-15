@@ -19,10 +19,8 @@ import { zodResolver } from '../../lib/zodResolver';
 import { business } from '../../data/business';
 import { services } from '../../data/services';
 import { serviceIconMap } from '../../lib/serviceIcons';
-import { Turnstile } from './Turnstile';
-import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
-
-const turnstileRequired = Boolean(PUBLIC_TURNSTILE_SITE_KEY);
+import { Turnstile, turnstileEnabled } from './Turnstile';
+import { trackLead } from '../../lib/analytics';
 
 const serviceTiles = [
   ...services.slice(0, 11).map((s) => ({ title: s.title, icon: serviceIconMap[s.icon] })),
@@ -42,6 +40,10 @@ const errorText = 'mt-1.5 text-xs font-medium text-red-600';
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sent' | 'error'>('idle');
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  // Bumped after every attempt: a Turnstile token is single-use, so the
+  // widget must remount to issue a new one before the visitor can retry.
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  const [turnstileFailed, setTurnstileFailed] = useState(false);
   const {
     register,
     handleSubmit,
@@ -74,13 +76,16 @@ export default function ContactForm() {
           message: data.message,
           urgent: data.service === 'Emergency / Not Sure',
           company: data.company ?? '',
-          turnstileToken
+          // Omitted rather than null when there's no widget (local/preview).
+          turnstileToken: turnstileToken ?? undefined
         })
       });
       if (!res.ok) throw new Error('Request failed');
       setStatus('sent');
+      trackLead({ source: 'contact-form', service: serviceLine, urgent: data.service === 'Emergency / Not Sure' });
     } catch {
       setTurnstileToken(null);
+      setTurnstileKey((k) => k + 1);
       setStatus('error');
     }
   });
@@ -96,7 +101,7 @@ export default function ContactForm() {
         <CheckCircle2 className="text-navy-700 size-12" aria-hidden="true" />
         <h3 className="font-display text-ink-900 text-xl font-bold">Request received</h3>
         <p className="text-ink-600 max-w-sm text-sm">
-          We'll get back to you within one business day. For emergencies, please call now.
+          We'll get back to you as quickly as possible. For emergencies, please call now.
         </p>
         <a
           href={`tel:${business.hotline.tel}`}
@@ -120,7 +125,10 @@ export default function ContactForm() {
       </div>
 
       {status === 'error' && (
-        <div className="flex items-start gap-2 rounded-2xl border border-red-500/40 bg-red-50 px-4 py-3 text-sm text-red-700">
+        <div
+          role="alert"
+          className="flex items-start gap-2 rounded-2xl border border-red-500/40 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
           <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>
             Something went wrong sending your request. Please call us at{' '}
@@ -324,13 +332,31 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <Turnstile onVerify={setTurnstileToken} onExpire={() => setTurnstileToken(null)} theme="light" />
+        <Turnstile
+          key={turnstileKey}
+          onVerify={(token) => {
+            setTurnstileToken(token);
+            setTurnstileFailed(false);
+          }}
+          onExpire={() => setTurnstileToken(null)}
+          onError={() => setTurnstileFailed(true)}
+          theme="light"
+        />
+        {turnstileFailed && (
+          <p role="alert" className={errorText}>
+            The security check couldn&rsquo;t load. Please refresh the page, or call us at{' '}
+            <a href={`tel:${business.hotline.tel}`} className="font-semibold underline">
+              {business.hotline.display}
+            </a>
+            .
+          </p>
+        )}
       </div>
 
       <div>
         <button
           type="submit"
-          disabled={isSubmitting || (turnstileRequired && !turnstileToken)}
+          disabled={isSubmitting || (turnstileEnabled && !turnstileToken)}
           className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-orange-600/20 transition-transform active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? (
@@ -346,7 +372,7 @@ export default function ContactForm() {
           )}
         </button>
         <p className="text-ink-500 mt-4 text-center text-xs">
-          We'll get back to you within one business day. For emergencies, please call {business.hotline.display}.
+          We'll get back to you as quickly as possible. For emergencies, please call {business.hotline.display}.
         </p>
       </div>
     </form>

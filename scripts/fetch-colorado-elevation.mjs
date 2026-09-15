@@ -112,7 +112,9 @@ function readTiff(b) {
 const { width, height, data } = readTiff(buf);
 
 const valid = [...data].filter((v) => Number.isFinite(v) && v > -1000 && v < 9000);
-console.log(`Decoded ${data.length} samples; ${valid.length} valid; range ${Math.min(...valid)}m - ${Math.max(...valid)}m`);
+console.log(
+  `Decoded ${data.length} samples; ${valid.length} valid; range ${Math.min(...valid)}m - ${Math.max(...valid)}m`
+);
 
 // Sanity check against known Colorado geography before trusting the grid.
 const at = (lat, lon) => {

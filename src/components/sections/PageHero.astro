@@ -25,13 +25,23 @@ const imageHeight = large ? 416 : 320;
 ---
 
 <section class="relative overflow-hidden bg-white">
-  <div class="bg-orange-300/20 pointer-events-none absolute -top-24 -left-24 size-[420px] rounded-full blur-[110px]" aria-hidden="true"></div>
-  <div class="bg-navy-500/15 pointer-events-none absolute -right-24 -bottom-24 size-[380px] rounded-full blur-[110px]" aria-hidden="true"></div>
+  <div
+    class="pointer-events-none absolute -top-24 -left-24 size-[420px] rounded-full bg-orange-300/20 blur-[110px]"
+    aria-hidden="true"
+  >
+  </div>
+  <div
+    class="bg-navy-500/15 pointer-events-none absolute -right-24 -bottom-24 size-[380px] rounded-full blur-[110px]"
+    aria-hidden="true"
+  >
+  </div>
 
   <Container class="relative grid items-center gap-10 py-16 sm:py-20 lg:grid-cols-[1.3fr_1fr] lg:py-24">
     <div>
       <Breadcrumbs crumbs={crumbs} />
-      <h1 class="font-display text-ink-900 mt-4 text-4xl leading-[1.03] font-extrabold tracking-[-0.02em] text-balance sm:text-5xl">
+      <h1
+        class="font-display text-ink-900 mt-4 text-4xl leading-[1.03] font-extrabold tracking-[-0.02em] text-balance sm:text-5xl"
+      >
         {title}
       </h1>
       {description && <p class="text-ink-600 mt-4 max-w-xl text-balance">{description}</p>}
@@ -40,7 +50,10 @@ const imageHeight = large ? 416 : 320;
     {
       image ? (
         <div class="relative hidden lg:block" data-reveal="right">
-          <div class="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-orange-500/15 to-navy-500/10 blur-2xl" aria-hidden="true" />
+          <div
+            class="to-navy-500/10 absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-orange-500/15 blur-2xl"
+            aria-hidden="true"
+          />
           <Image
             src={image}
             alt={imageAlt}
@@ -48,14 +61,20 @@ const imageHeight = large ? 416 : 320;
             height={imageHeight}
             densities={[1, 2]}
             quality="high"
-            class:list={['shadow-card-hover ml-auto aspect-[4/3] w-full rounded-[2rem] object-cover', large ? 'max-w-[546px]' : 'max-w-[420px]']}
+            class:list={[
+              'shadow-card-hover ml-auto aspect-[4/3] w-full rounded-[2rem] object-cover',
+              large ? 'max-w-[546px]' : 'max-w-[420px]'
+            ]}
             loading="eager"
           />
         </div>
       ) : (
         FallbackIcon && (
           <div class="relative hidden lg:flex lg:justify-end" data-reveal="right">
-            <div class="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-orange-500/15 to-navy-500/10 blur-2xl" aria-hidden="true" />
+            <div
+              class="to-navy-500/10 absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-orange-500/15 blur-2xl"
+              aria-hidden="true"
+            />
             {/* 24 of the 42 services have no photograph, so this tile is what
                 a visitor sees on more than half of them. A flat navy box with
                 one small glyph read as a missing image; the gradient, the
@@ -71,8 +90,7 @@ const imageHeight = large ? 416 : 320;
               <div
                 class="pointer-events-none absolute -top-10 -left-10 size-64 rounded-full bg-orange-500/20 blur-3xl"
                 aria-hidden="true"
-              >
-              </div>
+              />
               <FallbackIcon
                 className="pointer-events-none absolute -right-8 -bottom-10 size-64 text-white/[0.06]"
                 aria-hidden="true"

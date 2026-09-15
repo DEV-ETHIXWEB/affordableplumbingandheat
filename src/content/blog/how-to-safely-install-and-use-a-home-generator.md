@@ -1,10 +1,10 @@
 ---
-title: "How to Safely Install and Use a Home Generator"
-description: "Home generators keep the lights on during outages, but improper use can be dangerous. Learn how to safely install and operate a generator at home."
-category: "Power Outages"
+title: 'How to Safely Install and Use a Home Generator'
+description: 'Home generators keep the lights on during outages, but improper use can be dangerous. Learn how to safely install and operate a generator at home.'
+category: 'Power Outages'
 publishDate: 2026-08-19
 author: "Adam O'Brien"
-oldSlug: "how-to-safely-install-and-use-a-home-generator"
+oldSlug: 'how-to-safely-install-and-use-a-home-generator'
 ---
 
 When the power goes out, having a home generator can be a lifesaver. Whether it's due to severe weather, grid issues, or unexpected outages, a generator ensures your essential appliances and systems continue running. However, installing and using a generator requires careful planning to ensure safety for both your home and family. In this blog, we’ll walk you through key tips on safely installing and using a home generator.

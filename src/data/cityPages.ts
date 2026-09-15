@@ -16,9 +16,9 @@ const blurbs: Record<string, string> = {
   'castle-rock':
     'From The Meadows to Founders Village, we bring the same licensed, 24/7 plumbing, HVAC, and electrical service to Castle Rock that Colorado Springs homeowners already trust.',
   falcon:
-    'Falcon homes get fast, background-ready technicians for plumbing, heating, cooling, and electrical work, with no overtime upcharge for nights or weekends.',
+    'Falcon homes get licensed, insured technicians for plumbing, heating, cooling, and electrical work, available 24/7 with upfront pricing before any work begins.',
   fountain:
-    'Whether it’s a furnace that won’t start or a water heater on its way out, Fountain homeowners can count on same-day service and upfront pricing.',
+    'Whether it’s a furnace that won’t start or a water heater on its way out, Fountain homeowners can count on 24/7 service and upfront pricing.',
   monument:
     'From Jackson Creek to downtown Monument, our licensed crews handle plumbing, HVAC, and electrical work with the same 24/7 availability as our Colorado Springs base.',
   'woodland-park':

@@ -1,10 +1,10 @@
 ---
-title: "Electrical Safety Tips for Families in Colorado"
-description: "Practical electrical safety tips every Colorado family should know, from childproofing outlets to avoiding overloaded circuits and preventing hazards at home."
-category: "Electrical"
+title: 'Electrical Safety Tips for Families in Colorado'
+description: 'Practical electrical safety tips every Colorado family should know, from childproofing outlets to avoiding overloaded circuits and preventing hazards at home.'
+category: 'Electrical'
 publishDate: 2026-01-20
 author: "Adam O'Brien"
-oldSlug: "electrical-safety-tips-for-families-in-colorado"
+oldSlug: 'electrical-safety-tips-for-families-in-colorado'
 ---
 
 Electricity powers our homes and lives, but it’s important to remember that it can also pose serious risks if not handled properly. For families in Colorado, where weather conditions and energy needs can vary, staying mindful of electrical safety is essential. Here are some practical tips to keep your home safe and your loved ones protected.

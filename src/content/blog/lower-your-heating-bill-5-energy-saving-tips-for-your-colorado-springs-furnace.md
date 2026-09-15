@@ -1,10 +1,10 @@
 ---
-title: "Lower Your Heating Bill: 5 Energy-Saving Tips for Your Colorado Springs Furnace"
+title: 'Lower Your Heating Bill: 5 Energy-Saving Tips for Your Colorado Springs Furnace'
 description: "Heating costs can climb fast in a Colorado Springs winter. Try these five energy-saving tips to lower your furnace's fuel use and monthly bill."
-category: "HVAC"
+category: 'HVAC'
 publishDate: 2026-10-21
 author: "Adam O'Brien"
-oldSlug: "lower-your-heating-bill-5-energy-saving-tips-for-your-colorado-springs-furnace"
+oldSlug: 'lower-your-heating-bill-5-energy-saving-tips-for-your-colorado-springs-furnace'
 ---
 
 Winter in Colorado Springs is beautiful, but that beauty comes with a price - specifically, your utility bill. Here at Affordable Plumbing, Heat & Electrical, we see how quickly heating costs can climb when your furnace is fighting to keep up with those frigid Pikes Peak nights.

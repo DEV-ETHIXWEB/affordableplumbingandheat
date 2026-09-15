@@ -24,9 +24,7 @@ const {
     <h2 class="font-display max-w-2xl text-3xl font-bold text-balance text-white sm:text-4xl" data-reveal>{title}</h2>
     <p class="max-w-xl text-balance text-white/70" data-reveal>{description}</p>
     <div class="mt-2 flex flex-col gap-3 sm:flex-row" data-reveal>
-      <Button href="/contact-us/" size="lg" class="justify-center">
-        Request Service
-      </Button>
+      <Button href="/contact-us/" size="lg" class="justify-center"> Request Service </Button>
       <Button href={`tel:${business.hotline.tel}`} variant="secondary" size="lg" icon={Phone} class="justify-center">
         {business.hotline.display}
       </Button>

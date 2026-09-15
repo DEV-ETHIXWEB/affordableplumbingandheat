@@ -34,7 +34,13 @@ export function buildFaqSchema(items: { question: string; answer: string }[]) {
   };
 }
 
-export function buildServiceSchema(opts: { name: string; description: string; path: string }) {
+export function buildServiceSchema(opts: {
+  name: string;
+  description: string;
+  path: string;
+  /** Defaults to the business's home city; city landing pages pass their own. */
+  areaServed?: string;
+}) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -42,7 +48,11 @@ export function buildServiceSchema(opts: { name: string; description: string; pa
     name: opts.name,
     description: opts.description,
     url: `${business.url}${opts.path}`,
-    provider: { '@type': 'LocalBusiness', name: business.name, '@id': `${business.url}/#business` },
-    areaServed: { '@type': 'City', name: business.addressLocality }
+    provider: { '@id': `${business.url}/#business`, name: business.name },
+    areaServed: {
+      '@type': 'City',
+      name: opts.areaServed ?? business.addressLocality,
+      containedInPlace: { '@type': 'State', name: 'Colorado' }
+    }
   };
 }

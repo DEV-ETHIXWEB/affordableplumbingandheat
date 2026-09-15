@@ -1,8 +1,10 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
-import { leadApiSchema } from '../../lib/contactSchema';
+import { leadApiSchema, type LeadApiPayload } from '../../lib/contactSchema';
 import { business } from '../../data/business';
 import { verifyTurnstile } from '../../lib/turnstile';
+import { isRateLimited } from '../../lib/rateLimit';
+import { isProduction } from '../../lib/runtimeEnv';
 import { RESEND_API_KEY, LEAD_TO_EMAIL, LEAD_FROM_EMAIL } from 'astro:env/server';
 
 // Server-rendered: everything else on the site is prerendered static HTML,
@@ -10,22 +12,21 @@ import { RESEND_API_KEY, LEAD_TO_EMAIL, LEAD_FROM_EMAIL } from 'astro:env/server
 // API key server-side and to rate-limit abuse.
 export const prerender = false;
 
-// Simple in-memory fixed-window rate limit, keyed by client IP. Resets on
-// deploy/restart, which is fine here: the goal is blunting basic scripted
-// abuse, not a durable distributed limiter. A serverless/edge deployment
-// with multiple concurrent instances would need a shared store (e.g.
-// Upstash) instead — noted for production scaling, not required at this
-// traffic volume.
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-const RATE_LIMIT_MAX = 8;
-const hits = new Map<string, number[]>();
+/** Largest legitimate payload is a chatbot lead with a full transcript
+ * (~8KB); anything far beyond that is abuse, not a customer. */
+const MAX_BODY_BYTES = 32 * 1024;
 
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  const timestamps = (hits.get(key) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-  timestamps.push(now);
-  hits.set(key, timestamps);
-  return timestamps.length > RATE_LIMIT_MAX;
+const SOURCE_LABELS: Record<LeadApiPayload['source'], string> = {
+  'contact-form': 'Contact form',
+  'quick-lead': 'Homepage quick request',
+  chatbot: 'Chatbot'
+};
+
+function json(status: number, body: Record<string, unknown>): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+  });
 }
 
 function escapeHtml(value: string): string {
@@ -37,15 +38,49 @@ function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;');
 }
 
+/** Browsers always send Origin on a cross-site POST. A mismatch means another
+ * site is scripting submissions through a visitor's browser. The request's
+ * own host is compared alongside x-forwarded-host/host, because behind a
+ * proxy or platform router (Vercel) the URL a function sees may carry an
+ * internal host rather than the domain the visitor actually used. */
+function isCrossOrigin(request: Request): boolean {
+  const origin = request.headers.get('origin');
+  if (!origin) return false;
+  let originHost: string;
+  try {
+    originHost = new URL(origin).host;
+  } catch {
+    return true;
+  }
+  const allowedHosts = [
+    new URL(request.url).host,
+    ...(request.headers.get('x-forwarded-host') ?? '').split(','),
+    request.headers.get('host') ?? ''
+  ]
+    .map((h) => h.trim().toLowerCase())
+    .filter(Boolean);
+  return !allowedHosts.includes(originHost.toLowerCase());
+}
+
 export const POST: APIRoute = async ({ request, clientAddress }) => {
+  if (isCrossOrigin(request)) return json(403, { error: 'Forbidden.' });
+
+  const declaredLength = Number(request.headers.get('content-length') ?? 0);
+  if (declaredLength > MAX_BODY_BYTES) return json(413, { error: 'Request too large.' });
+
+  // Counted before parsing, so malformed or invalid payloads still use up the
+  // allowance instead of letting a script probe the validator for free.
+  if (await isRateLimited(clientAddress ?? 'unknown')) {
+    return json(429, { error: 'Too many requests. Please call us instead.' });
+  }
+
   let body: unknown;
   try {
-    body = await request.json();
+    const raw = await request.text();
+    if (raw.length > MAX_BODY_BYTES) return json(413, { error: 'Request too large.' });
+    body = JSON.parse(raw);
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid request body.' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return json(400, { error: 'Invalid request body.' });
   }
 
   // Honeypot, checked on the raw body BEFORE schema validation: a real
@@ -56,54 +91,29 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   // doesn't learn to retry with a different pattern) and dropping the
   // submission before it reaches strict validation.
   if (typeof body === 'object' && body !== null && 'company' in body && (body as { company?: unknown }).company) {
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return json(200, { ok: true });
   }
 
   const parsed = leadApiSchema.safeParse(body);
-  if (!parsed.success) {
-    return new Response(JSON.stringify({ error: 'Invalid submission.' }), {
-      status: 422,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+  if (!parsed.success) return json(422, { error: 'Invalid submission.' });
   const lead = parsed.data;
 
-  const rateLimitKey = clientAddress ?? 'unknown';
-  if (isRateLimited(rateLimitKey)) {
-    return new Response(JSON.stringify({ error: 'Too many requests. Please call us instead.' }), {
-      status: 429,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // The chatbot is exempt: it's a multi-turn conversational flow with no
-  // natural place for a checkbox widget, and it's already covered by the
-  // honeypot and rate-limit checks above. The contact form and quick-lead
-  // form both still require a verified token.
-  if (lead.source !== 'chatbot') {
-    const turnstile = await verifyTurnstile(lead.turnstileToken, clientAddress);
-    if (!turnstile.ok) {
-      if (turnstile.reason === 'not_configured') {
-        return new Response(
-          JSON.stringify({ error: 'Submissions are temporarily unavailable. Please try again later.' }),
-          { status: 503, headers: { 'Content-Type': 'application/json' } }
-        );
-      }
-      return new Response(JSON.stringify({ error: 'Verification failed. Please try again.' }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' }
-      });
+  // Every source, the chatbot included, must carry a verified token. An
+  // exemption keyed on a client-supplied `source` field is no exemption at
+  // all - a bot would simply claim to be the chatbot.
+  const turnstile = await verifyTurnstile(lead.turnstileToken, clientAddress);
+  if (!turnstile.ok) {
+    if (turnstile.reason === 'not_configured') {
+      return json(503, { error: 'Submissions are temporarily unavailable. Please call us instead.' });
     }
+    return json(403, { error: 'Verification failed. Please try again.' });
   }
 
   const subjectPrefix = lead.urgent ? 'URGENT - ' : '';
   const subject = `${subjectPrefix}New ${lead.source === 'chatbot' ? 'chatbot' : 'website'} lead: ${lead.name}${lead.service ? ` (${lead.service})` : ''}`;
 
   const rows: [string, string][] = [
-    ['Source', lead.source === 'chatbot' ? 'Chatbot' : 'Contact form'],
+    ['Source', SOURCE_LABELS[lead.source]],
     ['Name', lead.name],
     ['Phone', lead.phone],
     ['Email', lead.email || ' - '],
@@ -130,26 +140,21 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const toEmail = LEAD_TO_EMAIL || business.email;
   const fromEmail = LEAD_FROM_EMAIL || 'leads@notifications.affordableplumbingandheat.com';
 
-  // RESEND_API_KEY is an optional, documented configuration point (see
-  // README): without it the endpoint still validates and rate-limits
-  // correctly, it just can't dispatch email yet, so local development and a
-  // fresh deploy never hard-fail on a missing secret.
   if (!RESEND_API_KEY) {
-    // Deliberately includes name/phone (not redacted): this fallback exists
-    // so a lead is never silently lost while RESEND_API_KEY is unset — an
-    // operator tailing server logs needs enough to call the person back.
-    // This never reaches the client or a third party, only server-side
-    // stdout/log storage, but whoever has access to that hosting platform's
-    // log viewer can read it — treat server log access as PII-sensitive.
-    console.warn('[api/lead] RESEND_API_KEY not configured - lead captured but not emailed:', {
-      name: lead.name,
-      phone: lead.phone,
-      source: lead.source
-    });
-    return new Response(JSON.stringify({ ok: true, delivered: false }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    if (isProduction()) {
+      // Never tell a customer "request received" when nothing will reach the
+      // office. The 503 sends the visitor to the phone number instead. (The
+      // production build also refuses to run without this key - see
+      // astro.config.mjs - so this is a second line of defence.)
+      console.error('[api/lead] RESEND_API_KEY is not configured in production - lead NOT delivered');
+      return json(503, { error: 'Could not send right now. Please call us instead.' });
+    }
+    // Local/preview only: log enough to see the flow working. Name and phone
+    // are omitted - server logs are not the place for customer PII.
+    console.warn(
+      `[api/lead] RESEND_API_KEY not configured (${import.meta.env.MODE}) - ${lead.source} lead validated, not emailed`
+    );
+    return json(200, { ok: true, delivered: false });
   }
 
   try {
@@ -164,14 +169,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     if (error) throw new Error(error.message);
   } catch (err) {
     console.error('[api/lead] Resend send failed:', err);
-    return new Response(JSON.stringify({ error: 'Could not send right now. Please call us instead.' }), {
-      status: 502,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return json(502, { error: 'Could not send right now. Please call us instead.' });
   }
 
-  return new Response(JSON.stringify({ ok: true, delivered: true }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' }
-  });
+  return json(200, { ok: true, delivered: true });
 };

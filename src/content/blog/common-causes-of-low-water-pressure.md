@@ -1,10 +1,10 @@
 ---
-title: "Common Causes of Low Water Pressure"
-description: "Weak water pressure at the faucet or shower can signal a bigger plumbing issue. Here are the most common causes and how to restore proper flow."
-category: "Plumbing"
+title: 'Common Causes of Low Water Pressure'
+description: 'Weak water pressure at the faucet or shower can signal a bigger plumbing issue. Here are the most common causes and how to restore proper flow.'
+category: 'Plumbing'
 publishDate: 2026-06-16
 author: "Adam O'Brien"
-oldSlug: "common-causes-of-low-water-pressure"
+oldSlug: 'common-causes-of-low-water-pressure'
 ---
 
 There’s nothing more frustrating than turning on the faucet or shower - only to be met with a weak trickle. Low water pressure isn’t just inconvenient; it can also be a sign of a bigger plumbing issue.

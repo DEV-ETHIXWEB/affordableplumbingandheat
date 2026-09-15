@@ -1,10 +1,10 @@
 ---
-title: "Best Energy-Saving Tips for Colorado Springs Homeowners"
-description: "Year-round energy-saving tips for Colorado Springs homeowners covering thermostats, lighting, water heaters, and appliances to help lower utility bills."
-category: "Colorado"
+title: 'Best Energy-Saving Tips for Colorado Springs Homeowners'
+description: 'Year-round energy-saving tips for Colorado Springs homeowners covering thermostats, lighting, water heaters, and appliances to help lower utility bills.'
+category: 'Colorado'
 publishDate: 2026-09-09
 author: "Adam O'Brien"
-oldSlug: "best-energy-saving-tips-for-colorado-springs-homeowners"
+oldSlug: 'best-energy-saving-tips-for-colorado-springs-homeowners'
 ---
 
 Living in Colorado Springs comes with its perks – breathtaking mountain views, a vibrant community, and an enjoyable climate. However, the extreme temperature swings between seasons can result in high energy bills if you’re not careful. Whether it’s managing heat in the summer or staying warm through chilly winters, there are several ways to make your home more energy-efficient without sacrificing comfort.

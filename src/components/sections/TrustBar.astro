@@ -18,12 +18,14 @@ const points = [
 ];
 ---
 
-<section class="relative overflow-hidden bg-navy-900 py-16">
+<section class="bg-navy-900 relative overflow-hidden py-16">
   <div class="absolute inset-0" aria-hidden="true">
-    <!-- Decorative backdrop sitting at 25% opacity under a near-opaque
+    {
+      /* Decorative backdrop sitting at 25% opacity under a near-opaque
          gradient, so it never needs full fidelity. `widths`/`sizes` let the
          browser take a 640px file on a phone instead of the single 1600px
-         encode it was downloading at every breakpoint. -->
+         encode it was downloading at every breakpoint. */
+    }
     <Image
       src={heroImage}
       alt=""
@@ -39,10 +41,12 @@ const points = [
   </div>
 
   <Container class="relative">
-    <!-- Two columns: the trust points used to sit alone in a narrow centred
+    {
+      /* Two columns: the trust points used to sit alone in a narrow centred
          block, leaving the full right half of the section empty. The quick
          enquiry form fills it and puts a capture point directly below the
-         hero. -->
+         hero. */
+    }
     <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
       <div data-reveal>
         <h2 class="font-display text-2xl font-bold text-white sm:text-3xl">
@@ -78,13 +82,11 @@ const points = [
       </div>
 
       <div
-        class="rounded-3xl border border-white/10 bg-white/[0.07] p-6 shadow-2xl shadow-navy-950/40 backdrop-blur-sm sm:p-8"
+        class="shadow-navy-950/40 rounded-3xl border border-white/10 bg-white/[0.07] p-6 shadow-2xl backdrop-blur-sm sm:p-8"
         data-reveal
       >
         <h3 class="font-display text-xl font-bold text-white">Request Service</h3>
-        <p class="mt-1.5 mb-6 text-sm text-white/60">
-          Takes under a minute - we&rsquo;ll call you right back.
-        </p>
+        <p class="mt-1.5 mb-6 text-sm text-white/60">Takes under a minute - we&rsquo;ll call you right back.</p>
         <QuickLeadForm client:visible />
       </div>
     </div>

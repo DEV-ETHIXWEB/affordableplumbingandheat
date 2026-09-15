@@ -1,10 +1,10 @@
 ---
-title: "Spring Home Renovations? Don’t Forget Electrical Safety and Upgrades"
+title: 'Spring Home Renovations? Don’t Forget Electrical Safety and Upgrades'
 description: "Planning a spring renovation? Don't overlook your electrical system. Learn the key safety checks and upgrades to consider before your project begins."
-category: "Electrical"
+category: 'Electrical'
 publishDate: 2026-03-17
-author: "Emily Bardwell"
-oldSlug: "spring-home-renovations-dont-forget-electrical-safety-and-upgrades"
+author: 'Emily Bardwell'
+oldSlug: 'spring-home-renovations-dont-forget-electrical-safety-and-upgrades'
 ---
 
 Spring is the perfect time for home renovations, but many homeowners in Colorado Springs overlook the importance of electrical safety and necessary upgrades during the process. Whether you’re remodeling your kitchen, adding a new room, or upgrading outdoor spaces, ensuring your electrical system is up to code is crucial for safety and efficiency.

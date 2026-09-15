@@ -1,10 +1,10 @@
 ---
-title: "Signs Your Furnace Needs a Tune-Up or Replacement"
-description: "From rising energy bills to strange noises, learn the warning signs that tell you whether your furnace needs a simple tune-up or full replacement."
-category: "HVAC"
+title: 'Signs Your Furnace Needs a Tune-Up or Replacement'
+description: 'From rising energy bills to strange noises, learn the warning signs that tell you whether your furnace needs a simple tune-up or full replacement.'
+category: 'HVAC'
 publishDate: 2026-07-29
 author: "Adam O'Brien"
-oldSlug: "signs-your-furnace-needs-a-tune-up-or-replacement"
+oldSlug: 'signs-your-furnace-needs-a-tune-up-or-replacement'
 ---
 
 As the chill of winter sets in, ensuring your furnace is in top working condition becomes essential for keeping your home warm and comfortable. A well-maintained furnace not only provides consistent heat but also operates more efficiently and safely. However, even with regular maintenance, furnaces can develop issues over time that may necessitate a tune-up or even a replacement. Here are some key signs that your furnace needs attention.

@@ -1,10 +1,10 @@
 ---
-title: "Warning Signs of Sewer Line Damage"
-description: "From gurgling drains to lush patches of grass, learn the warning signs of sewer line damage, what causes it, and the most effective repair solutions."
-category: "Sewer"
+title: 'Warning Signs of Sewer Line Damage'
+description: 'From gurgling drains to lush patches of grass, learn the warning signs of sewer line damage, what causes it, and the most effective repair solutions.'
+category: 'Sewer'
 publishDate: 2026-03-31
 author: "Adam O'Brien"
-oldSlugs: ["sewer-line-problems-warning-signs-amp-solutions", "common-signs-of-sewer-line-damage"]
+oldSlugs: ['sewer-line-problems-warning-signs-amp-solutions', 'common-signs-of-sewer-line-damage']
 ---
 
 Your home's sewer line is one of the most critical components of your plumbing system. It quietly carries wastewater from your home to the city sewer system - but when something goes wrong, it can turn into a serious, messy, and costly problem fast. Recognizing the early warning signs can help you avoid major damage and expensive repairs. Here's what to watch for, what typically causes it, and how it gets fixed.

@@ -1,10 +1,10 @@
 ---
-title: "Top 5 Plumbing Myths Debunked"
-description: "From chemical drain cleaners to lemon-fresh disposals, we debunk five common plumbing myths that could be costing homeowners time and money."
-category: "FAQ"
+title: 'Top 5 Plumbing Myths Debunked'
+description: 'From chemical drain cleaners to lemon-fresh disposals, we debunk five common plumbing myths that could be costing homeowners time and money.'
+category: 'FAQ'
 publishDate: 2026-07-08
 author: "Adam O'Brien"
-oldSlug: "top-5-plumbing-myths-debunked"
+oldSlug: 'top-5-plumbing-myths-debunked'
 ---
 
 When it comes to plumbing, misinformation can lead to costly mistakes and unnecessary stress. Many homeowners believe they are well-equipped to handle common plumbing issues based on widespread myths. Today, we're debunking the top five plumbing myths to help you better understand your home's plumbing system and avoid potential pitfalls.

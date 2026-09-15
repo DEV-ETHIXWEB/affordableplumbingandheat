@@ -253,7 +253,7 @@ export default function AccessibilityWidget() {
            so this trigger has to clear it (mirroring the chat launcher's
            bottom-24) or it renders on top of the Call Now / Get Estimate
            buttons. From lg up the call bar is hidden and it can sit low. */
-        className="fixed bottom-24 left-[21px] z-40 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-navy-900 text-white shadow-[0_8px_24px_-6px_rgba(0,0,0,0.4)] transition-transform active:scale-95 lg:bottom-[21px]"
+        className="bg-navy-900 fixed bottom-24 left-[21px] z-40 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-white text-white shadow-[0_8px_24px_-6px_rgba(0,0,0,0.4)] transition-transform active:scale-95 lg:bottom-[21px]"
       >
         {open ? <X className="h-[19.2px] w-[19.2px]" /> : <Accessibility className="h-[19.2px] w-[19.2px]" />}
       </button>
@@ -278,7 +278,7 @@ export default function AccessibilityWidget() {
               transition={{ duration: 0.22, ease: EASE }}
               className="border-ink-100 flex h-[min(640px,72vh)] w-[calc(100vw-1.5rem)] max-w-[380px] flex-col overflow-hidden rounded-[1.75rem] border bg-white shadow-2xl shadow-black/15"
             >
-              <div className="relative shrink-0 overflow-hidden bg-navy-900 p-5">
+              <div className="bg-navy-900 relative shrink-0 overflow-hidden p-5">
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0"

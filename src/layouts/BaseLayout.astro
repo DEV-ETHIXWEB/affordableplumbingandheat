@@ -5,7 +5,9 @@ import StickyCallBar from '../components/layout/StickyCallBar.astro';
 import CouponWidget from '../components/islands/CouponWidget.tsx';
 import ChatWidget from '../components/islands/ChatWidget.tsx';
 import AccessibilityWidget from '../components/islands/AccessibilityWidget.tsx';
-import { business } from '../data/business';
+import { business, serviceAreas } from '../data/business';
+import { analyticsConfig } from '../lib/analytics';
+import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import '../styles/global.css';
 import logo from '../assets/images/brand/logo.png';
 import { getImage } from 'astro:assets';
@@ -20,7 +22,21 @@ interface Props {
   ogImage?: { src: string; width: number; height: number };
 }
 
-const { title, description, schema = [], noIndex = false, ogImage } = Astro.props;
+const { title: requestedTitle, description, schema = [], noIndex = false, ogImage } = Astro.props;
+
+/** Search results show roughly 60 characters of a title, and the brand
+ * suffix is the part that gets cut. Pages pass their natural title; if it's
+ * too long, the full business name gives way to the short name, then to no
+ * suffix at all, so the page's own keywords are what stay visible. */
+const TITLE_LIMIT = 60;
+function fitTitle(value: string): string {
+  const fullSuffix = ` | ${business.name}`;
+  if (value.length <= TITLE_LIMIT || !value.endsWith(fullSuffix)) return value;
+  const base = value.slice(0, -fullSuffix.length);
+  const shortTitle = `${base} | ${business.shortName}`;
+  return shortTitle.length <= TITLE_LIMIT ? shortTitle : base;
+}
+const title = fitTitle(requestedTitle);
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const defaultOg = await getImage({
@@ -37,7 +53,9 @@ const ogImageURL = ogImage
 
 const localBusinessSchema = {
   '@context': 'https://schema.org',
-  '@type': 'HVACBusiness',
+  // One business, three trades: every type applies, so all three are declared
+  // rather than HVACBusiness alone.
+  '@type': ['Plumber', 'HVACBusiness', 'Electrician'],
   '@id': `${business.url}/#business`,
   name: business.name,
   legalName: business.legalName,
@@ -60,7 +78,11 @@ const localBusinessSchema = {
     latitude: business.geo.latitude,
     longitude: business.geo.longitude
   },
-  areaServed: { '@type': 'City', name: business.addressLocality },
+  areaServed: serviceAreas.map((area) => ({
+    '@type': 'City',
+    name: area.name,
+    containedInPlace: { '@type': 'State', name: 'Colorado' }
+  })),
   openingHoursSpecification: {
     '@type': 'OpeningHoursSpecification',
     dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
@@ -71,6 +93,18 @@ const localBusinessSchema = {
 };
 
 const allSchema = [localBusinessSchema, ...schema];
+
+// IDs are regex-validated in analyticsConfig and JSON-encoded here, so nothing
+// but a well-formed vendor ID can reach these inline scripts. A tel: click is
+// pushed as its own event: for a 24/7 trade business most conversions are
+// phone calls, not form fills.
+const phoneClickTracking =
+  "document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href^=\"tel:\"]');if(a){window.dataLayer.push({event:'phone_call_click',link_url:a.href});}},true);";
+const analyticsSnippet = analyticsConfig.gtmId
+  ? `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',${JSON.stringify(analyticsConfig.gtmId)});${phoneClickTracking}`
+  : analyticsConfig.ga4Id
+    ? `window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments);};gtag('js',new Date());gtag('config',${JSON.stringify(analyticsConfig.ga4Id)});${phoneClickTracking}`
+    : null;
 
 // JSON.stringify can't produce an unescaped "</script>" from our own typed
 // data, but belt-and-suspenders: neutralize it anyway so this is safe even
@@ -87,6 +121,12 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    {
+      /* Latin subset only: it covers every glyph on the site, and preloading
+        it lets the real font win the race against first paint instead of
+        swapping in afterwards. */
+    }
+    <link rel="preload" href={interLatinWoff2} as="font" type="font/woff2" crossorigin />
     <meta name="description" content={description} />
     {
       /* No canonical on noindex pages: the 404 template renders under every
@@ -103,7 +143,7 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#0a1830" />
 
-    <!-- Open Graph -->
+    {/* Open Graph */}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={business.name} />
     <meta property="og:title" content={title} />
@@ -112,7 +152,7 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter -->
+    {/* Twitter */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -123,8 +163,37 @@ const schemaJson = (obj: Record<string, unknown>) => JSON.stringify(obj).replace
     <script>
       import '../scripts/reveal.ts';
     </script>
+
+    {analyticsSnippet && <script is:inline set:html={analyticsSnippet} />}
+    {
+      !analyticsConfig.gtmId && analyticsConfig.ga4Id && (
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${analyticsConfig.ga4Id}`} />
+      )
+    }
+    {
+      analyticsConfig.callRail && (
+        <script
+          is:inline
+          async
+          src={`https://cdn.callrail.com/companies/${analyticsConfig.callRail.companyId}/${analyticsConfig.callRail.scriptId}/12/swap.js`}
+        />
+      )
+    }
   </head>
   <body class="font-body text-ink-600 bg-white antialiased">
+    {
+      analyticsConfig.gtmId && (
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${analyticsConfig.gtmId}`}
+            height="0"
+            width="0"
+            style="display:none;visibility:hidden"
+            title="Google Tag Manager"
+          />
+        </noscript>
+      )
+    }
     <a
       href="#main-content"
       class="skip-link fixed top-0 left-4 z-[100] rounded-b-lg bg-orange-600 px-5 py-3 font-semibold text-white"

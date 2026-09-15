@@ -1,10 +1,10 @@
 ---
-title: "DIY Plumbing or Professional Plumber? A Guide for Colorado Springs Homeowners"
-description: "Not sure whether to DIY a plumbing repair or call a pro? This guide helps Colorado Springs homeowners decide which plumbing jobs are safe to tackle alone."
+title: 'DIY Plumbing or Professional Plumber? A Guide for Colorado Springs Homeowners'
+description: 'Not sure whether to DIY a plumbing repair or call a pro? This guide helps Colorado Springs homeowners decide which plumbing jobs are safe to tackle alone.'
 category: "Homeowner's Guide"
 publishDate: 2026-09-09
 author: "Adam O'Brien"
-oldSlug: "diy-plumbing-or-professional-plumber-a-guide-for-colorado-springs-homeowners"
+oldSlug: 'diy-plumbing-or-professional-plumber-a-guide-for-colorado-springs-homeowners'
 ---
 
 As a homeowner in Colorado Springs, you've likely faced a leaky faucet, a running toilet, or a clogged drain. The first thought for many is to grab a wrench and tackle the job themselves. While the "DIY" approach can be tempting, knowing when to roll up your sleeves and when to call a professional can save you time, money, and a major headache.

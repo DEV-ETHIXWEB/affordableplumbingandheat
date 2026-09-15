@@ -1,10 +1,10 @@
 ---
-title: "Keeping the Flow: Preventing Tankless Water Heater Freezing"
-description: "Tankless water heaters can freeze in cold weather without proper precautions. Learn how to protect your unit and keep hot water flowing all winter."
-category: "Water Heaters"
+title: 'Keeping the Flow: Preventing Tankless Water Heater Freezing'
+description: 'Tankless water heaters can freeze in cold weather without proper precautions. Learn how to protect your unit and keep hot water flowing all winter.'
+category: 'Water Heaters'
 publishDate: 2026-04-10
-author: "MacShayne Walpole-Molinar"
-oldSlug: "keeping-the-flow-preventing-tankless-water-heater-freezing"
+author: 'MacShayne Walpole-Molinar'
+oldSlug: 'keeping-the-flow-preventing-tankless-water-heater-freezing'
 ---
 
 Tankless water heaters offer efficient and convenient hot water on demand, but they are not immune to cold weather challenges. Freezing temperatures can pose a threat to tankless water heaters, potentially causing damage and disrupting the flow of hot water in your home. Fortunately, with the right precautions, you can protect your tankless water heater from freezing and ensure uninterrupted hot water supply during the winter months. In this guide, we'll explore effective strategies to prevent a tankless water heater from freezing and keep the hot water flowing.

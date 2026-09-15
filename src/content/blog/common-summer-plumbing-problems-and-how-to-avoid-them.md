@@ -1,10 +1,10 @@
 ---
-title: "Common Summer Plumbing Problems (and How to Avoid Them)"
-description: "Summer brings extra strain on home plumbing, from clogged toilets to sprinkler leaks. Learn the most common seasonal issues and how to avoid them."
-category: "Plumbing"
+title: 'Common Summer Plumbing Problems (and How to Avoid Them)'
+description: 'Summer brings extra strain on home plumbing, from clogged toilets to sprinkler leaks. Learn the most common seasonal issues and how to avoid them.'
+category: 'Plumbing'
 publishDate: 2026-05-12
 author: "Adam O'Brien"
-oldSlug: "common-summer-plumbing-problems-and-how-to-avoid-them"
+oldSlug: 'common-summer-plumbing-problems-and-how-to-avoid-them'
 ---
 
 Summer in Colorado Springs brings sunshine, backyard barbecues, and family vacations - but it can also bring unexpected plumbing problems. With increased water usage, outdoor activity, and seasonal changes, your plumbing system may face challenges that don't typically show up in colder months.

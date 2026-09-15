@@ -1,10 +1,10 @@
 ---
-title: "How to Unclog a Drain Without Damaging Your Pipes"
-description: "Expert, pipe-safe methods for clearing a clogged drain yourself, from hot water and plungers to a DIY baking soda cleaner and drain snake."
-category: "Plumbing"
+title: 'How to Unclog a Drain Without Damaging Your Pipes'
+description: 'Expert, pipe-safe methods for clearing a clogged drain yourself, from hot water and plungers to a DIY baking soda cleaner and drain snake.'
+category: 'Plumbing'
 publishDate: 2026-05-08
 author: "Adam O'Brien"
-oldSlugs: ["how-to-unclog-a-drain-without-damaging-your-pipes", "tips-from-plumbing-experts-how-to-unclog-a-drain"]
+oldSlugs: ['how-to-unclog-a-drain-without-damaging-your-pipes', 'tips-from-plumbing-experts-how-to-unclog-a-drain']
 ---
 
 Clogged drains are a common household nuisance, but they don't always require a plumber. With the right tools and techniques, you can often clear the blockage yourself without causing harm to your pipes. Here's a guide to effective, safe ways to unclog a drain, plus tips for avoiding future clogs.

@@ -1,8 +1,13 @@
 /** Old Squarespace URL (path only, no leading domain) -> new site path.
  * Preserves SEO equity from the previous site. Source: the HTTrack scrape
- * at `old website data/`. Old URLs used a flat `.html` structure with no
- * trailing slash; the new site uses trailing-slash directory routes. */
-export const legacyRedirects: Record<string, string> = {
+ * at `old website data/`, which saved every page with a `.html` suffix.
+ *
+ * The live Squarespace site does NOT use that suffix - it serves
+ * `/ac-repair-colorado-springs` and 404s `/ac-repair-colorado-springs.html`.
+ * The keys below keep the scrape's spelling, and `legacyRedirects` (bottom of
+ * this file) adds the extension-less URL that search engines have actually
+ * indexed. Both redirect; the new site uses trailing-slash directory routes. */
+const scrapedRedirects: Record<string, string> = {
   // Core / homepage-equivalent pages
   //
   // NOTE: '/index.html' is intentionally NOT listed here. The static file
@@ -61,8 +66,7 @@ export const legacyRedirects: Record<string, string> = {
   // Electrical services
   '/electrical-panel-upgrade-colorado-springs-colorado.html': '/services/electrical-panel-upgrade-colorado-springs/',
   '/electric-vehicle-charger-colorado-springs.html': '/services/electric-vehicle-charger-colorado-springs/',
-  '/back-up-generator-installation-colorado-springs.html':
-    '/services/back-up-generator-installation-colorado-springs/',
+  '/back-up-generator-installation-colorado-springs.html': '/services/back-up-generator-installation-colorado-springs/',
   '/surge-storm-protection-colorado-springs.html': '/services/surge-storm-protection-colorado-springs/',
   '/wiring-rewiring-colorado-springs.html': '/services/wiring-rewiring-colorado-springs/',
   '/lighting-installation-colorado-springs.html': '/services/lighting-installation-colorado-springs/',
@@ -246,7 +250,8 @@ export const legacyRedirects: Record<string, string> = {
     '/blog/top-10-plumbing-issues-every-homeowner-should-know-about/',
   '/affordable-plumbing-heat-and-electrical-blog/top-5-plumbing-issues-in-colorado-springs-homes-and-how-to-prevent-them.html':
     '/blog/top-5-plumbing-issues-in-colorado-springs-homes-and-how-to-prevent-them/',
-  '/affordable-plumbing-heat-and-electrical-blog/top-5-plumbing-myths-debunked.html': '/blog/top-5-plumbing-myths-debunked/',
+  '/affordable-plumbing-heat-and-electrical-blog/top-5-plumbing-myths-debunked.html':
+    '/blog/top-5-plumbing-myths-debunked/',
   '/affordable-plumbing-heat-and-electrical-blog/troubleshooting-guide-what-to-do-if-your-thermostat-isnt-turning-on.html':
     '/blog/troubleshooting-guide-what-to-do-if-your-thermostat-isnt-turning-on/',
   '/affordable-plumbing-heat-and-electrical-blog/understanding-plumbing-codes-in-colorado-what-homeowners-need-to-know.html':
@@ -257,7 +262,8 @@ export const legacyRedirects: Record<string, string> = {
     '/blog/understanding-your-homes-electrical-panel/',
   '/affordable-plumbing-heat-and-electrical-blog/sewer-line-problems-warning-signs-amp-solutions.html':
     '/blog/warning-signs-of-sewer-line-damage/',
-  '/affordable-plumbing-heat-and-electrical-blog/common-signs-of-sewer-line-damage.html': '/blog/warning-signs-of-sewer-line-damage/',
+  '/affordable-plumbing-heat-and-electrical-blog/common-signs-of-sewer-line-damage.html':
+    '/blog/warning-signs-of-sewer-line-damage/',
   '/affordable-plumbing-heat-and-electrical-blog/what-is-a-seer-rating-and-why-should-you-care.html':
     '/blog/what-is-a-seer-rating-and-why-should-you-care/',
   '/affordable-plumbing-heat-and-electrical-blog/what-is-a-tankless-water-heater-and-how-does-it-work.html':
@@ -269,7 +275,7 @@ export const legacyRedirects: Record<string, string> = {
   '/affordable-plumbing-heat-and-electrical-blog/why-does-my-furnace-keep-short-cycling-troubleshooting-tips-from-the-experts.html':
     '/blog/why-does-my-furnace-keep-short-cycling-troubleshooting-tips-from-the-experts/',
   '/affordable-plumbing-heat-and-electrical-blog/how-hard-water-affects-your-plumbing-system.html':
-    '/blog/why-is-my-air-conditioner-blowing-warm-air/',
+    '/blog/the-hidden-dangers-of-hard-water-and-how-to-solve-them/',
   '/affordable-plumbing-heat-and-electrical-blog/why-is-my-air-conditioner-blowing-warm-air.html':
     '/blog/why-is-my-air-conditioner-blowing-warm-air/',
   '/affordable-plumbing-heat-and-electrical-blog/why-you-need-a-backflow-prevention-device.html':
@@ -279,3 +285,15 @@ export const legacyRedirects: Record<string, string> = {
   '/affordable-plumbing-heat-and-electrical-blog/winter-plumbing-prep-how-to-avoid-frozen-pipes-in-colorado-springs.html':
     '/blog/winter-plumbing-prep-how-to-avoid-frozen-pipes-in-colorado-springs/'
 };
+
+/** Every scraped path plus its real, extension-less live URL. A bare path is
+ * skipped only when it would redirect to itself (e.g. `/contact-us` ->
+ * `/contact-us/`), since that page exists and the host already resolves it. */
+export const legacyRedirects: Record<string, string> = Object.fromEntries(
+  Object.entries(scrapedRedirects).flatMap(([from, to]) => {
+    const bare = from.replace(/\.html$/, '');
+    const entries: [string, string][] = [[from, to]];
+    if (bare !== from && `${bare}/` !== to) entries.push([bare, to]);
+    return entries;
+  })
+);

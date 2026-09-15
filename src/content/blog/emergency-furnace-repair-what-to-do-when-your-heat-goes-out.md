@@ -1,10 +1,14 @@
 ---
-title: "Emergency Furnace Repair: What to Do When Your Heat Goes Out"
-description: "When your furnace stops working in the dead of winter, follow this step-by-step safety and troubleshooting checklist before you call for emergency repair."
-category: "HVAC"
+title: 'Emergency Furnace Repair: What to Do When Your Heat Goes Out'
+description: 'When your furnace stops working in the dead of winter, follow this step-by-step safety and troubleshooting checklist before you call for emergency repair.'
+category: 'HVAC'
 publishDate: 2026-09-30
 author: "Adam O'Brien"
-oldSlugs: ["emergency-furnace-repair-in-colorado-springs-what-to-do-when-your-heat-goes-out", "emergency-furnace-repair-in-fountain-what-to-do-when-the-heat-goes-out"]
+oldSlugs:
+  [
+    'emergency-furnace-repair-in-colorado-springs-what-to-do-when-your-heat-goes-out',
+    'emergency-furnace-repair-in-fountain-what-to-do-when-the-heat-goes-out'
+  ]
 ---
 
 When the frigid Colorado winter rolls in, a working furnace isn't just a luxury - it's a necessity. But what happens if your furnace suddenly stops working in the middle of the night, leaving your home uncomfortably cold? Knowing what to do in a heating emergency can make a big difference in both your comfort and safety. At Affordable Plumbing, Heat & Electrical, we understand how stressful this situation can be, so we've put together this guide to help you take the right steps when your heat goes out.

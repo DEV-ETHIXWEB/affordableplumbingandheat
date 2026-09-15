@@ -1,8 +1,9 @@
 // @ts-check
 import eslintPluginAstro from 'eslint-plugin-astro';
 import tseslint from 'typescript-eslint';
+import { defineConfig } from 'eslint/config';
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: ['dist/**', '.astro/**', '.vercel/**', 'node_modules/**']
   },

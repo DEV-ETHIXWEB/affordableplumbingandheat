@@ -1,10 +1,10 @@
 ---
-title: "Why Is My Air Conditioner Blowing Warm Air?"
-description: "From a simple thermostat setting to a failing compressor, here are the most common reasons your AC blows warm air and what you can do to fix it."
-category: "Troubleshooting"
+title: 'Why Is My Air Conditioner Blowing Warm Air?'
+description: 'From a simple thermostat setting to a failing compressor, here are the most common reasons your AC blows warm air and what you can do to fix it.'
+category: 'Troubleshooting'
 publishDate: 2026-04-09
 author: "Adam O'Brien"
-oldSlugs: ["how-hard-water-affects-your-plumbing-system", "why-is-my-air-conditioner-blowing-warm-air"]
+oldSlugs: ['how-hard-water-affects-your-plumbing-system', 'why-is-my-air-conditioner-blowing-warm-air']
 ---
 
 There's nothing more frustrating than turning on your air conditioner during a hot Colorado Springs afternoon - only to feel warm air blowing from the vents. If you've found yourself asking, "Why is my AC blowing warm air?" you're not alone. The causes range from a simple setting you can fix yourself to more serious issues that need a licensed technician. Here's a breakdown of the most likely culprits and what you can do about each one.

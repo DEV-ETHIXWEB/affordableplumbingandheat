@@ -1,10 +1,10 @@
 ---
-title: "No Heat? First Steps to Take Before Calling for Emergency Furnace Repair"
-description: "Before you call for costly emergency service, walk through this five-step troubleshooting checklist to see if you can get your furnace running again yourself."
-category: "Troubleshooting"
+title: 'No Heat? First Steps to Take Before Calling for Emergency Furnace Repair'
+description: 'Before you call for costly emergency service, walk through this five-step troubleshooting checklist to see if you can get your furnace running again yourself.'
+category: 'Troubleshooting'
 publishDate: 2026-11-17
 author: "Adam O'Brien"
-oldSlug: "no-heat-first-steps-to-take-before-calling-for-emergency-furnace-repair"
+oldSlug: 'no-heat-first-steps-to-take-before-calling-for-emergency-furnace-repair'
 ---
 
 Waking up to a freezing home in Colorado Springs is a nightmare scenario. Before you panic and call for emergency service, which often comes with premium pricing, take a few minutes to walk through a simple troubleshooting checklist.
@@ -26,7 +26,7 @@ This is the most common reason for a service call - and the easiest to fix.
 Your furnace needs power in two different places, and a quick check of both can save you a service fee.
 
 1. **The Furnace Switch:** Locate the light-switch-style switch near the furnace itself (usually on the wall or mounted to the unit). This is a safety disconnect. Make sure it is **ON**. Sometimes, this switch gets accidentally flipped by cleaning supplies or a busy child.
-2. **The Breaker Panel:** Go to your home's main electrical panel. Find the circuit breaker labeled "Furnace" or "HVAC." If the breaker is tripped (the lever is halfway between ON and OFF, or fully OFF), flip it firmly **OFF** and then firmly back **ON**. If it trips again immediately, *do not* attempt to reset it; call a professional, as this indicates a serious electrical fault.
+2. **The Breaker Panel:** Go to your home's main electrical panel. Find the circuit breaker labeled "Furnace" or "HVAC." If the breaker is tripped (the lever is halfway between ON and OFF, or fully OFF), flip it firmly **OFF** and then firmly back **ON**. If it trips again immediately, _do not_ attempt to reset it; call a professional, as this indicates a serious electrical fault.
 
 ## Step 3: Inspect the Air Filter
 

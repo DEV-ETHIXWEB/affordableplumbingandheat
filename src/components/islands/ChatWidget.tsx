@@ -14,6 +14,9 @@ import {
 import { getPageContextTopic, topicLabel } from '../../lib/chat/knowledge';
 import { services } from '../../data/services';
 import { cityPages } from '../../data/cityPages';
+import { LEAD_LIMITS } from '../../lib/contactSchema';
+import { trackLead } from '../../lib/analytics';
+import { Turnstile, turnstileEnabled } from './Turnstile';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const TEASER_SEEN_KEY = 'aph-chat-teaser-seen';
@@ -54,8 +57,8 @@ const nextId = () => `m${++idCounter}`;
 
 const GREETING = (
   <>
-    Hi, I&rsquo;m the Affordable Plumbing &amp; Heat assistant. Ask me about a service, your area, pricing, or just
-    tell me what&rsquo;s going on, I&rsquo;ll get you the right answer or a real person.
+    Hi, I&rsquo;m the Affordable Plumbing &amp; Heat assistant. Ask me about a service, your area, pricing, or just tell
+    me what&rsquo;s going on, I&rsquo;ll get you the right answer or a real person.
   </>
 );
 
@@ -68,8 +71,8 @@ function buildGreeting(pageTopic: string | null): React.ReactNode {
     if (service) {
       return (
         <>
-          Hi, I&rsquo;m the Affordable Plumbing &amp; Heat assistant. Looking into {service.title.toLowerCase()}? I
-          can answer questions about it, pricing, or anything else on your mind.
+          Hi, I&rsquo;m the Affordable Plumbing &amp; Heat assistant. Looking into {service.title.toLowerCase()}? I can
+          answer questions about it, pricing, or anything else on your mind.
         </>
       );
     }
@@ -133,7 +136,7 @@ const QUICK_ACTIONS: QuickAction[] = [
 
 function BotAvatar() {
   return (
-    <span className="relative grid h-7 w-7 shrink-0 place-items-center overflow-hidden rounded-full bg-navy-900">
+    <span className="bg-navy-900 relative grid h-7 w-7 shrink-0 place-items-center overflow-hidden rounded-full">
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -175,7 +178,12 @@ function ActionButton({ label, onClick, disabled }: { label: string; onClick: ()
   );
 }
 
-function buildLeadPayload(lead: LeadState, ctx: ChatContext, transcript: TranscriptLine[]) {
+function buildLeadPayload(
+  lead: LeadState,
+  ctx: ChatContext,
+  transcript: TranscriptLine[],
+  turnstileToken: string | null
+) {
   const urgent = Boolean(lead.wizardUrgent || ctx.urgent);
   const topics = ctx.topicsDiscussed.map(topicLabel).join(', ') || 'General chat';
   return {
@@ -189,9 +197,14 @@ function buildLeadPayload(lead: LeadState, ctx: ChatContext, transcript: Transcr
     message: lead.wizardIssue ?? '',
     urgent,
     topicsDiscussed: topics,
-    transcript: transcript.map((line) => `${line.from === 'bot' ? 'Bot' : 'Visitor'}: ${line.text}`).join('\n'),
+    // Most recent part of the conversation; the API caps transcripts too.
+    transcript: transcript
+      .map((line) => `${line.from === 'bot' ? 'Bot' : 'Visitor'}: ${line.text}`)
+      .join('\n')
+      .slice(-LEAD_LIMITS.transcript),
     // Honeypot field — always empty for a real human using the chat UI.
-    company: ''
+    company: '',
+    turnstileToken: turnstileToken ?? undefined
   };
 }
 
@@ -217,7 +230,7 @@ function buildLeadMailto(lead: LeadState, ctx: ChatContext, transcript: Transcri
   ]
     .filter((line) => line !== null)
     .join('\n');
-  return `mailto:${business.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return `mailto:${business.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body.slice(0, 1500))}`;
 }
 
 // Astro islands with client:load hydrate in the browser, so this module-level
@@ -244,6 +257,15 @@ export default function ChatWidget() {
   const transcriptRef = useRef<TranscriptLine[]>([{ from: 'bot', text: 'Greeted the visitor' }]);
   const leadRef = useRef<LeadState>(lead);
   const ctxRef = useRef<ChatContext>(ctx);
+  const openRef = useRef(open);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const hasOpenedRef = useRef(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  const [turnstileFailed, setTurnstileFailed] = useState(false);
+  const turnstileTokenRef = useRef<string | null>(null);
+  turnstileTokenRef.current = turnstileToken;
+  openRef.current = open;
 
   useEffect(() => {
     leadRef.current = lead;
@@ -253,10 +275,20 @@ export default function ChatWidget() {
   }, [ctx]);
 
   useEffect(() => {
-    if (sessionStorage.getItem(TEASER_SEEN_KEY)) return;
+    // Storage can throw (Safari private mode, blocked site data); the teaser
+    // is a nicety, so it simply shows once per page view in that case.
+    try {
+      if (sessionStorage.getItem(TEASER_SEEN_KEY)) return;
+    } catch {
+      /* storage unavailable */
+    }
     const t = setTimeout(() => {
       setTeaser(true);
-      sessionStorage.setItem(TEASER_SEEN_KEY, '1');
+      try {
+        sessionStorage.setItem(TEASER_SEEN_KEY, '1');
+      } catch {
+        /* storage unavailable */
+      }
     }, 4500);
     return () => clearTimeout(t);
   }, []);
@@ -290,10 +322,47 @@ export default function ChatWidget() {
     }
   }, [open]);
 
+  // Return focus to the launcher when the dialog closes, so a keyboard user
+  // isn't dropped back at the top of the document.
+  useEffect(() => {
+    if (open) {
+      hasOpenedRef.current = true;
+      return;
+    }
+    if (!hasOpenedRef.current) return;
+    const t = window.setTimeout(() => launcherRef.current?.focus(), 0);
+    return () => window.clearTimeout(t);
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape') {
+        setOpen(false);
+        return;
+      }
+      // aria-modal promises focus stays inside the dialog: wrap Tab at the ends.
+      if (e.key === 'Tab' && panelRef.current) {
+        const focusable = [
+          ...panelRef.current.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), input:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])'
+          )
+        ].filter((el) => el.offsetParent !== null);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+        if (!panelRef.current.contains(active)) {
+          e.preventDefault();
+          first.focus();
+        } else if (e.shiftKey && active === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
     function onClickOutside(e: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
@@ -320,7 +389,7 @@ export default function ChatWidget() {
       setTyping(false);
       setMessages((m) => [...m, { id: nextId(), from: 'bot', content }]);
       transcriptRef.current.push({ from: 'bot', text: logLabel });
-      if (!open) setUnread((u) => u + 1);
+      if (!openRef.current) setUnread((u) => u + 1);
       onDone?.();
     }, 700);
   }
@@ -380,8 +449,15 @@ export default function ChatWidget() {
   }
 
   async function submitLeadFromChat() {
+    if (turnstileEnabled && !turnstileTokenRef.current) {
+      pushBotReply(
+        <>One quick security check first, tick the box below, then send.</>,
+        'Asked visitor to complete the security check'
+      );
+      return;
+    }
     setLead((prev) => ({ ...prev, step: 'sending' }));
-    const payload = buildLeadPayload(leadRef.current, ctxRef.current, transcriptRef.current);
+    const payload = buildLeadPayload(leadRef.current, ctxRef.current, transcriptRef.current, turnstileTokenRef.current);
     try {
       const res = await fetch('/api/lead', {
         method: 'POST',
@@ -391,6 +467,7 @@ export default function ChatWidget() {
       if (!res.ok) throw new Error('Request failed');
       setLead((prev) => ({ ...prev, step: 'done' }));
       setCtx((c) => ({ ...c, leadSubmitted: true }));
+      trackLead({ source: 'chatbot', service: payload.service, urgent: payload.urgent });
       pushBotReply(
         <>
           <p className="flex items-center gap-1.5 font-semibold text-orange-600">
@@ -403,21 +480,33 @@ export default function ChatWidget() {
         'Lead submitted successfully to the office'
       );
     } catch {
-      // Fall back to a mailto: hand-off so the lead is never silently lost
-      // if the API route is unreachable.
-      window.location.href = buildLeadMailto(leadRef.current, ctxRef.current, transcriptRef.current);
-      setLead((prev) => ({ ...prev, step: 'done' }));
-      setCtx((c) => ({ ...c, leadSubmitted: true }));
+      // Never claim success, and never navigate the visitor away on our own.
+      // The details stay in the chat so they can retry, call, or choose to
+      // email them. Tokens are single-use, so the check is re-issued.
+      setTurnstileToken(null);
+      setTurnstileKey((k) => k + 1);
+      setLead((prev) => ({ ...prev, step: 'confirm' }));
       pushBotReply(
         <>
-          <p className="flex items-center gap-1.5 font-semibold text-orange-600">
-            <AlertTriangle className="h-4 w-4" /> Your email app should be opening now.
+          <p className="flex items-center gap-1.5 font-semibold text-red-700">
+            <AlertTriangle className="h-4 w-4" /> That didn&rsquo;t go through.
           </p>
-          <p className="text-ink-500 mt-1">
-            Hit send there to reach our office. For anything urgent, call {business.hotline.display}.
+          <p className="text-ink-600 mt-1">
+            Please call{' '}
+            <a href={`tel:${business.hotline.tel}`} className="font-semibold text-orange-600 underline">
+              {business.hotline.display}
+            </a>
+            , try sending again, or{' '}
+            <a
+              href={buildLeadMailto(leadRef.current, ctxRef.current, transcriptRef.current)}
+              className="font-semibold text-orange-600 underline"
+            >
+              email these details
+            </a>
+            .
           </p>
         </>,
-        'Lead API unreachable, handed off to visitor email client'
+        'Lead submission failed; offered call, retry, or email'
       );
     }
   }
@@ -446,9 +535,12 @@ export default function ChatWidget() {
     if (step === 'wizard-service') {
       const matchedService = services.find((s) => s.title.toLowerCase() === t.toLowerCase());
       const label = matchedService?.title ?? t;
-      if (t.length < 2) {
+      if (t.length < 2 || t.length > LEAD_LIMITS.service) {
         pushBotReply(
-          <>What kind of issue is it, drain, water heater, cooling, electrical, or something else?</>,
+          <>
+            What kind of issue is it, drain, water heater, cooling, electrical, or something else? A few words is
+            plenty.
+          </>,
           'Reprompted for service type'
         );
         return;
@@ -489,7 +581,7 @@ export default function ChatWidget() {
     }
 
     if (step === 'wizard-city') {
-      if (t.length < 2) {
+      if (t.length < 2 || t.length > LEAD_LIMITS.city) {
         pushBotReply(<>Which city should I put down?</>, 'Reprompted for city');
         return;
       }
@@ -543,7 +635,7 @@ export default function ChatWidget() {
     if (step === 'phone') {
       if (!isValidPhone(t)) {
         pushBotReply(
-          <>That doesn&rsquo;t look like a full phone number, mind trying again?</>,
+          <>That doesn&rsquo;t look like a full phone number, mind including the area code?</>,
           'Asked again for phone'
         );
         return;
@@ -660,7 +752,10 @@ export default function ChatWidget() {
                   : 'Type a question…';
 
   return (
-    <div className={`fixed right-4 bottom-24 lg:right-6 lg:bottom-6 ${open ? 'z-[60]' : 'z-40'}`}>
+    <aside
+      aria-label="Chat assistant"
+      className={`fixed right-4 bottom-24 lg:right-6 lg:bottom-6 ${open ? 'z-[60]' : 'z-40'}`}
+    >
       <AnimatePresence>
         {open && (
           <motion.div
@@ -674,7 +769,7 @@ export default function ChatWidget() {
             aria-modal="true"
             aria-label={`Chat with ${business.name}`}
           >
-            <div className="relative shrink-0 overflow-hidden bg-navy-900 p-5">
+            <div className="bg-navy-900 relative shrink-0 overflow-hidden p-5">
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0"
@@ -777,9 +872,30 @@ export default function ChatWidget() {
               ) : lead.step === 'wizard-issue' ? (
                 <ActionButton label="Skip this" onClick={() => handleUserInput('skip')} />
               ) : lead.step === 'confirm' ? (
-                <div className="grid grid-cols-2 gap-1.5">
-                  <ActionButton label="Yes, send it" onClick={() => handleUserInput('Yes, send it')} />
-                  <ActionButton label="Start over" onClick={() => handleUserInput('Start over')} />
+                <div className="space-y-2">
+                  <Turnstile
+                    key={turnstileKey}
+                    onVerify={(token) => {
+                      setTurnstileToken(token);
+                      setTurnstileFailed(false);
+                    }}
+                    onExpire={() => setTurnstileToken(null)}
+                    onError={() => setTurnstileFailed(true)}
+                    theme="light"
+                  />
+                  {turnstileFailed && (
+                    <p role="alert" className="text-center text-xs font-medium text-red-700">
+                      The security check couldn&rsquo;t load. Please call {business.hotline.display}.
+                    </p>
+                  )}
+                  <div className="grid grid-cols-2 gap-1.5">
+                    <ActionButton
+                      label="Yes, send it"
+                      disabled={turnstileEnabled && !turnstileToken}
+                      onClick={() => handleUserInput('Yes, send it')}
+                    />
+                    <ActionButton label="Start over" onClick={() => handleUserInput('Start over')} />
+                  </div>
                 </div>
               ) : lead.step === 'sending' ? (
                 <p className="text-ink-400 py-1.5 text-center text-xs">Sending…</p>
@@ -830,7 +946,11 @@ export default function ChatWidget() {
         )}
       </AnimatePresence>
 
-      <div className="flex items-center justify-end gap-3">
+      {/* The teaser is absolutely positioned beside the launcher, outside the
+          flex flow: as a flex sibling it resized this fixed container when it
+          appeared and moved the launcher (a layout shift on every page). Desktop
+          only: on a phone it covered the hero's call button. */}
+      <div className="relative flex justify-end">
         <AnimatePresence>
           {teaser && !open && (
             <motion.div
@@ -838,7 +958,7 @@ export default function ChatWidget() {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: 10, scale: 0.95 }}
               transition={{ duration: 0.25 }}
-              className="border-ink-100 flex max-w-[220px] items-start gap-2 rounded-2xl rounded-br-md border bg-white p-3.5 pr-2.5 shadow-xl shadow-black/10"
+              className="border-ink-100 absolute right-full bottom-0 mr-3 hidden w-[220px] items-start gap-2 rounded-2xl rounded-br-md border bg-white p-3.5 pr-2.5 shadow-xl shadow-black/10 lg:flex"
             >
               <p className="text-ink-700 flex-1 text-sm leading-snug">
                 Got a plumbing, HVAC, or electrical question? I can help, or connect you to a real person.
@@ -847,7 +967,7 @@ export default function ChatWidget() {
                 type="button"
                 aria-label="Dismiss"
                 onClick={() => setTeaser(false)}
-                className="text-ink-400 hover:bg-ink-100 hover:text-ink-700 grid h-5 w-5 shrink-0 place-items-center rounded-full"
+                className="text-ink-400 hover:bg-ink-100 hover:text-ink-700 grid h-6 w-6 shrink-0 place-items-center rounded-full"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -858,6 +978,7 @@ export default function ChatWidget() {
         <AnimatePresence>
           {!open && (
             <motion.button
+              ref={launcherRef}
               type="button"
               onClick={() => {
                 setOpen(true);
@@ -871,7 +992,7 @@ export default function ChatWidget() {
               transition={{ duration: 0.2, ease: EASE }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.92 }}
-              className="group relative grid h-14 w-14 shrink-0 place-items-center rounded-full bg-navy-900 text-white shadow-[0_0_0_3px_var(--color-orange-400),var(--shadow-card-hover)] lg:h-16 lg:w-16"
+              className="group bg-navy-900 relative grid h-14 w-14 shrink-0 place-items-center rounded-full text-white shadow-[0_0_0_3px_var(--color-orange-400),var(--shadow-card-hover)] lg:h-16 lg:w-16"
             >
               <span
                 aria-hidden
@@ -893,6 +1014,6 @@ export default function ChatWidget() {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </aside>
   );
 }

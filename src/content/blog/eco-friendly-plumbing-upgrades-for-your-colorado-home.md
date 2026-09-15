@@ -1,10 +1,10 @@
 ---
-title: "Eco-Friendly Plumbing Upgrades for Your Colorado Home"
-description: "Sustainable plumbing upgrades, from low-flow fixtures to tankless water heaters, that save water and energy while lowering utility bills in Colorado homes."
-category: "Plumbing"
+title: 'Eco-Friendly Plumbing Upgrades for Your Colorado Home'
+description: 'Sustainable plumbing upgrades, from low-flow fixtures to tankless water heaters, that save water and energy while lowering utility bills in Colorado homes.'
+category: 'Plumbing'
 publishDate: 2026-12-02
 author: "Adam O'Brien"
-oldSlug: "eco-friendly-plumbing-upgrades-for-your-colorado-home"
+oldSlug: 'eco-friendly-plumbing-upgrades-for-your-colorado-home'
 ---
 
 As a Colorado homeowner, you likely appreciate the natural beauty of our state - from the majestic Rockies to our pristine waterways. But did you know that your plumbing system can significantly impact the environment? Eco-friendly plumbing upgrades not only help protect Colorado’s water resources but can also save you money on utility bills. At Affordable Plumbing, Heat & Electrical, we’re passionate about helping you create a sustainable home while maintaining top-notch comfort and efficiency.

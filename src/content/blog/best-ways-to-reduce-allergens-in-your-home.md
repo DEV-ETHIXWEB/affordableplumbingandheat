@@ -1,10 +1,10 @@
 ---
-title: "Best Ways to Reduce Allergens in Your Home"
-description: "Practical strategies for reducing dust, pollen, and other allergens indoors, from air filtration to cleaning habits, for a healthier home environment."
+title: 'Best Ways to Reduce Allergens in Your Home'
+description: 'Practical strategies for reducing dust, pollen, and other allergens indoors, from air filtration to cleaning habits, for a healthier home environment.'
 category: "Homeowner's Guide"
 publishDate: 2026-03-18
 author: "Adam O'Brien"
-oldSlug: "best-ways-to-reduce-allergens-in-your-home"
+oldSlug: 'best-ways-to-reduce-allergens-in-your-home'
 ---
 
 Allergies can make life miserable, especially when they strike inside your own home. Pollen, pet dander, dust mites, and mold spores are common indoor allergens that can trigger sneezing, coughing, itchy eyes, and even respiratory issues. Fortunately, there are effective ways to reduce allergens and create a healthier living environment. Here are some of the best methods to keep allergens at bay.

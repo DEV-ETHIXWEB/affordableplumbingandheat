@@ -1,31 +1,31 @@
 ---
 title: "What NOT to Flush: Your Toilet and Septic System's Worst Enemies"
-description: "Flushing the wrong items can clog pipes and damage septic systems. Learn what never belongs in your toilet and how to protect your plumbing."
-category: "Plumbing"
+description: 'Flushing the wrong items can clog pipes and damage septic systems. Learn what never belongs in your toilet and how to protect your plumbing.'
+category: 'Plumbing'
 publishDate: 2026-12-01
 author: "Adam O'Brien"
-oldSlug: "what-not-to-flush-your-toilet-and-septic-systems-worst-enemies"
+oldSlug: 'what-not-to-flush-your-toilet-and-septic-systems-worst-enemies'
 ---
 
 Your toilet is not a trash can. While it’s designed to handle human waste and toilet paper (specifically, paper designed to dissolve quickly), the moment you flush anything else, you are actively inviting clogs, costly plumbing emergencies, and potentially catastrophic damage to your septic system or the Colorado Springs municipal sewer lines.
 
 At **Affordable Plumbing, Heat & Electrical**, we often see the same offenders causing major problems. Saving money on a service call starts with being hyper-vigilant about what goes down the drain.
 
-Here is a list of items that should *never* be flushed, broken down by why they pose a threat to your plumbing.
+Here is a list of items that should _never_ be flushed, broken down by why they pose a threat to your plumbing.
 
 ## The Fiber Offenders: Things That Don't Dissolve
 
 These are the most common culprits. Unlike toilet paper, which is designed to break down rapidly in water, these items are built with strong, non-soluble fibers.
 
 - **Wipes (Even "Flushable" Ones):** This is the number one enemy. Despite the labels, **flushable wipes are a lie.** They may go down the toilet easily, but their polyester and plastic fibers do not dissolve like paper. Instead, they catch grease and other debris, creating massive, immovable blockages known as "fatbergs" in pipes and sewer systems.
-- **Paper Towels and Tissues:** While these are paper products, they are designed to be strong and absorbent (i.e., *not* dissolve). Flushing them regularly will eventually lead to a dense, stubborn clog in your toilet trap or main drain line.
+- **Paper Towels and Tissues:** While these are paper products, they are designed to be strong and absorbent (i.e., _not_ dissolve). Flushing them regularly will eventually lead to a dense, stubborn clog in your toilet trap or main drain line.
 - **Feminine Hygiene Products:** Tampons and pads are designed to absorb and expand, not dissolve. When flushed, they quickly swell with water and can get caught in small bends or corners of your pipes, creating an instant blockage.
 
 ## The Kitchen and Grease Killers
 
 It might seem obvious, but what happens in your kitchen often impacts your bathroom, especially if you have an older or undersized sewer line.
 
-- **Cooking Grease and Oil:** Never, ever dump grease down the sink, and definitely don't try to dilute it by flushing it down the toilet. When hot grease cools, it solidifies. This sticky substance coats the inside of your pipes and catches *everything* else that flows by (wipes, hair, food scraps), leading to those costly, stubborn clogs.
+- **Cooking Grease and Oil:** Never, ever dump grease down the sink, and definitely don't try to dilute it by flushing it down the toilet. When hot grease cools, it solidifies. This sticky substance coats the inside of your pipes and catches _everything_ else that flows by (wipes, hair, food scraps), leading to those costly, stubborn clogs.
 - **Food Scraps:** Your stomach - or the garbage disposal - is the right place for food, not the toilet.
 
 ## The Chemical and Medicinal Hazards

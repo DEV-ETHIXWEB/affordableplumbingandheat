@@ -23,8 +23,12 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
 const points = [
   { icon: Clock, title: 'Available 24/7', body: 'A real person answers, day or night, holidays included.' },
-  { icon: ShieldCheck, title: 'Licensed & Insured', body: `Electrical #${business.license.electrical}, plumbing #${business.license.plumbing}, mechanical #${business.license.mechanical}.` },
-  { icon: Award, title: 'Upfront Pricing', body: "We explain the cost clearly before any work begins, no surprises." }
+  {
+    icon: ShieldCheck,
+    title: 'Licensed & Insured',
+    body: `Electrical #${business.license.electrical}, plumbing #${business.license.plumbing}, mechanical #${business.license.mechanical}.`
+  },
+  { icon: Award, title: 'Upfront Pricing', body: 'We explain the cost clearly before any work begins, no surprises.' }
 ];
 ---
 
@@ -47,9 +51,9 @@ const points = [
       <p class="text-ink-600 text-lg leading-relaxed">
         Welcome to Affordable Plumbing, Heat &amp; Electrical, your trusted solution for top-notch home services in
         Colorado Springs, Colorado. With decades of combined experience, our team is dedicated to delivering
-        unparalleled expertise and exceptional customer care at affordable rates. Whether you're facing a leaky
-        faucet, a malfunctioning furnace, or electrical issues, our licensed technicians are here to provide prompt,
-        reliable solutions tailored to your needs.
+        unparalleled expertise and exceptional customer care at affordable rates. Whether you're facing a leaky faucet,
+        a malfunctioning furnace, or electrical issues, our licensed technicians are here to provide prompt, reliable
+        solutions tailored to your needs.
       </p>
       <p class="text-ink-600 mt-6 text-lg leading-relaxed">
         We prioritize transparency and integrity in every interaction. We understand the importance of a smoothly
@@ -62,7 +66,7 @@ const points = [
         {
           points.map((p) => (
             <div class="border-ink-100 shadow-card rounded-2xl border bg-white p-6">
-              <span class="bg-orange-500/15 text-orange-600 ring-orange-500/25 inline-flex size-11 items-center justify-center rounded-2xl ring-1 ring-inset">
+              <span class="inline-flex size-11 items-center justify-center rounded-2xl bg-orange-500/15 text-orange-600 ring-1 ring-orange-500/25 ring-inset">
                 <p.icon className="size-5" aria-hidden="true" />
               </span>
               <h2 class="font-display text-ink-900 mt-4 text-base font-bold">{p.title}</h2>
@@ -73,7 +77,11 @@ const points = [
       </div>
 
       <div class="mt-14 flex flex-wrap items-center gap-6">
-        {trustBadges.map((badge) => <Image src={badge.image} alt={badge.name} width={120} height={50} class="h-12 w-auto" loading="lazy" />)}
+        {
+          trustBadges.map((badge) => (
+            <Image src={badge.image} alt={badge.name} width={120} height={50} class="h-12 w-auto" loading="lazy" />
+          ))
+        }
       </div>
     </Container>
   </section>

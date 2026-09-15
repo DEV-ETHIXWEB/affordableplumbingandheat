@@ -1,10 +1,10 @@
 ---
-title: "What to Do If All the Drains in Your House Are Clogged"
-description: "When every drain in the house backs up at once, it usually points to a main line problem. Learn what to do and when to call a professional plumber."
-category: "Troubleshooting"
+title: 'What to Do If All the Drains in Your House Are Clogged'
+description: 'When every drain in the house backs up at once, it usually points to a main line problem. Learn what to do and when to call a professional plumber.'
+category: 'Troubleshooting'
 publishDate: 2026-04-25
 author: "Adam O'Brien"
-oldSlug: "what-to-do-if-all-the-drains-in-your-house-are-clogged"
+oldSlug: 'what-to-do-if-all-the-drains-in-your-house-are-clogged'
 ---
 
 Few plumbing problems are as stressful as having every drain in your house back up at once. Whether it’s the kitchen sink, shower, or toilet, a home-wide clog brings daily life to a screeching halt. So what does it mean - and more importantly, what can you do about it?

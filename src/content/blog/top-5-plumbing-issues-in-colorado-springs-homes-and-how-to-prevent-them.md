@@ -1,10 +1,10 @@
 ---
-title: "Top 5 Plumbing Issues in Colorado Springs Homes and How to Prevent Them"
+title: 'Top 5 Plumbing Issues in Colorado Springs Homes and How to Prevent Them'
 description: "Colorado Springs' climate and terrain create unique plumbing challenges. Learn the top five issues local homeowners face and how to prevent them."
-category: "Colorado"
+category: 'Colorado'
 publishDate: 2026-09-23
 author: "Adam O'Brien"
-oldSlug: "top-5-plumbing-issues-in-colorado-springs-homes-and-how-to-prevent-them"
+oldSlug: 'top-5-plumbing-issues-in-colorado-springs-homes-and-how-to-prevent-them'
 ---
 
 If you own a home in Colorado Springs, you know the local climate and geography can present unique challenges for your plumbing system. From freezing winter temperatures to hard water problems, homeowners need to be vigilant about maintaining their plumbing to avoid costly repairs. In this post, we’ll explore the top five plumbing issues commonly seen in Colorado Springs homes and offer tips on how to prevent them.

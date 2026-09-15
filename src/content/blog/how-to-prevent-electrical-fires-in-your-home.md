@@ -1,10 +1,14 @@
 ---
-title: "How to Prevent Electrical Fires in Your Home"
-description: "Practical, expert tips to reduce the risk of an electrical fire year-round, from safe space heater use to overloaded circuits and outdated wiring."
-category: "Electrical"
+title: 'How to Prevent Electrical Fires in Your Home'
+description: 'Practical, expert tips to reduce the risk of an electrical fire year-round, from safe space heater use to overloaded circuits and outdated wiring.'
+category: 'Electrical'
 publishDate: 2026-07-15
-author: "Brett Eller"
-oldSlugs: ["how-to-prevent-electrical-fires-in-winter-essential-tips-from-affordable-plumbing-heat-amp-electrical", "how-to-prevent-electrical-fires-in-your-home"]
+author: 'Brett Eller'
+oldSlugs:
+  [
+    'how-to-prevent-electrical-fires-in-winter-essential-tips-from-affordable-plumbing-heat-amp-electrical',
+    'how-to-prevent-electrical-fires-in-your-home'
+  ]
 ---
 
 Electrical fires are a serious hazard that can cause significant damage to your home and put your family at risk. With proper awareness and a few preventative measures, you can greatly reduce that risk. Here's what every homeowner should know.

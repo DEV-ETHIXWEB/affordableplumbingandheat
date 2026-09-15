@@ -1,10 +1,10 @@
 ---
-title: "What is a Tankless Water Heater and How Does It Work?"
-description: "Tankless water heaters heat water on demand instead of storing it. Learn how they work and what makes them different from traditional tank units."
-category: "Water Heaters"
+title: 'What is a Tankless Water Heater and How Does It Work?'
+description: 'Tankless water heaters heat water on demand instead of storing it. Learn how they work and what makes them different from traditional tank units.'
+category: 'Water Heaters'
 publishDate: 2026-09-16
 author: "Adam O'Brien"
-oldSlug: "what-is-a-tankless-water-heater-and-how-does-it-work"
+oldSlug: 'what-is-a-tankless-water-heater-and-how-does-it-work'
 ---
 
 When it comes to modernizing your home’s energy systems, one of the most impactful upgrades you can make is installing a tankless water heater. Unlike traditional water heaters that store and constantly heat a large tank of water, tankless water heaters provide hot water on demand, making them both energy-efficient and space-saving.

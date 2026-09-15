@@ -1,10 +1,10 @@
 ---
 title: "Navigating Colorado Springs' Electrical Code: What Homeowners Need to Know"
 description: "Colorado Springs has specific electrical code requirements homeowners should understand before starting any wiring or panel project. Here's what to know."
-category: "Electrical"
+category: 'Electrical'
 publishDate: 2026-04-29
 author: "Adam O'Brien"
-oldSlug: "navigating-colorado-springs-electrical-code-what-homeowners-need-to-know"
+oldSlug: 'navigating-colorado-springs-electrical-code-what-homeowners-need-to-know'
 ---
 
 Are you a homeowner in Colorado Springs looking to tackle electrical projects around your house? Whether you're planning a renovation, upgrading fixtures, or simply trying to troubleshoot issues, understanding the electrical code is crucial. Navigating the electrical code can seem daunting, but with the right knowledge, you can ensure your projects are safe, up to code, and hassle-free. In this guide, we'll break down everything you need to know about Colorado Springs' electrical code, empowering you to make informed decisions and keep your home's electrical system in top shape.

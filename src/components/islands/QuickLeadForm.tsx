@@ -5,10 +5,8 @@ import { Send, CheckCircle2, Phone, Loader2, User, AlertTriangle } from 'lucide-
 import { quickLeadSchema, type QuickLeadValues } from '../../lib/contactSchema';
 import { zodResolver } from '../../lib/zodResolver';
 import { business } from '../../data/business';
-import { Turnstile } from './Turnstile';
-import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
-
-const turnstileRequired = Boolean(PUBLIC_TURNSTILE_SITE_KEY);
+import { Turnstile, turnstileEnabled } from './Turnstile';
+import { trackLead } from '../../lib/analytics';
 
 /**
  * Short homepage enquiry form: name, phone, service, optional detail.
@@ -16,9 +14,8 @@ const turnstileRequired = Boolean(PUBLIC_TURNSTILE_SITE_KEY);
  * Deliberately not the full ContactForm — this sits beside the hero trust
  * points as a low-friction capture, and anything more than four fields there
  * reads as work. POST /api/lead already accepts a short payload (only name and
- * phone are required), so both forms hit the same endpoint and the same inbox;
- * `source` stays 'contact-form' because the API only distinguishes form vs
- * chatbot.
+ * phone are required), so both forms hit the same endpoint and the same inbox,
+ * labelled 'quick-lead' so the office can tell which form a lead came from.
  */
 const SERVICE_OPTIONS = [
   'Plumbing',
@@ -43,6 +40,9 @@ const errorText = 'mt-1.5 text-xs font-medium text-red-300';
 export default function QuickLeadForm() {
   const [status, setStatus] = useState<'idle' | 'sent' | 'error'>('idle');
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  // Remounted after each attempt - Turnstile tokens are single-use.
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  const [turnstileFailed, setTurnstileFailed] = useState(false);
   const {
     register,
     handleSubmit,
@@ -55,20 +55,22 @@ export default function QuickLeadForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          source: 'contact-form',
+          source: 'quick-lead',
           name: data.name,
           phone: data.phone,
           service: data.service,
           message: data.message ?? '',
           urgent: data.service === 'Emergency - Need Help Now',
           company: data.company ?? '',
-          turnstileToken
+          turnstileToken: turnstileToken ?? undefined
         })
       });
       if (!res.ok) throw new Error('Request failed');
       setStatus('sent');
+      trackLead({ source: 'quick-lead', service: data.service, urgent: data.service === 'Emergency - Need Help Now' });
     } catch {
       setTurnstileToken(null);
+      setTurnstileKey((k) => k + 1);
       setStatus('error');
     }
   });
@@ -106,7 +108,10 @@ export default function QuickLeadForm() {
       </div>
 
       {status === 'error' && (
-        <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-500/15 px-3 py-2.5 text-sm text-red-100">
+        <div
+          role="alert"
+          className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-500/15 px-3 py-2.5 text-sm text-red-100"
+        >
           <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>
             Couldn&rsquo;t send that. Please call{' '}
@@ -215,11 +220,25 @@ export default function QuickLeadForm() {
         />
       </div>
 
-      <Turnstile onVerify={setTurnstileToken} onExpire={() => setTurnstileToken(null)} theme="dark" />
+      <Turnstile
+        key={turnstileKey}
+        onVerify={(token) => {
+          setTurnstileToken(token);
+          setTurnstileFailed(false);
+        }}
+        onExpire={() => setTurnstileToken(null)}
+        onError={() => setTurnstileFailed(true)}
+        theme="dark"
+      />
+      {turnstileFailed && (
+        <p role="alert" className={errorText}>
+          The security check couldn&rsquo;t load. Refresh the page or call {business.hotline.display}.
+        </p>
+      )}
 
       <button
         type="submit"
-        disabled={isSubmitting || (turnstileRequired && !turnstileToken)}
+        disabled={isSubmitting || (turnstileEnabled && !turnstileToken)}
         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-orange-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-orange-900/30 transition-transform hover:bg-orange-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? (

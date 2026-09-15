@@ -1,10 +1,10 @@
 ---
-title: "Dealing with a Sewer Backup: Essential Step"
-description: "A sewer backup is a plumbing emergency that demands quick, careful action. Follow these essential steps to protect your home and health when it happens."
-category: "Sewer"
+title: 'Dealing with a Sewer Backup: Essential Step'
+description: 'A sewer backup is a plumbing emergency that demands quick, careful action. Follow these essential steps to protect your home and health when it happens.'
+category: 'Sewer'
 publishDate: 2026-03-12
-author: "MacShayne Walpole-Molinar"
-oldSlug: "dealing-with-a-sewer-backup-essential-step"
+author: 'MacShayne Walpole-Molinar'
+oldSlug: 'dealing-with-a-sewer-backup-essential-step'
 ---
 
 Experiencing a sewer backup can be a homeowner's nightmare, causing stress and potential damage to your property. However, knowing what steps to take in such a situation can help mitigate the damage and ensure a swift resolution. At Affordable Plumbing, Heat & Electrical in Colorado Springs, Colorado, we understand the urgency of sewer backups and are here to provide guidance on what to do if you encounter this issue.

@@ -1,10 +1,10 @@
 ---
-title: "Understanding Your Home’s Electrical Panel"
+title: 'Understanding Your Home’s Electrical Panel'
 description: "Your electrical panel is the control center of your home's power. Learn how it works, what warning signs to watch for, and when it might need an upgrade."
-category: "Electrical"
+category: 'Electrical'
 publishDate: 2026-06-26
 author: "Adam O'Brien"
-oldSlug: "understanding-your-homes-electrical-panel"
+oldSlug: 'understanding-your-homes-electrical-panel'
 ---
 
 Your home’s electrical panel, often referred to as the breaker box or fuse box, is the heart of your electrical system. It’s crucial for distributing electricity throughout your home safely and efficiently. Understanding your electrical panel can help you manage your home's power usage, troubleshoot common issues, and ensure the safety of your household. Here’s a comprehensive guide to help you get to know this vital component of your home’s electrical infrastructure.

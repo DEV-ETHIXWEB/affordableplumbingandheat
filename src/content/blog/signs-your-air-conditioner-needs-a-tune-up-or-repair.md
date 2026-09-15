@@ -1,10 +1,14 @@
 ---
-title: "Signs Your Air Conditioner Needs a Tune-Up or Repair"
-description: "From strange noises to rising energy bills, learn the warning signs that mean your air conditioner needs a professional tune-up or repair."
-category: "HVAC"
+title: 'Signs Your Air Conditioner Needs a Tune-Up or Repair'
+description: 'From strange noises to rising energy bills, learn the warning signs that mean your air conditioner needs a professional tune-up or repair.'
+category: 'HVAC'
 publishDate: 2026-01-30
 author: "Adam O'Brien"
-oldSlugs: ["signs-your-air-conditioner-needs-attention-dont-ignore-the-warning-signals", "is-it-time-for-an-air-conditioner-tune-up"]
+oldSlugs:
+  [
+    'signs-your-air-conditioner-needs-attention-dont-ignore-the-warning-signals',
+    'is-it-time-for-an-air-conditioner-tune-up'
+  ]
 ---
 
 As the scorching summer days approach, your air conditioner becomes a crucial ally in keeping your home cool and comfortable. But like any appliance, air conditioners aren't immune to wear and tear, and they require regular maintenance to run efficiently. Recognizing the signs of a struggling AC early can save you from unexpected breakdowns and costly repairs. Here are the key indicators that it's time to schedule a tune-up or repair.

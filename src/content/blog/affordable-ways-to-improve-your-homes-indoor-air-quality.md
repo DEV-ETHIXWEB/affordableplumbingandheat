@@ -1,10 +1,10 @@
 ---
 title: "Affordable Ways to Improve Your Home's Indoor Air Quality"
-description: "Budget-friendly ways to improve indoor air quality at home, from air filters to ventilation habits, so your family breathes cleaner, healthier air."
+description: 'Budget-friendly ways to improve indoor air quality at home, from air filters to ventilation habits, so your family breathes cleaner, healthier air.'
 category: "Homeowner's Guide"
 publishDate: 2026-05-20
 author: "Adam O'Brien"
-oldSlug: "affordable-ways-to-improve-your-homes-indoor-air-quality"
+oldSlug: 'affordable-ways-to-improve-your-homes-indoor-air-quality'
 ---
 
 In our quest for a healthier home environment, we often overlook the quality of the air we breathe indoors. Poor indoor air quality can lead to a host of health issues, including respiratory problems, allergies, and even more serious conditions over time. While investing in expensive air purifiers and filtration systems might seem like the only solution, there are actually plenty of affordable ways to enhance your home's indoor air quality. In this blog post, we'll explore some simple and cost-effective strategies to breathe easier and create a healthier living space for you and your family.

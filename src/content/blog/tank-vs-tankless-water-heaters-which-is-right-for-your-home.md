@@ -1,10 +1,14 @@
 ---
-title: "Tank vs. Tankless Water Heaters: Which Is Right for Your Home?"
-description: "Comparing traditional tank and tankless water heaters, including cost, lifespan, and energy efficiency, to help you choose the right fit for your home."
-category: "Water Heaters"
+title: 'Tank vs. Tankless Water Heaters: Which Is Right for Your Home?'
+description: 'Comparing traditional tank and tankless water heaters, including cost, lifespan, and energy efficiency, to help you choose the right fit for your home.'
+category: 'Water Heaters'
 publishDate: 2026-02-17
 author: "Adam O'Brien"
-oldSlugs: ["tank-vs-tankless-water-heaters-whats-best-for-your-home", "tankless-water-heaters-vs-traditional-water-heaters-which-is-right-for-you"]
+oldSlugs:
+  [
+    'tank-vs-tankless-water-heaters-whats-best-for-your-home',
+    'tankless-water-heaters-vs-traditional-water-heaters-which-is-right-for-you'
+  ]
 ---
 
 When it's time to replace your water heater, you're faced with a key decision: tank or tankless? Both types have real advantages and drawbacks, and choosing the right one for your home depends on your household size, energy goals, and hot water usage. At Affordable Plumbing, Heat & Electrical, we've helped hundreds of homeowners make smart, energy-efficient upgrades. Here's a breakdown to help you decide.

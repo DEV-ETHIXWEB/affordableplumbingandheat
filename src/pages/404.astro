@@ -12,7 +12,9 @@ const popularServices = services.slice(0, 4);
 <BaseLayout title={`Page Not Found | ${business.name}`} description="This page couldn't be found." noIndex>
   <section class="bg-white py-24 sm:py-32">
     <Container class="mx-auto flex max-w-2xl flex-col items-center text-center">
-      <span class="bg-orange-500/15 text-orange-600 ring-orange-500/25 grid size-16 place-items-center rounded-full ring-1 ring-inset">
+      <span
+        class="grid size-16 place-items-center rounded-full bg-orange-500/15 text-orange-600 ring-1 ring-orange-500/25 ring-inset"
+      >
         <Wrench className="size-7" aria-hidden="true" />
       </span>
       <h1 class="font-display text-ink-900 mt-6 text-4xl font-bold sm:text-5xl">404</h1>
@@ -34,7 +36,10 @@ const popularServices = services.slice(0, 4);
           {
             popularServices.map((s) => (
               <li>
-                <a href={`/services/${s.slug}/`} class="border-ink-100 text-ink-700 hover:border-orange-300 flex min-h-11 items-center justify-center rounded-xl border bg-white px-3 py-2.5 text-center text-xs font-medium transition-colors hover:text-orange-600">
+                <a
+                  href={`/services/${s.slug}/`}
+                  class="border-ink-100 text-ink-700 flex min-h-11 items-center justify-center rounded-xl border bg-white px-3 py-2.5 text-center text-xs font-medium transition-colors hover:border-orange-300 hover:text-orange-600"
+                >
                   {s.title}
                 </a>
               </li>

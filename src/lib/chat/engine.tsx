@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Phone } from 'lucide-react';
 import { business } from '../../data/business';
 import { findBestMatch } from './knowledge';
+import { isValidEmailAddress, isValidPhoneNumber, LEAD_LIMITS } from '../contactSchema';
 
 // Conversation state carried across turns in a single chat session. Nothing
 // here is persisted between sessions, it just lets the bot avoid repeating
@@ -58,30 +59,27 @@ const EMAIL_RE = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i;
 
 /** Picks a phone number or email address a visitor typed unprompted, so the bot can react without being asked. */
 export function detectContactInfo(text: string): { phone?: string; email?: string } {
-  const phoneMatch = text.match(PHONE_RE);
-  const emailMatch = text.match(EMAIL_RE);
+  const phone = text.match(PHONE_RE)?.[0]?.trim();
+  const email = text.match(EMAIL_RE)?.[0]?.trim();
   return {
-    phone: phoneMatch?.[0]?.trim(),
-    email: emailMatch?.[0]?.trim()
+    phone: phone && isValidPhone(phone) ? phone : undefined,
+    email: email && isValidEmail(email) ? email : undefined
   };
 }
 
+// Same rules POST /api/lead enforces, so the bot never collects a value the
+// server will reject after the visitor has already confirmed it.
 export function isValidName(value: string): boolean {
-  return value.trim().length >= 2;
+  const length = value.trim().length;
+  return length >= 2 && length <= LEAD_LIMITS.name;
 }
-export function isValidPhone(value: string): boolean {
-  return value.replace(/\D/g, '').length >= 7;
-}
-export function isValidEmail(value: string): boolean {
-  return EMAIL_RE.test(value.trim());
-}
+export const isValidPhone = isValidPhoneNumber;
+export const isValidEmail = isValidEmailAddress;
 
 function emergencyReply(): ReactNode {
   return (
     <>
-      <p>
-        Got it, that sounds urgent. Call our 24/7 emergency line right now, a live person answers around the clock.
-      </p>
+      <p>Got it, that sounds urgent. Call our 24/7 emergency line right now, a live person answers around the clock.</p>
       <a
         href={`tel:${business.hotline.tel}`}
         className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-orange-600 px-4 py-2 text-sm font-bold text-white"
@@ -95,8 +93,8 @@ function emergencyReply(): ReactNode {
 function humanReply(): ReactNode {
   return (
     <>
-      Of course. Call {business.hotline.display} any time, a real person picks up, not a robot. Or I can grab your
-      info right here and have someone call you back.
+      Of course. Call {business.hotline.display} any time, a real person picks up, not a robot. Or I can grab your info
+      right here and have someone call you back.
     </>
   );
 }
@@ -117,8 +115,8 @@ function bookingReply(): ReactNode {
 function fallbackReply(): ReactNode {
   return (
     <>
-      I&rsquo;m not sure I have a good answer for that one, best to ask a real person. Call {business.hotline.display}
-      , or I can take your name and number and have someone follow up.
+      I&rsquo;m not sure I have a good answer for that one, best to ask a real person. Call {business.hotline.display},
+      or I can take your name and number and have someone follow up.
     </>
   );
 }

@@ -1,10 +1,10 @@
 ---
-title: "Why You Need a Backflow Prevention Device"
+title: 'Why You Need a Backflow Prevention Device'
 description: "Backflow can let contaminated water into your home's clean water supply. Learn how a backflow prevention device protects your family's health."
-category: "Plumbing"
+category: 'Plumbing'
 publishDate: 2026-08-21
 author: "Adam O'Brien"
-oldSlug: "why-you-need-a-backflow-prevention-device"
+oldSlug: 'why-you-need-a-backflow-prevention-device'
 ---
 
 When it comes to protecting your home’s plumbing, some issues are less obvious than leaky faucets or clogged drains - but just as important. One of the most critical safeguards for your drinking water is a backflow prevention device.

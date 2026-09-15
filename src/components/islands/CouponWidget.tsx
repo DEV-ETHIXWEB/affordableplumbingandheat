@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Tag, X, Phone, Printer, ArrowRight, Sparkles } from 'lucide-react';
-import { coupons } from '../../data/coupons';
+import { getActiveCoupons, formatCouponExpiry, type Coupon } from '../../data/coupons';
 import { business } from '../../data/business';
 
 /* The open state used to be mirrored into sessionStorage and restored on
@@ -11,7 +11,7 @@ import { business } from '../../data/business';
    visitor asks for it on the page they're on. */
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-function printCoupon(coupon: (typeof coupons)[number]) {
+function printCoupon(coupon: Coupon) {
   const win = window.open('', '_blank', 'width=480,height=640');
   if (!win) return;
   const doc = win.document;
@@ -24,23 +24,26 @@ function printCoupon(coupon: (typeof coupons)[number]) {
     .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#d3440a;margin:0 0 8px;font-weight:700;}
     h1{font-size:24px;margin:0 0 16px;}
     .offer{font-size:16px;margin:0 0 18px;}
-    .code{display:inline-block;border:2px solid #16181e;border-radius:999px;padding:6px 18px;font-weight:700;letter-spacing:.08em;margin-bottom:18px;}
     .terms{font-size:12px;color:#555;margin:14px 0 0;line-height:1.5;}
   `;
   doc.head.appendChild(style);
   const card = doc.createElement('div');
   card.className = 'card';
-  // All interpolated values come from our own static coupons.ts (no user
-  // input reaches this template), so building markup here is safe.
-  card.innerHTML = `
-    <div class="brand">${business.shortName}</div>
-    <p class="kicker">Coupon</p>
-    <h1>${coupon.title}</h1>
-    <p class="offer">${coupon.description}</p>
-    <div class="code">CODE: ${coupon.code}</div>
-    <p class="terms">Show this coupon to your technician at time of service. Restrictions may apply.</p>
-    <p class="terms">Call ${business.hotline.display} to redeem.</p>
-  `;
+  const expiry = formatCouponExpiry(coupon);
+  const lines: [keyof HTMLElementTagNameMap, string, string][] = [
+    ['div', 'brand', business.name],
+    ['p', 'kicker', 'Coupon'],
+    ['h1', '', coupon.title],
+    ['p', 'offer', coupon.description],
+    ['p', 'terms', `${coupon.terms}${expiry ? ` Expires ${expiry}.` : ''}`],
+    ['p', 'terms', `Call ${business.hotline.display} to schedule.`]
+  ];
+  for (const [tag, className, text] of lines) {
+    const el = doc.createElement(tag);
+    if (className) el.className = className;
+    el.textContent = text;
+    card.appendChild(el);
+  }
   doc.body.appendChild(card);
   win.focus();
   win.print();
@@ -48,6 +51,9 @@ function printCoupon(coupon: (typeof coupons)[number]) {
 
 export default function CouponWidget() {
   const [open, setOpen] = useState(false);
+  // Evaluated in the browser on hydration, so an offer that has expired since
+  // the last deploy drops out even though the page itself is static.
+  const [coupons] = useState(getActiveCoupons);
   const tabRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -114,7 +120,7 @@ export default function CouponWidget() {
         <span className="font-display [transform:rotate(180deg)] text-[11px] font-bold tracking-wider uppercase [writing-mode:vertical-rl]">
           {open ? 'Close' : 'Coupons'}
         </span>
-        {!open && (
+        {!open && coupons.length > 0 && (
           <span className="font-display flex size-5 shrink-0 items-center justify-center rounded-full bg-white/20 text-[10px] font-bold">
             {coupons.length}
           </span>
@@ -147,7 +153,7 @@ export default function CouponWidget() {
                     tabIndex={-1}
                     className="font-display text-ink-900 mt-1.5 text-xl font-bold text-balance outline-none"
                   >
-                    {coupons.length} Ways to Save
+                    {coupons.length > 0 ? `${coupons.length} Ways to Save` : 'Current Specials'}
                   </h2>
                 </div>
                 {/* The rail tab doubles as the close control, but it is
@@ -168,9 +174,14 @@ export default function CouponWidget() {
             </div>
 
             <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+              {coupons.length === 0 && (
+                <p className="text-ink-600 px-2 py-6 text-center text-sm">
+                  No printed coupons are running right now. Call and ask about current specials.
+                </p>
+              )}
               {coupons.map((coupon) => (
                 <div
-                  key={coupon.code}
+                  key={coupon.id}
                   className="border-ink-100 shadow-card hover:bg-ink-50 rounded-2xl border bg-white p-4 transition-colors"
                 >
                   <div className="flex items-start gap-3">
@@ -179,12 +190,12 @@ export default function CouponWidget() {
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="font-display text-ink-900 text-sm font-bold">{coupon.title}</p>
-                      <p className="mt-1 text-[13px] leading-snug text-ink-600">{coupon.description}</p>
+                      <p className="text-ink-600 mt-1 text-[13px] leading-snug">{coupon.description}</p>
                     </div>
                   </div>
                   <div className="mt-3 flex items-center justify-between gap-2">
-                    <span className="font-display border-ink-200 text-ink-500 rounded-full border px-2.5 py-1 text-[10px] font-bold tracking-wide">
-                      CODE {coupon.code}
+                    <span className="text-ink-500 text-[11px] font-medium">
+                      {formatCouponExpiry(coupon) ? `Expires ${formatCouponExpiry(coupon)}` : 'Ongoing offer'}
                     </span>
                     <button
                       type="button"

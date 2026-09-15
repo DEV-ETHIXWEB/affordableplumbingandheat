@@ -1,10 +1,10 @@
 ---
-title: "The Importance of Professional Water Heater Installation"
-description: "Water heater installation involves gas, electricity, and code compliance. Learn why hiring a professional protects your safety, warranty, and investment."
-category: "Water Heaters"
+title: 'The Importance of Professional Water Heater Installation'
+description: 'Water heater installation involves gas, electricity, and code compliance. Learn why hiring a professional protects your safety, warranty, and investment.'
+category: 'Water Heaters'
 publishDate: 2026-06-19
 author: "Adam O'Brien"
-oldSlug: "the-importance-of-professional-water-heater-installation"
+oldSlug: 'the-importance-of-professional-water-heater-installation'
 ---
 
 When it comes to home appliances, your water heater is one of the most critical components. From providing hot showers to ensuring your dishwasher and washing machine run efficiently, a well-functioning water heater is essential to daily comfort and convenience. However, the installation of a water heater is not a task to be taken lightly. While DIY projects can be satisfying, water heater installation is best left to professionals.

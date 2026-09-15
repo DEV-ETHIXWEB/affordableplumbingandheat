@@ -64,7 +64,7 @@ export const categoryMeta: Record<ServiceCategory, { label: string; hub: string;
     label: 'Plumbing',
     hub: 'plumbing-contractor-colorado-springs',
     description:
-      'From leaky faucets to full water line repairs, our licensed plumbers handle every job with upfront pricing and same-day availability.'
+      'From leaky faucets to full water line repairs, our licensed plumbers handle every job with upfront pricing and 24/7 availability.'
   },
   hvac: {
     label: 'HVAC',
@@ -119,7 +119,7 @@ export const services: Service[] = [
     short: 'Gas, electric, and tankless water heater repair.',
     description:
       "No hot water is never convenient. We diagnose and repair every major water heater brand and type, tank or tankless, so you're back to normal fast.",
-    bullets: ['Same-day repair availability', 'All major brands serviced', 'Upfront, flat-rate pricing'],
+    bullets: ['24/7 emergency service', 'All major brands serviced', 'Upfront pricing, no hidden fees'],
     image: waterHeaterLeakImg
   },
   {
@@ -152,8 +152,8 @@ export const services: Service[] = [
     eyebrow: 'Repair, service, and install',
     short: 'Running, clogged, or leaking toilets fixed for good.',
     description:
-      'A toilet problem is rarely just an inconvenience, it can mean real water damage. We handle running toilets, weak flushes, and base leaks with same-day care.',
-    bullets: ['Same-day service', 'Wax ring & base leak repair', 'Water-efficient upgrade options'],
+      'A toilet problem is rarely just an inconvenience, it can mean real water damage. We handle running toilets, weak flushes, and base leaks before they turn into water damage.',
+    bullets: ['24/7 emergency service', 'Wax ring & base leak repair', 'Water-efficient upgrade options'],
     image: toiletRepairImg
   },
   {
@@ -246,8 +246,8 @@ export const services: Service[] = [
     eyebrow: 'Cooling repair',
     short: 'Fast air conditioner diagnosis and repair.',
     description:
-      "When your AC quits on a 95-degree day, waiting isn't an option. We diagnose and repair all major residential AC brands, often the same day.",
-    bullets: ['Same-day service available', 'All major AC brands', 'Upfront diagnostic pricing'],
+      "When your AC quits on a 95-degree day, waiting isn't an option. We diagnose and repair all major residential AC brands, and we're available 24/7.",
+    bullets: ['24/7 emergency service', 'All major AC brands', 'Upfront diagnostic pricing'],
     image: acRepairImg
   },
   {
@@ -338,7 +338,7 @@ export const services: Service[] = [
     short: 'Heat pump diagnosis and repair.',
     description:
       'From refrigerant issues to defrost-cycle problems, we diagnose and repair heat pumps so your year-round comfort system keeps working.',
-    bullets: ['Same-day diagnostics', 'All major brands serviced', 'Repair or replace guidance']
+    bullets: ['24/7 emergency service', 'All major brands serviced', 'Repair or replace guidance']
   },
   {
     slug: 'heating-repair-colorado-springs',
@@ -536,7 +536,7 @@ export const services: Service[] = [
     eyebrow: 'No-dig sewer repair',
     short: 'Trenchless sewer repair without tearing up your yard.',
     description:
-      "Trenchless repair fixes damaged sewer lines through small access points instead of digging a full trench, saving your landscaping, driveway, or patio.",
+      'Trenchless repair fixes damaged sewer lines through small access points instead of digging a full trench, saving your landscaping, driveway, or patio.',
     bullets: ['Minimal yard disruption', 'Faster than traditional dig-up', 'Long-lasting pipe lining'],
     image: trenchlessSewerImg
   },

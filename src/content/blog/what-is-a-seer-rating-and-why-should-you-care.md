@@ -1,10 +1,10 @@
 ---
-title: "What is a SEER Rating, and Why Should You Care?"
+title: 'What is a SEER Rating, and Why Should You Care?'
 description: "SEER ratings measure your air conditioner's energy efficiency. Learn what the number means and why it matters when choosing a new HVAC system."
-category: "FAQ"
+category: 'FAQ'
 publishDate: 2026-06-23
 author: "Adam O'Brien"
-oldSlug: "what-is-a-seer-rating-and-why-should-you-care"
+oldSlug: 'what-is-a-seer-rating-and-why-should-you-care'
 ---
 
 If you’re in the market for a new air conditioner - or just trying to understand your current one - you’ve probably come across the term “SEER rating”. But what does SEER mean, and why is it important? At Affordable Plumbing, Heat & Electrical in Colorado Springs, we help homeowners understand their heating and cooling equipment every day. Here’s what you need to know about SEER ratings and why they matter.

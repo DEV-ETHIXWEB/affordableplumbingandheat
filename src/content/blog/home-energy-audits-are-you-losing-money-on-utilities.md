@@ -1,10 +1,10 @@
 ---
-title: "Home Energy Audits: Are You Losing Money on Utilities?"
+title: 'Home Energy Audits: Are You Losing Money on Utilities?'
 description: "A home energy audit can reveal exactly where you're losing money on utilities. Learn what's involved and how it helps you cut wasteful energy spending."
 category: "Homeowner's Guide"
 publishDate: 2026-02-10
 author: "Adam O'Brien"
-oldSlug: "home-energy-audits-are-you-losing-money-on-utilities"
+oldSlug: 'home-energy-audits-are-you-losing-money-on-utilities'
 ---
 
 With rising energy costs, homeowners in Colorado are looking for ways to save money and make their homes more energy-efficient. One of the most effective ways to identify inefficiencies and reduce utility bills is by conducting a home energy audit. But what exactly is a home energy audit, and how can it help you stop wasting money on unnecessary energy use?

@@ -20,7 +20,14 @@ declare global {
   }
 }
 
-const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+// render=explicit: without it, api.js also auto-renders every `.cf-turnstile`
+// element it finds - with no data-sitekey on ours, that threw "Invalid or
+// missing type for parameter sitekey" whenever a widget mounted after the
+// script had loaded (the chatbot's confirm step).
+const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+
+/** True when the widget will render, so forms know to wait for a token. */
+export const turnstileEnabled = Boolean(PUBLIC_TURNSTILE_SITE_KEY);
 let scriptPromise: Promise<void> | null = null;
 
 function loadTurnstileScript(): Promise<void> {
@@ -38,7 +45,12 @@ function loadTurnstileScript(): Promise<void> {
     script.async = true;
     script.defer = true;
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Turnstile script failed'));
+    script.onerror = () => {
+      // Let a later mount retry instead of caching the failure forever.
+      scriptPromise = null;
+      script.remove();
+      reject(new Error('Turnstile script failed'));
+    };
     document.head.appendChild(script);
   });
   return scriptPromise;
@@ -50,22 +62,30 @@ function loadTurnstileScript(): Promise<void> {
  * live widget to submit forms — the server-side verifyTurnstile() helper
  * (src/lib/turnstile.ts) is the one that decides whether that absence is
  * acceptable (fails closed in production).
+ *
+ * Tokens are single-use: after any submission attempt, remount the widget
+ * (change its `key`) to get a fresh one.
  */
 export function Turnstile({
   onVerify,
   onExpire,
+  onError,
   theme = 'auto'
 }: {
   onVerify: (token: string) => void;
   onExpire?: () => void;
+  /** The check could not load or run (blocked script, network, widget error). */
+  onError?: () => void;
   theme?: 'light' | 'dark' | 'auto';
 }) {
   const containerId = `turnstile-${useId().replace(/:/g, '')}`;
   const widgetId = useRef<string | undefined>(undefined);
   const onVerifyRef = useRef(onVerify);
   const onExpireRef = useRef(onExpire);
+  const onErrorRef = useRef(onError);
   onVerifyRef.current = onVerify;
   onExpireRef.current = onExpire;
+  onErrorRef.current = onError;
 
   const siteKey = PUBLIC_TURNSTILE_SITE_KEY;
 
@@ -83,10 +103,15 @@ export function Turnstile({
           theme,
           callback: (token) => onVerifyRef.current(token),
           'expired-callback': () => onExpireRef.current?.(),
-          'error-callback': () => onExpireRef.current?.()
+          'error-callback': () => {
+            onExpireRef.current?.();
+            onErrorRef.current?.();
+          }
         });
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!cancelled) onErrorRef.current?.();
+      });
 
     return () => {
       cancelled = true;
@@ -99,5 +124,5 @@ export function Turnstile({
 
   if (!siteKey) return null;
 
-  return <div id={containerId} className="cf-turnstile" />;
+  return <div id={containerId} className="turnstile-widget" />;
 }

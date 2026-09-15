@@ -1,10 +1,10 @@
 ---
-title: "How to Know When It’s Time to Upgrade Your Electrical Panel"
+title: 'How to Know When It’s Time to Upgrade Your Electrical Panel'
 description: "An outdated electrical panel can't keep up with modern power needs. Learn the warning signs that mean it's time to upgrade your home's electrical panel."
-category: "Electrical"
+category: 'Electrical'
 publishDate: 2026-03-03
 author: "Adam O'Brien"
-oldSlug: "how-to-know-when-its-time-to-upgrade-your-electrical-panel"
+oldSlug: 'how-to-know-when-its-time-to-upgrade-your-electrical-panel'
 ---
 
 Your home’s electrical panel is the heart of your electrical system, distributing power to all your appliances, devices, and lighting. Over time, panels can become outdated or overloaded, posing safety risks and limiting your home’s electrical capabilities. Here’s how to tell when it might be time for an upgrade!

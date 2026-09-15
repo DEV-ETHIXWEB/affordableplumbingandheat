@@ -36,7 +36,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 const serviceSchema = buildServiceSchema({
   name: `Plumbing, HVAC & Electrical in ${city.name}, CO`,
   description: city.blurb,
-  path: `/service-area/${city.slug}/`
+  path: `/service-area/${city.slug}/`,
+  areaServed: city.name
 });
 ---
 

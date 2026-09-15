@@ -11,12 +11,16 @@
 # behind an edge runtime that can mint per-request nonces, swap
 # 'unsafe-inline' for that instead of loosening this further.
 #
-# frame-src allows Google Maps (the embedded service-area/contact map
-# iframes) — no other third-party frames are used.
+# Third-party origins, and why each is allowed:
+#   challenges.cloudflare.com  Turnstile bot check on every lead form (script + iframe)
+#   googletagmanager.com, google-analytics.com  GTM / GA4, only loaded when an ID is configured
+#   callrail.com  call tracking number swap, only loaded when configured
+#   maps.google.com, google.com  embedded map on the contact page
+# Keep this policy identical to vercel.json and src/middleware.ts.
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-src 'self' https://maps.google.com https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://www.googletagmanager.com https://cdn.callrail.com https://js.callrail.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; font-src 'self' data:; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.callrail.com; frame-src 'self' https://challenges.cloudflare.com https://maps.google.com https://www.google.com https://www.googletagmanager.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'

@@ -1,10 +1,14 @@
 ---
-title: "Energy-Efficient Heating Solutions for Colorado Homes"
+title: 'Energy-Efficient Heating Solutions for Colorado Homes'
 description: "A guide to energy-efficient heating options for Colorado's cold winters, from high-efficiency furnaces and heat pumps to smart thermostats and zoning."
-category: "HVAC"
+category: 'HVAC'
 publishDate: 2026-05-06
 author: "Adam O'Brien"
-oldSlugs: ["energy-efficient-heating-solutions-for-a-budget-friendly-home", "energy-efficient-heating-solutions-for-colorado-homes"]
+oldSlugs:
+  [
+    'energy-efficient-heating-solutions-for-a-budget-friendly-home',
+    'energy-efficient-heating-solutions-for-colorado-homes'
+  ]
 ---
 
 Living in Colorado means experiencing chilly winters that demand a reliable, efficient heating system. For homeowners, staying warm while minimizing energy costs and environmental impact is a top priority. At Affordable Plumbing, Heat & Electrical, we specialize in helping Colorado residents find energy-efficient heating solutions tailored to their needs. Here's a guide to keeping your home warm without straining your budget.

@@ -1,10 +1,10 @@
 ---
-title: "Winter Plumbing Prep: How to Avoid Frozen Pipes in Colorado Springs"
-description: "Frozen pipes are a common winter hazard in Colorado Springs. Learn how to prepare your plumbing now to avoid costly bursts when temperatures drop."
-category: "Colorado"
+title: 'Winter Plumbing Prep: How to Avoid Frozen Pipes in Colorado Springs'
+description: 'Frozen pipes are a common winter hazard in Colorado Springs. Learn how to prepare your plumbing now to avoid costly bursts when temperatures drop.'
+category: 'Colorado'
 publishDate: 2026-11-04
 author: "Adam O'Brien"
-oldSlug: "winter-plumbing-prep-how-to-avoid-frozen-pipes-in-colorado-springs"
+oldSlug: 'winter-plumbing-prep-how-to-avoid-frozen-pipes-in-colorado-springs'
 ---
 
 Winter in Colorado Springs is beautiful, but it can bring challenges for your home’s plumbing system, especially as temperatures plunge well below freezing. Frozen pipes are a common issue many homeowners face in our area, leading to potential water damage, costly repairs, and an inconvenience no one wants to deal with in the middle of winter. At Affordable Plumbing, Heat & Electrical, we want to help you protect your home this season with a few simple yet effective winter plumbing tips.

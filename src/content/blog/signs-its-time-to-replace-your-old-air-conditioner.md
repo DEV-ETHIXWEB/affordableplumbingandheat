@@ -1,10 +1,10 @@
 ---
-title: "Signs It’s Time to Replace Your Old Air Conditioner"
+title: 'Signs It’s Time to Replace Your Old Air Conditioner'
 description: "Rising repair costs, an aging R-22 system, or inconsistent cooling can all signal it's time to replace your air conditioner. Here's how to know for sure."
-category: "HVAC"
+category: 'HVAC'
 publishDate: 2026-05-19
 author: "Adam O'Brien"
-oldSlug: "signs-its-time-to-replace-your-old-air-conditioner"
+oldSlug: 'signs-its-time-to-replace-your-old-air-conditioner'
 ---
 
 Air conditioners don’t last forever. While regular maintenance can extend the life of your system, there comes a time when repairs just aren't worth it anymore. If your AC is struggling to keep your Colorado Springs home cool, it may be time to consider a replacement.

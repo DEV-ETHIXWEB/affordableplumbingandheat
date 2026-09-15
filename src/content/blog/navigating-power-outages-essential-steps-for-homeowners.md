@@ -1,10 +1,10 @@
 ---
-title: "Navigating Power Outages: Essential Steps for Homeowners"
-description: "Power outages can strike with little warning. Learn the essential steps homeowners should take to stay safe and minimize disruption when the lights go out."
-category: "Power Outages"
+title: 'Navigating Power Outages: Essential Steps for Homeowners'
+description: 'Power outages can strike with little warning. Learn the essential steps homeowners should take to stay safe and minimize disruption when the lights go out.'
+category: 'Power Outages'
 publishDate: 2026-02-13
-author: "MacShayne Walpole-Molinar"
-oldSlug: "navigating-power-outages-essential-steps-for-homeowners"
+author: 'MacShayne Walpole-Molinar'
+oldSlug: 'navigating-power-outages-essential-steps-for-homeowners'
 ---
 
 Power outages are a frustrating but inevitable part of life for homeowners. Whether caused by severe weather, equipment failure, or unforeseen circumstances, being prepared and knowing what to do during a power outage can make a significant difference in minimizing inconvenience and ensuring safety for you and your family. In this blog post, we'll discuss essential steps to take when faced with a power outage, covering everything from preparation to safety measures.

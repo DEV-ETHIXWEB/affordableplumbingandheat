@@ -1,10 +1,15 @@
 ---
-title: "Energy-Efficient Cooling Tips to Lower Your AC Costs"
-description: "Practical, energy-saving cooling tips for Colorado homes, from smart thermostat settings to shade, insulation, and AC maintenance that cut summer bills."
-category: "HVAC"
+title: 'Energy-Efficient Cooling Tips to Lower Your AC Costs'
+description: 'Practical, energy-saving cooling tips for Colorado homes, from smart thermostat settings to shade, insulation, and AC maintenance that cut summer bills.'
+category: 'HVAC'
 publishDate: 2026-06-04
 author: "Adam O'Brien"
-oldSlugs: ["energy-efficient-cooling-tips-for-colorado-homes", "home-energy-efficiency-tips-for-hot-colorado-summers", "how-to-reduce-your-air-conditioning-costs-this-summer"]
+oldSlugs:
+  [
+    'energy-efficient-cooling-tips-for-colorado-homes',
+    'home-energy-efficiency-tips-for-hot-colorado-summers',
+    'how-to-reduce-your-air-conditioning-costs-this-summer'
+  ]
 ---
 
 Keeping your Colorado home cool during the summer months doesn't have to mean sky-high utility bills. With dry heat, high altitude, and sunny days, Colorado homes face unique cooling challenges - but also unique opportunities for energy savings. At Affordable Plumbing, Heat & Electrical, we help homeowners stay comfortable and save money all summer long. Here are our top energy-efficient cooling tips.

@@ -1,10 +1,10 @@
 ---
-title: "Hydrojetting: The Efficient Solution for Clearing Tree Roots in Sewer Lines"
-description: "Tree roots are a leading cause of sewer line blockages. Learn how hydrojetting clears roots and buildup more effectively than traditional snaking."
-category: "Hydro Jetting"
+title: 'Hydrojetting: The Efficient Solution for Clearing Tree Roots in Sewer Lines'
+description: 'Tree roots are a leading cause of sewer line blockages. Learn how hydrojetting clears roots and buildup more effectively than traditional snaking.'
+category: 'Hydro Jetting'
 publishDate: 2026-04-23
-author: "MacShayne Walpole-Molinar"
-oldSlug: "hydrojetting-the-efficient-solution-for-clearing-tree-roots-in-sewer-lines"
+author: 'MacShayne Walpole-Molinar'
+oldSlug: 'hydrojetting-the-efficient-solution-for-clearing-tree-roots-in-sewer-lines'
 ---
 
 Maintaining the functionality of sewer lines is crucial for any property, whether residential or commercial. However, over time, these lines can become clogged with various debris, including tree roots, leading to frustrating and costly issues. While traditional snaking methods have been the go-to solution for many years, there's a more efficient and effective option available: Hydro Jetting. In this article, we'll explore why Hydro Jetting is a superior choice for clearing tree roots in sewer lines compared to continually snaking the line.

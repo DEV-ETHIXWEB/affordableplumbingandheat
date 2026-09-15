@@ -1,10 +1,10 @@
 ---
-title: "The Hidden Dangers of Hard Water and How to Solve Them"
-description: "Hard water does more than leave spots on dishes. Learn how mineral buildup damages plumbing and appliances over time, and how to solve the problem."
-category: "Plumbing"
+title: 'The Hidden Dangers of Hard Water and How to Solve Them'
+description: 'Hard water does more than leave spots on dishes. Learn how mineral buildup damages plumbing and appliances over time, and how to solve the problem.'
+category: 'Plumbing'
 publishDate: 2026-01-06
 author: "Adam O'Brien"
-oldSlug: "the-hidden-dangers-of-hard-water-and-how-to-solve-them"
+oldSlug: 'the-hidden-dangers-of-hard-water-and-how-to-solve-them'
 ---
 
 Hard water is a common problem in many households, including those in Colorado Springs. While it might not seem like a big deal, the effects of hard water can add up over time, impacting your home, health, and wallet. Let’s explore the hidden dangers of hard water and what you can do to solve them.

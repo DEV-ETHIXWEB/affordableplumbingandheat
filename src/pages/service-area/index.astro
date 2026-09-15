@@ -25,8 +25,8 @@ const trustPoints = [
 ---
 
 <BaseLayout
-  title={`Service Area | Plumbing, HVAC & Electrical Near Colorado Springs, CO`}
-  description={`Affordable Plumbing, Heat & Electrical serves Colorado Springs and ${surroundingServiceAreas.length} surrounding Colorado communities, including Castle Rock, Falcon, Fountain, Monument, and Woodland Park.`}
+  title={`Service Area Near Colorado Springs, CO | ${business.name}`}
+  description={`Plumbing, HVAC & electrical service in Colorado Springs and ${surroundingServiceAreas.length} nearby communities, including Castle Rock, Falcon, Fountain, Monument, and Woodland Park.`}
   schema={[breadcrumbSchema]}
 >
   <PageHero
@@ -69,9 +69,11 @@ const trustPoints = [
     </Container>
   </section>
 
-  <!-- Premium interactive Colorado service-area map: markers, legend, compass,
+  {
+    /* Premium interactive Colorado service-area map: markers, legend, compass,
        coverage-area hull, and a crawlable "Communities We Serve" side panel
-       that's the primary a11y/SEO redundancy for the visual map. -->
+       that's the primary a11y/SEO redundancy for the visual map. */
+  }
   <section class="border-ink-100 border-t bg-mist-100 py-16 sm:py-20">
     <Container>
       <div class="mx-auto max-w-2xl text-center" data-reveal>
@@ -88,8 +90,8 @@ const trustPoints = [
       </div>
       <p class="text-ink-400 mt-8 flex items-center justify-center gap-1.5 text-center text-xs">
         <Phone className="size-3.5 shrink-0" aria-hidden="true" />
-        Don&rsquo;t see your town? Call {business.hotline.display} - there&rsquo;s a good chance we still cover you
-        (serving {surroundingServiceAreas.length} verified surrounding communities today).
+        Don&rsquo;t see your town? Call {business.hotline.display} - there&rsquo;s a good chance we still cover you (serving
+        {surroundingServiceAreas.length} verified surrounding communities today).
       </p>
     </Container>
   </section>

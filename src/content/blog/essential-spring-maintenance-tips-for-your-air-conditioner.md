@@ -1,10 +1,10 @@
 ---
-title: "Essential Spring Maintenance Tips for Your Air Conditioner"
-description: "Get your air conditioner ready for the warm season ahead with these essential spring maintenance tips that improve efficiency and prevent breakdowns."
-category: "HVAC"
+title: 'Essential Spring Maintenance Tips for Your Air Conditioner'
+description: 'Get your air conditioner ready for the warm season ahead with these essential spring maintenance tips that improve efficiency and prevent breakdowns.'
+category: 'HVAC'
 publishDate: 2026-03-10
 author: "Adam O'Brien"
-oldSlug: "essential-spring-maintenance-tips-for-your-air-conditioner"
+oldSlug: 'essential-spring-maintenance-tips-for-your-air-conditioner'
 ---
 
 As winter fades and warmer temperatures approach in Colorado Springs, it's the perfect time to prepare your air conditioning (AC) system for the upcoming cooling season. Proper spring maintenance can enhance efficiency, extend lifespan, and ensure reliable performance. Here are key steps to get your AC ready:

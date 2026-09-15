@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { services, type Service } from '../../data/services';
 import { cityPages, type CityPage } from '../../data/cityPages';
-import { coupons } from '../../data/coupons';
+import { getActiveCoupons, formatCouponExpiry } from '../../data/coupons';
 import { generalFaq } from '../../data/faq';
 import { business, surroundingServiceAreas } from '../../data/business';
 
@@ -361,23 +361,26 @@ function buildFaqEntries(): KnowledgeEntry[] {
 }
 
 function buildCouponEntries(): KnowledgeEntry[] {
-  return coupons.map((coupon) => ({
-    id: `coupon:${coupon.code}`,
-    topic: 'coupons',
-    keywords: [...tokenize(coupon.title), ...tokenize(coupon.description)],
-    weight: 1,
-    logLabel: `Mentioned coupon ${coupon.code}`,
-    reply: () => (
-      <>
-        <p>
-          {coupon.title} - {coupon.description}
-        </p>
-        <p className="mt-1.5 text-xs">
-          Mention code <strong>{coupon.code}</strong> when you schedule.
-        </p>
-      </>
-    )
-  }));
+  return getActiveCoupons().map((coupon) => {
+    const expiry = formatCouponExpiry(coupon);
+    return {
+      id: `coupon:${coupon.id}`,
+      topic: 'coupons',
+      keywords: [...tokenize(coupon.title), ...tokenize(coupon.description)],
+      weight: 1,
+      logLabel: `Mentioned coupon: ${coupon.title}`,
+      reply: () => (
+        <>
+          <p>
+            {coupon.title} - {coupon.description}
+          </p>
+          <p className="mt-1.5 text-xs">
+            Show the coupon to your technician at time of service.{expiry ? ` Expires ${expiry}.` : ''}
+          </p>
+        </>
+      )
+    };
+  });
 }
 
 function buildLocationEntries(): KnowledgeEntry[] {
@@ -726,8 +729,8 @@ const STATIC_ENTRIES: KnowledgeEntry[] = [
     logLabel: 'Pointed to current coupons',
     reply: () => (
       <>
-        We&rsquo;ve got {coupons.length} current offers, including savings on AC, furnace/AC installs, and water
-        heaters.{' '}
+        We&rsquo;ve got {getActiveCoupons().length} current offers, including savings on furnace and AC/furnace
+        installs, water heaters, furnace tune-ups, and drain cleaning.{' '}
         <a href="/coupons/" className="font-semibold text-orange-600 hover:text-orange-700">
           See current coupons
         </a>

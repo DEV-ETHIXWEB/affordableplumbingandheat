@@ -26,15 +26,15 @@ The dev server runs at `http://localhost:4321`.
 
 ## Commands
 
-| Command              | Action                                              |
-| --------------------- | ---------------------------------------------------- |
-| `npm run dev`         | Start the local dev server                          |
-| `npm run build`       | Type-check content collections and build to `dist/` |
-| `npm run preview`     | Preview the production build locally                |
-| `npm run check`       | Run `astro check` (TypeScript + template diagnostics) |
-| `npm run lint`        | Run ESLint                                           |
-| `npm run format`      | Run Prettier (writes changes)                        |
-| `npm run format:check`| Run Prettier in check mode (CI-safe, no writes)       |
+| Command                | Action                                                |
+| ---------------------- | ----------------------------------------------------- |
+| `npm run dev`          | Start the local dev server                            |
+| `npm run build`        | Type-check content collections and build to `dist/`   |
+| `npm run preview`      | Preview the production build locally                  |
+| `npm run check`        | Run `astro check` (TypeScript + template diagnostics) |
+| `npm run lint`         | Run ESLint                                            |
+| `npm run format`       | Run Prettier (writes changes)                         |
+| `npm run format:check` | Run Prettier in check mode (CI-safe, no writes)       |
 
 ## Architecture overview
 
@@ -57,7 +57,7 @@ src/
   layouts/
     BaseLayout.astro  <head>, JSON-LD, Navbar/Footer/StickyCallBar + the three floating islands
   pages/
-    api/lead.ts       POST endpoint: honeypot + rate limit + Zod validation + Resend email
+    api/lead.ts       POST endpoint: origin check + rate limit + honeypot + Zod + Turnstile + Resend email
     services/[slug]/  One page per service (generated from src/data/services.ts)
     service-area/[city]/  One page per city hub (generated from src/data/cityPages.ts)
     blog/[...id]/     One page per blog post (generated from the content collection)
@@ -69,7 +69,8 @@ src/
 Not an LLM — a small deterministic rule engine (`src/lib/chat/engine.tsx` + `knowledge.tsx`) that keyword-matches
 visitor messages against the site's own services/FAQ/coupons/service-area content, so answers can never drift out of
 sync with the rest of the site. Handles emergency detection, a guided lead-capture wizard, and hands off to
-`POST /api/lead` (with a `mailto:` fallback if the API is unreachable). No external API key required or used.
+`POST /api/lead` after the same Turnstile check as the forms. If sending fails, the chat says so and offers call, retry,
+or a visitor-initiated email - it never claims success or navigates away on its own. No LLM or AI API key is used.
 
 ### Accessibility widget
 
@@ -81,37 +82,49 @@ keyboard nav, focus states, skip link, labeled forms) — the panel is a helpful
 
 ### Forms & lead capture
 
-Both the contact page form and the chatbot's guided wizard POST to `/api/lead` (`src/pages/api/lead.ts`), which:
+The contact page form, the homepage quick-request form, and the chatbot's wizard all POST to `/api/lead`
+(`src/pages/api/lead.ts`), which:
 
-- Validates the payload with Zod (`src/lib/contactSchema.ts`)
-- Rejects submissions that fill the hidden honeypot field
-- Rate-limits by IP (in-memory, 8 requests / 10 minutes — see the code comment for scaling notes)
-- Emails the lead via Resend if `RESEND_API_KEY` is configured; otherwise logs to the server console so nothing
-  is silently lost during local development or before the key is set up
+- Rejects cross-origin requests and bodies over 32KB
+- Rate-limits by IP, 8 requests / 10 minutes (`src/lib/rateLimit.ts`): Upstash Redis when configured, so the limit
+  holds across Vercel's serverless instances; in-memory otherwise
+- Silently drops submissions that fill the hidden honeypot field
+- Validates with Zod (`src/lib/contactSchema.ts`) - the same rules the forms and chatbot use client-side
+- Verifies a Cloudflare Turnstile token for **every** source (fails closed in production)
+- Emails the lead via Resend. In production a missing `RESEND_API_KEY` returns 503 so the visitor is sent to the
+  phone number instead of seeing a false "request received"; locally it logs a PII-free notice
+
+Conversion events (`generate_lead`, and `phone_call_click` for `tel:` links) are pushed to GTM/GA4 only after the
+API confirms success - see `src/lib/analytics.ts`.
 
 ### SEO / migration
 
 - `src/data/redirects.ts` maps every recoverable old-site URL (service pages, city pages, blog posts, utility
-  pages) to its new location. These compile into real HTTP 308 redirects served by the Node adapter — verified
-  with `curl` during development, not just configured.
+  pages) to its new location as permanent (301) redirects. The live Squarespace URLs have no `.html` suffix; each
+  entry is emitted both with and without it (318 routes). Re-test against the live sitemap before launch.
 - Every page sets a unique title/description, canonical URL, Open Graph/Twitter tags, and JSON-LD
-  (`HVACBusiness` site-wide; `BreadcrumbList`, `Service`, and `FAQPage` where relevant). No fabricated ratings,
+  (`Plumber` + `HVACBusiness` + `Electrician` site-wide with every served community; `BreadcrumbList`, `Service`,
+  `Article`, and `FAQPage` where relevant). No fabricated ratings,
   review counts, or awards.
 - `robots.txt` and an auto-generated `sitemap-index.xml` / `sitemap-0.xml` (via `@astrojs/sitemap`).
 
 ## Environment variables
 
-See `.env.example` for the full list with descriptions. None are required for the site to build or run — every
-integration degrades gracefully when its variable is unset (leads log to console instead of emailing, analytics
-snippets simply don't render, etc).
+See `.env.example` for the full list with descriptions. Nothing is required for local development or preview
+builds. **A Vercel production build fails on purpose** if any required variable below is missing (see
+`requireProductionEnv` in `astro.config.mjs`) - a site whose forms can't deliver must not deploy silently.
 
-| Variable | Purpose |
-| --- | --- |
-| `RESEND_API_KEY` | Sends lead emails via Resend. Unset = leads are logged server-side, not emailed. |
-| `LEAD_TO_EMAIL` | Inbox that receives lead notifications. Defaults to the business email in `src/data/business.ts`. |
-| `LEAD_FROM_EMAIL` | Verified "from" address in your Resend account/domain. |
-| `TURNSTILE_SECRET_KEY` / `PUBLIC_TURNSTILE_SITE_KEY` | Optional Cloudflare Turnstile bot protection (not wired into the UI yet — configuration point only). |
-| `PUBLIC_GA4_ID`, `PUBLIC_GTM_ID`, `PUBLIC_CALLRAIL_COMPANY_ID`, `PUBLIC_CALLRAIL_SCRIPT_ID` | Analytics/call-tracking configuration points (not wired into the UI yet — see "Manual actions" in the production readiness report). |
+| Variable                                                   | Production  | Purpose                                                                    |
+| ---------------------------------------------------------- | ----------- | -------------------------------------------------------------------------- |
+| `RESEND_API_KEY`                                           | Required    | Sends lead emails via Resend.                                              |
+| `LEAD_FROM_EMAIL`                                          | Required    | Sender address on a domain verified in Resend.                             |
+| `LEAD_TO_EMAIL`                                            | Optional    | Inbox for leads. Defaults to the business email in `src/data/business.ts`. |
+| `TURNSTILE_SECRET_KEY` / `PUBLIC_TURNSTILE_SITE_KEY`       | Required    | Cloudflare Turnstile on every lead form and the chatbot.                   |
+| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`      | Recommended | Shared rate-limit store across serverless instances.                       |
+| `PUBLIC_GTM_ID` or `PUBLIC_GA4_ID`                         | Recommended | Analytics. Set one, not both (GTM should load GA4 itself).                 |
+| `PUBLIC_CALLRAIL_COMPANY_ID` / `PUBLIC_CALLRAIL_SCRIPT_ID` | Optional    | CallRail dynamic number swap.                                              |
+
+Vercel reads `PUBLIC_*` values at **build** time: changing one requires a redeploy, not just a settings edit.
 
 ## Deployment
 
@@ -140,15 +153,12 @@ If this project ever moves off Vercel:
   `public/_headers` there — neither file is read by a bare Node process, though `src/middleware.ts` already applies
   the same headers to the one real SSR route regardless of host.
 
-## Known dependency risk (accepted)
+## Dependency overrides
 
-`npm audit` reports a ReDoS advisory in `path-to-regexp`, pulled in transitively via
-`@astrojs/vercel` → `@vercel/routing-utils`. npm's suggested fix is downgrading to
-`@astrojs/vercel@8.0.4`, which requires `astro: ^5.0.0` — incompatible with this project's Astro 7
-and would be a breaking downgrade, not a fix. The vulnerable code path only parses this repo's own
-`astro.config.mjs` route definitions at build time; it never touches runtime user input (no user-
-controlled string reaches `path-to-regexp` at request time). Risk accepted as build-tool-only until
-`@astrojs/vercel` ships an Astro-7-compatible release with the dependency bumped.
+`package.json` pins `path-to-regexp@6.3.0` under `@vercel/routing-utils` (via `overrides`). That package still
+declares the vulnerable `6.1.0` (GHSA-9wv6-86v2-598j); 6.3.0 is the same major version with the fix, and the
+generated redirect routes were verified unchanged. Remove the override once `@vercel/routing-utils` updates.
+`npm audit` should report 0 vulnerabilities.
 
 ## Content
 
@@ -156,7 +166,8 @@ controlled string reaches `path-to-regexp` at request time). Risk accepted as bu
 - Services: `src/data/services.ts`
 - City hub pages: `src/data/cityPages.ts`
 - FAQ: `src/data/faq.ts`
-- Coupons: `src/data/coupons.ts`
+- Coupons: `src/data/coupons.ts` (transcribed from the live coupon artwork; expired offers hide automatically -
+  update the list when the client issues new coupons)
 - Blog posts: `src/content/blog/*.md` (frontmatter schema in `src/content.config.ts`)
 
 Update these files rather than editing pages directly where possible — most pages read from them so facts stay

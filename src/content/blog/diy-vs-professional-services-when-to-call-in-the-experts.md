@@ -1,10 +1,10 @@
 ---
-title: "DIY vs. Professional Services: When to Call in the Experts"
-description: "Some home repairs are fine for a weekend DIY project, but others need a licensed professional. Learn when to call in the experts for plumbing, HVAC, and electrical work."
+title: 'DIY vs. Professional Services: When to Call in the Experts'
+description: 'Some home repairs make a fine weekend DIY project; others need a licensed pro. Learn when to call the experts for plumbing, HVAC, and electrical work.'
 category: "Homeowner's Guide"
 publishDate: 2026-07-22
 author: "Adam O'Brien"
-oldSlug: "diy-vs-professional-services-when-to-call-in-the-experts"
+oldSlug: 'diy-vs-professional-services-when-to-call-in-the-experts'
 ---
 
 In today's world of endless online tutorials and home improvement shows, it's easy to believe you can tackle any home project on your own. While many tasks around the house can indeed be managed with a bit of DIY spirit, certain jobs are best left to professionals. Knowing when to call in the experts can save you time, money, and even prevent potential hazards. Here's a guide to help you decide when to DIY and when to hire a professional.

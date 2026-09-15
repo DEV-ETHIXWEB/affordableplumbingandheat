@@ -246,7 +246,9 @@ function clipToView(points, slack = 40) {
   return runs.filter((r) => r.length >= 2);
 }
 
-const coloradoPath = projectedRings.map((ring) => pointsToPath(ring.map(toSvg), { close: true, minStep: 0.8 })).join(' ');
+const coloradoPath = projectedRings
+  .map((ring) => pointsToPath(ring.map(toSvg), { close: true, minStep: 0.8 }))
+  .join(' ');
 
 // ---- 4. Terrain relief from the real elevation grid -----------------------
 //
@@ -488,9 +490,7 @@ const i25Path = routePath((r) => r.kind === 'interstate' && r.route === '25');
 const i70Path = routePath((r) => r.kind === 'interstate' && r.route === '70');
 // Other interstates in-frame (I-76 north-east, I-225/I-270 around Denver)
 // drawn slightly lighter as background context.
-const otherInterstatePath = routePath(
-  (r) => r.kind === 'interstate' && !['25', '70'].includes(r.route)
-);
+const otherInterstatePath = routePath((r) => r.kind === 'interstate' && !['25', '70'].includes(r.route));
 // US routes — the reference shows US-24 running west from Colorado Springs
 // through Woodland Park, which is exactly the corridor several service
 // communities sit on.
@@ -632,10 +632,14 @@ const coverageAreaPath = smoothPolygonPath(expandHull(rawHull, 26));
 
 /** Returns the point at `t` (0-1) along a route's total length. */
 function pointAlongRoute(predicate, t) {
-  const segs = geo.roads.filter(predicate).map((r) => clipToView(projectLine(r.coords))).flat();
+  const segs = geo.roads
+    .filter(predicate)
+    .map((r) => clipToView(projectLine(r.coords)))
+    .flat();
   if (!segs.length) return null;
   // Use the longest visible run so shields land on the main trunk, not a stub.
-  const runLength = (run) => run.reduce((sum, p, i) => (i ? sum + Math.hypot(p[0] - run[i - 1][0], p[1] - run[i - 1][1]) : 0), 0);
+  const runLength = (run) =>
+    run.reduce((sum, p, i) => (i ? sum + Math.hypot(p[0] - run[i - 1][0], p[1] - run[i - 1][1]) : 0), 0);
   const sorted = segs.sort((a, b) => runLength(b) - runLength(a));
   const run = sorted[0];
   const total = runLength(run);

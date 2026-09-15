@@ -4,15 +4,28 @@ import Button from '../ui/Button.astro';
 import Container from '../ui/Container.astro';
 import { business } from '../../data/business';
 
+/** 854w for phones, 1280w for laptops, the full 1920p master for large
+ * screens: the master is what desktop visitors get (the brand impression is
+ * why it exists), but a 7.8MB download on a phone buys nothing. The list
+ * lives in a data attribute and the <source> elements are only created on
+ * activation - empty <source> tags in the markup made Firefox log "no src"
+ * media warnings on every homepage load. */
+const videoSources = [
+  { src: '/video/hero-cityscape-854.mp4', media: '(max-width: 767px)' },
+  { src: '/video/hero-cityscape-1280.mp4', media: '(max-width: 1439px)' },
+  { src: '/video/hero-cityscape.mp4', media: '' }
+];
+
 const badges = [
   { icon: Clock, label: 'Available 24/7' },
   { icon: ShieldCheck, label: 'Licensed & Insured' }
 ];
 ---
 
-<section class="relative overflow-hidden bg-navy-900">
+<section class="bg-navy-900 relative overflow-hidden">
   <div class="absolute inset-0" aria-hidden="true">
-    <!--
+    {
+      /*
       Full-quality 1920p master, deliberately: the hero is the first thing a
       visitor sees and the brand impression is worth the bytes here. Downscaled
       1280/854 encodes were trialled and rejected — quality comes first for
@@ -29,53 +42,84 @@ const badges = [
         promotes it to `src`, and it declines to do so under
         `prefers-reduced-motion`. Removing the source after the fact does not
         work — the scanner has already issued the request by then.
-      • The 22MB webm is not offered: a browser takes the FIRST source it can
-        play, and every target browser plays this H.264 mp4, so listing webm
-        only risked a far heavier download for no visual gain.
-    -->
-    <!--
+      • No webm is offered: a browser takes the FIRST source it can play, and
+        every target browser plays this H.264 mp4. (The unused 22MB webm
+        master was removed from public/ so it no longer ships in the deploy.)
+    */
+    }
+    {
+      /*
       The poster is a real <img>, not the video's `poster` attribute, so it can
       ship as WebP with a srcset. `poster` takes a single URL, which forced one
       648KB JPEG on every device and made it the LCP element on mobile; phones
       now pull an 82KB 900w file instead. fetchpriority="high" keeps it ahead
       of the CSS in the queue. The video fades in over it once playing.
-    -->
-    <img
-      id="hero-poster"
-      src="/video/hero-poster-1600.webp"
-      srcset="/video/hero-poster-900.webp 900w, /video/hero-poster-1600.webp 1600w"
-      sizes="100vw"
-      alt=""
-      width="1600"
-      height="900"
-      fetchpriority="high"
-      decoding="async"
-      class="absolute inset-0 h-full w-full object-cover opacity-80"
-    />
+    */
+    }
+    {
+      /*
+      Phones get a portrait crop: below sm the hero is taller than it is wide,
+      and the 16:9 poster was heavily upscaled to cover it.
+    */
+    }
+    <picture>
+      <source media="(max-width: 639px)" srcset="/video/hero-poster-portrait.webp" width="540" height="959" />
+      <img
+        id="hero-poster"
+        src="/video/hero-poster-1600.webp"
+        srcset="/video/hero-poster-900.webp 900w, /video/hero-poster-1600.webp 1600w"
+        sizes="100vw"
+        alt=""
+        width="1600"
+        height="900"
+        fetchpriority="high"
+        decoding="async"
+        class="absolute inset-0 h-full w-full object-cover opacity-80"
+      />
+    </picture>
+    {
+      /*
+      The video is visible from the start and carries the same poster frame
+      (set by the inline script below, per screen size). With the old
+      opacity-0 -> fade-in, Chrome recorded the first video frame as a NEW,
+      larger paint: LCP landed at 2.8s (Slow 4G phone) / 3.7s (Slow 4G
+      desktop) instead of first paint. A video that is already painted with
+      its poster doesn't register again when playback starts. Without JS, or
+      before the poster loads, the element is transparent and the <img> behind
+      it shows through, so there is never an empty box.
+    */
+    }
     <video
       id="hero-video"
-      class="relative h-full w-full object-cover opacity-0 transition-opacity duration-700"
+      class="relative h-full w-full object-cover opacity-80"
       autoplay
       loop
       muted
       playsinline
       preload="none"
-    >
-      <!--
-        854w for phones, 1280w for laptops, full 1920p master for large
-        screens. The master is still what desktop visitors get - the brand
-        impression it buys is the reason it exists - but a 7.8MB download on a
-        phone was never buying that, just costing data.
-      -->
-      <source data-src="/video/hero-cityscape-854.mp4" type="video/mp4" media="(max-width: 767px)" />
-      <source data-src="/video/hero-cityscape-1280.mp4" type="video/mp4" media="(max-width: 1439px)" />
-      <source data-src="/video/hero-cityscape.mp4" type="video/mp4" />
-    </video>
-    <div class="absolute inset-0 bg-gradient-to-b from-navy-950/55 via-navy-900/35 to-navy-900/85"></div>
-    <div class="absolute inset-0 bg-gradient-to-r from-navy-950/40 via-transparent to-transparent"></div>
+      data-sources={JSON.stringify(videoSources)}></video>
+    <script is:inline>
+      (function () {
+        const v = document.getElementById('hero-video');
+        if (!v) return;
+        v.poster = matchMedia('(max-width: 639px)').matches
+          ? '/video/hero-poster-portrait.webp'
+          : matchMedia('(max-width: 900px)').matches
+            ? '/video/hero-poster-900.webp'
+            : '/video/hero-poster-1600.webp';
+      })();
+    </script>
+    <div class="from-navy-950/55 via-navy-900/35 to-navy-900/85 absolute inset-0 bg-gradient-to-b"></div>
+    <div class="from-navy-950/40 absolute inset-0 bg-gradient-to-r via-transparent to-transparent"></div>
   </div>
 
-  <Container class="relative flex min-h-[560px] flex-col justify-center gap-8 py-24 sm:min-h-[620px] sm:py-28 lg:py-32">
+  {
+    /* pt-12 below sm: with py-24 the phone CTA sat under the floating chat and
+      accessibility launchers on a 375x812 phone (both overlap by ~50px). */
+  }
+  <Container
+    class="relative flex min-h-[560px] flex-col justify-center gap-8 pt-12 pb-24 sm:min-h-[620px] sm:py-28 lg:py-32"
+  >
     <div class="max-w-2xl" data-reveal>
       <span
         class="font-display inline-flex items-center gap-2 rounded-full border border-orange-400/40 bg-orange-500/10 px-4 py-1.5 text-xs font-bold tracking-wider text-orange-300 uppercase"
@@ -87,13 +131,17 @@ const badges = [
         Available 24/7 - Emergency Service
       </span>
 
-      <h1 class="font-display mt-6 text-[2.75rem] leading-[1.02] font-extrabold tracking-[-0.02em] text-balance text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-[3.75rem]">
+      <h1
+        class="font-display mt-6 text-[2.75rem] leading-[1.02] font-extrabold tracking-[-0.02em] text-balance text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)] sm:text-[3.75rem]"
+      >
         Plumbing, Heating, Cooling &amp; Electrical
       </h1>
 
-      <p class="mt-5 max-w-lg text-lg leading-relaxed text-balance text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)] sm:text-xl">
-        Colorado Springs' trusted plumber for honest pricing, licensed technicians, and fast, reliable service, day
-        or night.
+      <p
+        class="mt-5 max-w-lg text-lg leading-relaxed text-balance text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)] sm:text-xl"
+      >
+        Colorado Springs' trusted plumber for honest pricing, licensed technicians, and fast, reliable service, day or
+        night.
       </p>
 
       <div class="mt-9 flex flex-col gap-3.5 sm:flex-row sm:items-center">
@@ -103,10 +151,12 @@ const badges = [
         </Button>
       </div>
 
-      {/* pb-16 below lg: the accessibility and chat launchers float at
-          bottom-24, right on top of this row on a phone. The padding lets the
-          badges sit above the launcher band instead of behind it. */}
-      <ul class="mt-8 flex flex-wrap gap-x-8 gap-y-3 pb-16 lg:pb-0">
+      {
+        /* Hidden below sm: on a phone this row sat directly under the floating
+          chat and accessibility launchers, and the same two points are listed
+          again in the section immediately below the hero. */
+      }
+      <ul class="mt-8 hidden flex-wrap gap-x-8 gap-y-3 sm:flex">
         {
           badges.map(({ icon: Icon, label }) => (
             <li class="flex items-center gap-2 text-sm font-semibold text-white/85">
@@ -121,9 +171,9 @@ const badges = [
 </section>
 
 <script>
-  // Activates the hero background video by copying each <source>'s data-src
-  // into src. Holding the URLs in data-src until now is what keeps the
-  // preload scanner from downloading the clip before this check runs, so a
+  // Activates the hero background video by creating its <source> elements from
+  // data-sources. Keeping the URLs out of the markup until now is what keeps
+  // the preload scanner from downloading the clip before this check runs, so a
   // "reduce motion" visitor pays zero video bytes and simply keeps the
   // poster frame as a still backdrop.
   const video = document.getElementById('hero-video') as HTMLVideoElement | null;
@@ -136,24 +186,23 @@ const badges = [
 
   const activate = () => {
     if (!video) return;
-    let activated = false;
-    video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach((s) => {
-      s.src = s.dataset.src!;
-      activated = true;
-    });
-    if (activated) {
-      // Only reveal the video once it actually has frames to show, so it never
-      // flashes an empty box over the poster. If autoplay is refused (iOS Low
-      // Power Mode, data saver) this simply never fires and the poster stays -
-      // which is why the poster, not the video, carries the opacity-80.
-      video.addEventListener(
-        'playing',
-        () => {
-          video.classList.remove('opacity-0');
-          video.classList.add('opacity-80');
-        },
-        { once: true }
-      );
+    if (video.querySelector('source')) return;
+    let sources: { src: string; media: string }[] = [];
+    try {
+      sources = JSON.parse(video.dataset.sources ?? '[]');
+    } catch {
+      return;
+    }
+    for (const { src, media } of sources) {
+      const source = document.createElement('source');
+      source.src = src;
+      source.type = 'video/mp4';
+      if (media) source.media = media;
+      video.appendChild(source);
+    }
+    if (sources.length > 0) {
+      // If autoplay is refused (iOS Low Power Mode, data saver) the element
+      // keeps showing its poster frame, so nothing visibly changes.
       video.load();
       void video.play().catch(() => {});
     }

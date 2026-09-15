@@ -1,10 +1,10 @@
 ---
-title: "Protecting Your Basement from Flooding: The Role of Sump Pumps"
+title: 'Protecting Your Basement from Flooding: The Role of Sump Pumps'
 description: "A sump pump is one of the best defenses against basement flooding. Learn how these systems work and why they're essential for protecting your home."
-category: "Plumbing"
+category: 'Plumbing'
 publishDate: 2026-05-22
 author: "Adam O'Brien"
-oldSlug: "protecting-your-basement-from-flooding-the-role-of-sump-pumps"
+oldSlug: 'protecting-your-basement-from-flooding-the-role-of-sump-pumps'
 ---
 
 Basements are valuable spaces in our homes, often serving as storage areas, recreational zones, or even additional living quarters. However, they're also susceptible to flooding, especially in areas prone to heavy rainfall or high water tables. To safeguard your basement from potential water damage, it's essential to understand the pivotal role sump pumps play in flood prevention and mitigation.

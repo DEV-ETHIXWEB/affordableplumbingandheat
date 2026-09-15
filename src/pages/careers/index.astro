@@ -12,16 +12,23 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Careers', path: '/careers/' }
 ]);
 
-const reasons = [
-  'Work alongside licensed, experienced plumbing, HVAC, and electrical professionals',
-  'Steady, year-round work serving Colorado Springs and the surrounding area',
-  'A team that values honest work and treating customers right'
+/** Hiring details and benefits carried over verbatim from the existing
+ * site's careers page. */
+const roles = ['Certified HVAC service technicians', 'Electricians', 'Experienced plumbers', 'Apprentices'];
+const benefits = [
+  'Competitive pay with bonus',
+  'Paid vacation',
+  '6 paid holidays and 1 paid floating holiday',
+  'Company-paid employee health insurance',
+  'Dental insurance',
+  'Safe Harbor 401(k) retirement plan',
+  'Advancement opportunities'
 ];
 ---
 
 <BaseLayout
   title={`Careers | ${business.name}`}
-  description="Work for Affordable Plumbing, Heat & Electrical in Colorado Springs, CO. Reach out to learn about current opportunities."
+  description="Now hiring HVAC technicians, electricians, plumbers, and apprentices in Colorado Springs, CO. Competitive pay, paid time off, health insurance, and a 401(k)."
   schema={[breadcrumbSchema]}
 >
   <section class="bg-white py-20 sm:py-28">
@@ -32,23 +39,45 @@ const reasons = [
         Work For Affordable Plumbing, Heat &amp; Electrical
       </h1>
       <p class="text-ink-600 mx-auto mt-5 max-w-xl text-lg leading-relaxed">
-        We're always interested in hearing from skilled, reliable plumbing, HVAC, and electrical professionals in the
-        Colorado Springs area.
+        {business.name} is always seeking qualified applicants. We&rsquo;re proud of our local community and proud to employ
+        veterans.
       </p>
 
-      <ul class="mx-auto mt-10 max-w-lg space-y-3 text-left">
-        {
-          reasons.map((r) => (
-            <li class="border-ink-100 text-ink-700 shadow-card flex items-start gap-3 rounded-2xl border bg-white px-5 py-4 text-sm">
-              <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-orange-600" aria-hidden="true" />
-              {r}
-            </li>
-          ))
-        }
-      </ul>
+      <div class="mx-auto mt-10 grid max-w-2xl gap-6 text-left sm:grid-cols-2">
+        <div>
+          <h2 class="font-display text-ink-900 text-lg font-bold">Now Hiring</h2>
+          <ul class="mt-4 space-y-3">
+            {
+              roles.map((r) => (
+                <li class="border-ink-100 text-ink-700 shadow-card flex items-start gap-3 rounded-2xl border bg-white px-5 py-4 text-sm">
+                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-orange-600" aria-hidden="true" />
+                  {r}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <h2 class="font-display text-ink-900 text-lg font-bold">We Offer</h2>
+          <ul class="mt-4 space-y-3">
+            {
+              benefits.map((b) => (
+                <li class="border-ink-100 text-ink-700 shadow-card flex items-start gap-3 rounded-2xl border bg-white px-5 py-4 text-sm">
+                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-orange-600" aria-hidden="true" />
+                  {b}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
 
       <p class="text-ink-500 mt-10 text-sm">
-        Interested in joining the team? Send us your resume and a bit about your experience.
+        To apply, stop by our office at {business.streetAddress}, {business.addressLocality}, {business.addressRegion}{
+          ' '
+        }
+        {business.postalCode} to pick up an application, or send us your resume. Your application is completely confidential
+        and will only be used for internal purposes.
       </p>
       <div class="mt-5 flex flex-wrap justify-center gap-3">
         <Button href={`mailto:${business.email}?subject=${encodeURIComponent('Career Inquiry')}`} size="lg" icon={Mail}>

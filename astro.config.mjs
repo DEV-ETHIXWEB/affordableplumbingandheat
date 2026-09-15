@@ -6,6 +6,47 @@ import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 import { legacyRedirects } from './src/data/redirects.ts';
 
+/** Keys a production deploy cannot work without. Missing any of them used to
+ * degrade silently (leads logged instead of emailed, forms rejecting every
+ * submission), which is exactly the failure a launch checklist exists to
+ * catch - so a Vercel *production* build now stops with a clear error instead.
+ * Preview and local builds are unaffected. */
+const REQUIRED_PRODUCTION_ENV = [
+  'RESEND_API_KEY',
+  'LEAD_FROM_EMAIL',
+  'TURNSTILE_SECRET_KEY',
+  'PUBLIC_TURNSTILE_SITE_KEY'
+];
+const RECOMMENDED_PRODUCTION_ENV = [
+  ['PUBLIC_GTM_ID', 'PUBLIC_GA4_ID'],
+  ['UPSTASH_REDIS_REST_URL'],
+  ['UPSTASH_REDIS_REST_TOKEN']
+];
+
+/** @returns {import('astro').AstroIntegration} */
+function requireProductionEnv() {
+  return {
+    name: 'require-production-env',
+    hooks: {
+      'astro:config:setup': ({ command, logger }) => {
+        if (command !== 'build' || process.env.VERCEL_ENV !== 'production') return;
+        const missing = REQUIRED_PRODUCTION_ENV.filter((key) => !process.env[key]);
+        if (missing.length) {
+          throw new Error(
+            `Production build blocked - missing required environment variables: ${missing.join(', ')}. ` +
+              'Set them in the Vercel project settings (Production) and redeploy. See .env.example.'
+          );
+        }
+        for (const group of RECOMMENDED_PRODUCTION_ENV) {
+          if (!group.some((key) => process.env[key])) {
+            logger.warn(`Production build without ${group.join(' or ')} - see .env.example.`);
+          }
+        }
+      }
+    }
+  };
+}
+
 // https://astro.build/config
 // Deployed on Vercel: the @astrojs/vercel adapter translates the one SSR
 // route (src/pages/api/lead.ts) into a Vercel serverless function while
@@ -20,7 +61,7 @@ export default defineConfig({
   site: 'https://www.affordableplumbingandheat.com',
   output: 'static',
   adapter: vercel(),
-  integrations: [react(), sitemap()],
+  integrations: [requireProductionEnv(), react(), sitemap()],
   redirects: legacyRedirects,
   // Inline every stylesheet into the HTML instead of Astro's default
   // "only under 4kB". The two sheets this page emits (~19kB combined) were
@@ -52,6 +93,8 @@ export default defineConfig({
       LEAD_TO_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
       LEAD_FROM_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
       TURNSTILE_SECRET_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
+      UPSTASH_REDIS_REST_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      UPSTASH_REDIS_REST_TOKEN: envField.string({ context: 'server', access: 'secret', optional: true }),
       PUBLIC_TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_GA4_ID: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_GTM_ID: envField.string({ context: 'client', access: 'public', optional: true }),

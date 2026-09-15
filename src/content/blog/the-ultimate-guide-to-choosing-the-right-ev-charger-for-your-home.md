@@ -1,10 +1,10 @@
 ---
-title: "The Ultimate Guide to Choosing the Right EV Charger for Your Home"
-description: "Shopping for a home EV charger? This guide breaks down charger levels, installation needs, and key factors to help you choose the right one for your home."
-category: "Electrical"
+title: 'The Ultimate Guide to Choosing the Right EV Charger for Your Home'
+description: 'Shopping for a home EV charger? This guide breaks down charger levels, installation needs, and key factors to help you choose the right one for your home.'
+category: 'Electrical'
 publishDate: 2026-06-03
 author: "Adam O'Brien"
-oldSlug: "the-ultimate-guide-to-choosing-the-right-ev-charger-for-your-home"
+oldSlug: 'the-ultimate-guide-to-choosing-the-right-ev-charger-for-your-home'
 ---
 
 Are you considering making the switch to an electric vehicle (EV)? Or perhaps you already own one and want to streamline your charging experience at home? Whatever your situation, choosing the right EV charger for your home is a crucial decision that can impact your convenience, efficiency, and even your budget. In this comprehensive guide, we'll walk you through everything you need to know to make an informed decision about which EV charger is best suited to your needs.

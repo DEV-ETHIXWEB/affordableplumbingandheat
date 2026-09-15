@@ -1,10 +1,10 @@
 ---
-title: "How to Prepare Your Pipes for Colorado Winters"
+title: 'How to Prepare Your Pipes for Colorado Winters'
 description: "Colorado's harsh winters put pipes at risk of freezing and bursting. Learn how to prepare your home's plumbing before the cold weather arrives."
-category: "Colorado"
+category: 'Colorado'
 publishDate: 2026-09-02
 author: "Adam O'Brien"
-oldSlug: "how-to-prepare-your-pipes-for-colorado-winters"
+oldSlug: 'how-to-prepare-your-pipes-for-colorado-winters'
 ---
 
 Colorado winters are known for their cold temperatures and heavy snowfall, which can put a lot of stress on your home's plumbing system. If you’re a homeowner in Colorado Springs, preparing your pipes for winter is essential to avoid costly repairs from frozen or burst pipes. With a few proactive steps, you can protect your plumbing and keep your home warm and safe all winter long.

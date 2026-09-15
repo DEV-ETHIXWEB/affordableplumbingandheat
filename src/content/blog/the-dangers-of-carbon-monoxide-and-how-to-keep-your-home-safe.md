@@ -1,10 +1,10 @@
 ---
-title: "The Dangers of Carbon Monoxide & How to Keep Your Home Safe"
-description: "Carbon monoxide is a silent, odorless danger in many homes. Learn where it comes from, the warning signs of exposure, and how to keep your family safe."
+title: 'The Dangers of Carbon Monoxide & How to Keep Your Home Safe'
+description: 'Carbon monoxide is a silent, odorless danger in many homes. Learn where it comes from, the warning signs of exposure, and how to keep your family safe.'
 category: "Homeowner's Guide"
 publishDate: 2026-02-24
 author: "Adam O'Brien"
-oldSlug: "the-dangers-of-carbon-monoxide-amp-how-to-keep-your-home-safe"
+oldSlug: 'the-dangers-of-carbon-monoxide-amp-how-to-keep-your-home-safe'
 ---
 
 Carbon monoxide (CO) is often called the "silent killer" because it is a colorless, odorless gas that can be deadly if inhaled in high concentrations. As a byproduct of burning fuels such as natural gas, propane, wood, and oil, CO can accumulate in homes when heating systems, appliances, or ventilation are not functioning properly. At Affordable Plumbing, Heating & Electrical, we are committed to keeping Colorado Springs homeowners safe by providing education and essential services to prevent carbon monoxide poisoning.

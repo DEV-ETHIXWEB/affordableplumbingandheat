@@ -1,10 +1,10 @@
 ---
-title: "Common AC Problems in Colorado’s Dry Climate"
+title: 'Common AC Problems in Colorado’s Dry Climate'
 description: "Colorado's dry climate creates unique strain on air conditioners. Learn the most common AC problems local homeowners face and how to prevent them."
-category: "HVAC"
+category: 'HVAC'
 publishDate: 2026-07-10
 author: "Adam O'Brien"
-oldSlug: "common-ac-problems-in-colorados-dry-climate"
+oldSlug: 'common-ac-problems-in-colorados-dry-climate'
 ---
 
 Living in Colorado’s dry, high-altitude climate has its perks - plenty of sunshine, low humidity, and crisp mountain air. But when summer temperatures rise, your air conditioner works overtime to keep your home comfortable. And while dry air might seem easier on your HVAC system than humid conditions, it can actually lead to some unique AC problems.

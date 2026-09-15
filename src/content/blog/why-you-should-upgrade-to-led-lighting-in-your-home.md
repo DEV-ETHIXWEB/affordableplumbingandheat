@@ -1,10 +1,10 @@
 ---
-title: "Why You Should Upgrade to LED Lighting in Your Home"
+title: 'Why You Should Upgrade to LED Lighting in Your Home'
 description: "LED lighting offers major advantages over traditional bulbs, from energy savings to longer lifespan. Learn why it's worth upgrading your home's lighting."
-category: "Electrical"
+category: 'Electrical'
 publishDate: 2026-12-23
 author: "Adam O'Brien"
-oldSlug: "why-you-should-upgrade-to-led-lighting-in-your-home"
+oldSlug: 'why-you-should-upgrade-to-led-lighting-in-your-home'
 ---
 
 When it comes to home improvements that offer a high return on investment, upgrading your lighting to LEDs is a bright idea. LED (Light Emitting Diode) lighting has revolutionized the way we illuminate our homes, providing numerous advantages over traditional incandescent and fluorescent bulbs. Here are some compelling reasons why making the switch to LED lighting is a decision you won’t regret.

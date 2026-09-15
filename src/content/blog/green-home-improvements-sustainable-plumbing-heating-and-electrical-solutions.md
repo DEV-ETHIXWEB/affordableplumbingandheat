@@ -1,10 +1,10 @@
 ---
-title: "Green Home Improvements: Sustainable Plumbing, Heating, and Electrical Solutions"
+title: 'Green Home Improvements: Sustainable Plumbing, Heating, and Electrical Solutions'
 description: "Sustainable upgrades across plumbing, heating, and electrical systems that reduce your home's environmental footprint while saving money on utilities."
 category: "Homeowner's Guide"
 publishDate: 2026-08-05
 author: "Adam O'Brien"
-oldSlug: "green-home-improvements-sustainable-plumbing-heating-and-electrical-solutions"
+oldSlug: 'green-home-improvements-sustainable-plumbing-heating-and-electrical-solutions'
 ---
 
 As homeowners become more conscious of their environmental impact, green home improvements are gaining popularity. Sustainable plumbing, heating, and electrical solutions not only reduce your carbon footprint but also save money on utility bills. Here’s a comprehensive guide to eco-friendly upgrades for a greener, more efficient home.

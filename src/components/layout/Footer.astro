@@ -30,11 +30,14 @@ const companyLinks = [
 ];
 ---
 
-<!-- No closing CTA here: ContactCTA.astro is rendered by the pages themselves
+{
+  /* No closing CTA here: ContactCTA.astro is rendered by the pages themselves
      and sits directly above this footer, so a second heading-plus-two-buttons
-     block repeated the same offer and the same phone number twice in a row. -->
-<!-- The border matters: ContactCTA is also navy-900, so without it the two
-     would merge into one undifferentiated navy field. -->
+     block repeated the same offer and the same phone number twice in a row. */
+}{
+  /* The border matters: ContactCTA is also navy-900, so without it the two
+     would merge into one undifferentiated navy field. */
+}
 <footer class="bg-navy-900 border-t border-white/10 text-white/60">
   <Container class="grid grid-cols-2 gap-x-8 gap-y-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.1fr]">
     <div class="col-span-2 lg:col-span-1">
@@ -59,14 +62,19 @@ const companyLinks = [
       <div class="mt-6 flex items-center gap-4">
         {
           trustBadges.map((badge) => (
-            <Image
-              src={badge.image}
-              alt={badge.name}
-              width={100}
-              height={42}
-              class="h-10 w-auto rounded bg-white/95 p-1"
-              loading="lazy"
-            />
+            <span class="flex h-12 w-28 items-center justify-center rounded bg-white/95 p-1.5">
+              {/* Width-only sizing keeps each logo's own aspect ratio: forcing
+                  both into 100x42 cropped the square Energy Star mark and the
+                  wide Equal Housing Lender lockup. */}
+              <Image
+                src={badge.image}
+                alt={badge.name}
+                width={200}
+                densities={[1, 2]}
+                class="max-h-full w-auto max-w-full object-contain"
+                loading="lazy"
+              />
+            </span>
           ))
         }
       </div>
@@ -145,8 +153,15 @@ const companyLinks = [
       </p>
       <p class="mt-1.5 flex items-start gap-1.5 text-sm text-white/60">
         <MapPin className="mt-0.5 size-3.5 shrink-0 text-orange-400" aria-hidden="true" />
-        {business.streetAddress}, {business.addressLocality}, {business.addressRegion}
-        {business.postalCode}
+        {
+          /* One expression: as separate text nodes inside this flex row, the
+            space before the ZIP collapsed and rendered "CO80904". */
+        }
+        <span
+          >{
+            `${business.streetAddress}, ${business.addressLocality}, ${business.addressRegion} ${business.postalCode}`
+          }</span
+        >
       </p>
     </div>
   </Container>

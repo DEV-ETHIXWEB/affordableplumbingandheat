@@ -1,10 +1,10 @@
 ---
-title: "How to Prep Your AC System for a Colorado Springs Summer"
-description: "Get your air conditioner ready before the summer heat hits. Follow these prep steps to keep your Colorado Springs AC system running efficiently all season."
-category: "HVAC"
+title: 'How to Prep Your AC System for a Colorado Springs Summer'
+description: 'Get your air conditioner ready before the summer heat hits. Follow these prep steps to keep your Colorado Springs AC system running efficiently all season.'
+category: 'HVAC'
 publishDate: 2026-05-02
 author: "Adam O'Brien"
-oldSlug: "how-to-prep-your-ac-system-for-a-colorado-springs-summer"
+oldSlug: 'how-to-prep-your-ac-system-for-a-colorado-springs-summer'
 ---
 
 As the snow melts and temperatures start to climb in Colorado Springs, it's time to shift your focus from heating to cooling. Prepping your AC system before summer hits full force is one of the smartest things you can do to ensure your home stays cool, your energy bills stay low, and your system runs without costly breakdowns.

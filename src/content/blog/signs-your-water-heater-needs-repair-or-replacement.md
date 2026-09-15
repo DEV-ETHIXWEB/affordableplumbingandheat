@@ -1,10 +1,10 @@
 ---
-title: "Signs Your Water Heater Needs Repair or Replacement"
-description: "From rusty water to rumbling noises, learn the warning signs that your water heater is failing and whether a repair or replacement is the right call."
-category: "Water Heaters"
+title: 'Signs Your Water Heater Needs Repair or Replacement'
+description: 'From rusty water to rumbling noises, learn the warning signs that your water heater is failing and whether a repair or replacement is the right call.'
+category: 'Water Heaters'
 publishDate: 2026-07-01
 author: "Adam O'Brien"
-oldSlugs: ["signs-your-water-heater-is-about-to-fail", "signs-your-water-heater-needs-repair-or-replacement"]
+oldSlugs: ['signs-your-water-heater-is-about-to-fail', 'signs-your-water-heater-needs-repair-or-replacement']
 ---
 
 A reliable water heater is something most homeowners don't think much about - until it stops working. Whether you're suddenly stuck with a cold shower or noticing unusual noises from the tank, your water heater is often sending out warning signs before a full breakdown. Catching these signs early can save you from the discomfort, and expense, of a complete failure. Here are the most common signs your water heater may need repair or replacement.

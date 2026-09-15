@@ -2,6 +2,19 @@
 
 @import '@fontsource-variable/inter/wght.css';
 
+/* Metric-matched local fallback. Inter arrives with font-display: swap, and
+   without this the swap from the system font reflowed hero copy by ~37px on
+   mobile (measured CLS 0.06). These overrides size Arial/Helvetica to Inter's
+   metrics so the swap changes glyph shapes, not line breaks. */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
+  size-adjust: 107.12%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+}
+
 /* ------------------------------------------------------------------
    Design tokens — "Affordable Plumbing & Heat, redesigned for 2026."
    80% preserved identity: deep navy + safety-orange, the brand's
@@ -11,8 +24,8 @@
    white, and a single confident accent instead of scattered hues.
 ------------------------------------------------------------------ */
 @theme {
-  --font-display: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
 
   /* Navy — sampled from the existing header/footer navy (#0a2647 family).
      Anchors navbar, footer, dark sections, and headings. */

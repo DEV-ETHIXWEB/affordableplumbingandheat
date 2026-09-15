@@ -1,10 +1,10 @@
 ---
-title: "Why Does My Furnace Keep Short Cycling? Troubleshooting Tips from the Experts"
-description: "A furnace that keeps turning on and off in short bursts wastes energy and wears out faster. Learn the common causes of short cycling and how to fix it."
-category: "Troubleshooting"
+title: 'Why Does My Furnace Keep Short Cycling? Troubleshooting Tips from the Experts'
+description: 'A furnace that keeps turning on and off in short bursts wastes energy and wears out faster. Learn the common causes of short cycling and how to fix it.'
+category: 'Troubleshooting'
 publishDate: 2026-12-19
 author: "Adam O'Brien"
-oldSlug: "why-does-my-furnace-keep-short-cycling-troubleshooting-tips-from-the-experts"
+oldSlug: 'why-does-my-furnace-keep-short-cycling-troubleshooting-tips-from-the-experts'
 ---
 
 There is nothing quite as frustrating as sitting in your living room during a Colorado Springs cold snap and hearing your furnace click on, run for three minutes, and then abruptly shut off - only to do the exact same thing ten minutes later.

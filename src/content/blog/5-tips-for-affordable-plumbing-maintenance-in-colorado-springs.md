@@ -1,10 +1,10 @@
 ---
-title: "5 Tips for Affordable Plumbing Maintenance in Colorado Springs"
-description: "Simple, budget-friendly plumbing maintenance habits that help Colorado Springs homeowners avoid costly repairs and keep pipes running smoothly year-round."
-category: "Plumbing"
+title: '5 Tips for Affordable Plumbing Maintenance in Colorado Springs'
+description: 'Simple, budget-friendly plumbing maintenance habits that help Colorado Springs homeowners avoid costly repairs and keep pipes running smoothly year-round.'
+category: 'Plumbing'
 publishDate: 2026-04-22
 author: "Adam O'Brien"
-oldSlug: "5-tips-for-affordable-plumbing-maintenance-in-colorado-springs"
+oldSlug: '5-tips-for-affordable-plumbing-maintenance-in-colorado-springs'
 ---
 
 Are you a homeowner in Colorado Springs looking to keep your plumbing system in top shape without breaking the bank? Plumbing maintenance is key to preventing costly repairs down the line, but it doesn't have to drain your wallet. With these five affordable tips, you can maintain your plumbing system effectively while staying within your budget.

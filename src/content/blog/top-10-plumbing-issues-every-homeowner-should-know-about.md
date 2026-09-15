@@ -1,10 +1,10 @@
 ---
-title: "Top 10 Plumbing Issues Every Homeowner Should Know About"
-description: "From leaky faucets to clogged drains, learn the top 10 plumbing issues every homeowner should recognize early to avoid costly repairs down the road."
+title: 'Top 10 Plumbing Issues Every Homeowner Should Know About'
+description: 'From leaky faucets to clogged drains, learn the top 10 plumbing issues every homeowner should recognize early to avoid costly repairs down the road.'
 category: "Homeowner's Guide"
 publishDate: 2026-08-12
 author: "Adam O'Brien"
-oldSlug: "top-10-plumbing-issues-every-homeowner-should-know-about"
+oldSlug: 'top-10-plumbing-issues-every-homeowner-should-know-about'
 ---
 
 Owning a home comes with its fair share of responsibilities, and maintaining your plumbing system is one of the most important. Plumbing issues can range from minor inconveniences to major disasters, but being aware of the most common problems can help you act quickly and avoid costly repairs. Here are the top 10 plumbing issues every homeowner should know about.

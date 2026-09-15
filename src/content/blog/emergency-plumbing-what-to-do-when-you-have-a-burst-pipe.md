@@ -1,10 +1,10 @@
 ---
-title: "Emergency Plumbing: What to Do When You Have a Burst Pipe"
-description: "A burst pipe can flood your home fast. Learn the immediate steps to take to limit damage and get emergency plumbing help when a pipe bursts."
-category: "Plumbing"
+title: 'Emergency Plumbing: What to Do When You Have a Burst Pipe'
+description: 'A burst pipe can flood your home fast. Learn the immediate steps to take to limit damage and get emergency plumbing help when a pipe bursts.'
+category: 'Plumbing'
 publishDate: 2026-10-14
 author: "Adam O'Brien"
-oldSlug: "emergency-plumbing-what-to-do-when-you-have-a-burst-pipe"
+oldSlug: 'emergency-plumbing-what-to-do-when-you-have-a-burst-pipe'
 ---
 
 A burst pipe is one of the most stressful and damaging plumbing emergencies a homeowner can face. When a pipe bursts, water can flood your home, damaging walls, floors, and furniture, while potentially leading to costly repairs if not addressed quickly. In Colorado Springs, where freezing temperatures are common in the winter, pipes are particularly susceptible to bursting.

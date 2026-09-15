@@ -1,10 +1,10 @@
 ---
 title: "Signs Your Boiler Needs Repair: Don't Wait Until It's Too Late!"
 description: "Strange noises, uneven heat, or rising energy bills can all signal a failing boiler. Learn the warning signs so you can get repairs before it's too late."
-category: "HVAC"
+category: 'HVAC'
 publishDate: 2026-10-21
 author: "Adam O'Brien"
-oldSlug: "signs-your-boiler-needs-repair-dont-wait-until-its-too-late"
+oldSlug: 'signs-your-boiler-needs-repair-dont-wait-until-its-too-late'
 ---
 
 As winter approaches in Colorado Springs, homeowners rely heavily on their boilers to keep their homes warm and comfortable. But like any essential home system, boilers don’t last forever, and when they start to show signs of wear and tear, timely repairs can prevent bigger, more expensive issues. Ignoring the early warning signs of boiler trouble can leave you facing a cold home and emergency repair costs in the middle of winter. Here are the top signs that your boiler needs repair - don’t wait until it's too late!

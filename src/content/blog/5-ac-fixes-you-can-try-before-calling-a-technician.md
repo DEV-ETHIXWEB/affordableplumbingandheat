@@ -1,10 +1,10 @@
 ---
-title: "5 AC Fixes You Can Try Before Calling a Technician"
-description: "Before you book a service call, try these five simple AC troubleshooting fixes Colorado Springs homeowners can safely do themselves to restore cooling fast."
-category: "Troubleshooting"
+title: '5 AC Fixes You Can Try Before Calling a Technician'
+description: 'Before you book a service call, try these five simple AC troubleshooting fixes Colorado Springs homeowners can safely do themselves to restore cooling fast.'
+category: 'Troubleshooting'
 publishDate: 2026-04-18
 author: "Adam O'Brien"
-oldSlug: "5-ac-fixes-you-can-try-before-calling-a-technician"
+oldSlug: '5-ac-fixes-you-can-try-before-calling-a-technician'
 ---
 
 When your air conditioner suddenly stops cooling, it’s easy to panic - especially during the middle of a hot Colorado Springs summer. But before you reach for the phone to call in the pros, there are a few simple fixes you can try yourself.

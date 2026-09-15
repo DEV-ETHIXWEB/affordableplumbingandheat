@@ -88,16 +88,7 @@ function listHrefFor(area: { slug: string; type?: string }) {
  * printed relief map rather than a heatmap — greens through tans to a pale
  * rock grey, matching the reference artwork's palette. Index-matched to
  * `reliefBands` (ascending elevation). */
-const RELIEF_FILLS = [
-  '#e4ebd9',
-  '#d9e5cb',
-  '#cddcbb',
-  '#cfd8ac',
-  '#d6d29e',
-  '#d8c992',
-  '#d3bd89',
-  '#cbb185'
-];
+const RELIEF_FILLS = ['#e4ebd9', '#d9e5cb', '#cddcbb', '#cfd8ac', '#d6d29e', '#d8c992', '#d3bd89', '#cbb185'];
 
 /** Colorado Springs sits in a genuinely dense real-world cluster — Cascade,
  * Manitou Springs, Woodland Park, Monument, Palmer Lake, Security, Widefield
@@ -134,19 +125,21 @@ function labelFor(slug: string) {
 
 <div class:list={['service-area-map-wrap', isCompact && 'is-compact']} data-reveal>
   <div class:list={['map-poster-grid', !isCompact && 'map-poster-grid--full']}>
-    <!-- ============ MAP CARD ============ -->
+    {/* ============ MAP CARD ============ */}
     <div class="service-area-map card-elevated relative overflow-hidden bg-white p-4 sm:p-6">
-      <!-- Every path below is projected at build time from a real
+      {
+        /* Every path below is projected at build time from a real
            public-domain dataset (US Census counties, Natural Earth rivers and
            roads, a NOAA elevation grid traced into hypsometric contour bands).
            See scripts/generate-service-area-map.mjs. Nothing here is
            hand-drawn, and no geodata reaches the browser - only these
-           static strings. -->
+           static strings. */
+      }
       <div class="map-figure" style={`--map-ratio:${MAP_WIDTH} / ${MAP_HEIGHT}`}>
         <svg
           class="map-svg"
           viewBox={MAP_VIEW_BOX}
-          role="img"
+          role="group"
           aria-labelledby={`map-title-${variant} map-desc-${variant}`}
           preserveAspectRatio="xMidYMid meet"
         >
@@ -156,8 +149,8 @@ function labelFor(slug: string) {
           <desc id={`map-desc-${variant}`}>
             A relief map of Colorado showing {business.addressLocality} as the primary service market, with {
               surrounding.length
-            } surrounding communities marked along the Front Range corridor. Denver is shown only as a geographic
-            reference point. The full list of communities is available as text beside this map.
+            } surrounding communities marked along the Front Range corridor. Denver is shown only as a geographic reference
+            point. The full list of communities is available as text beside this map.
           </desc>
 
           <defs>
@@ -179,13 +172,17 @@ function labelFor(slug: string) {
 
           <rect x="0" y="0" width={MAP_WIDTH} height={MAP_HEIGHT} fill={`url(#map-sky-${variant})`}></rect>
 
-          <!-- Everything geographic is clipped to the real state boundary, so
-               detail never bleeds outside Colorado. -->
+          {
+            /* Everything geographic is clipped to the real state boundary, so
+               detail never bleeds outside Colorado. */
+          }
           <g clip-path={`url(#state-clip-${variant})`}>
             <path d={coloradoPath} fill="#eef0e6"></path>
 
-            <!-- Hypsometric relief: contour bands traced by marching squares
-                 over a real NOAA elevation grid. This is the terrain. -->
+            {
+              /* Hypsometric relief: contour bands traced by marching squares
+                 over a real NOAA elevation grid. This is the terrain. */
+            }
             <g class="map-relief" aria-hidden="true">
               {
                 reliefBands.map((band, i) => (
@@ -199,15 +196,17 @@ function labelFor(slug: string) {
             <path class="map-rivers" d={riverPath} fill="none" aria-hidden="true"></path>
             {lakePath && <path class="map-lakes" d={lakePath} aria-hidden="true" />}
 
-            <!-- Real surveyed highway alignments from Natural Earth. -->
+            {/* Real surveyed highway alignments from Natural Earth. */}
             <path class="map-road map-road--us" d={usRoutePath} fill="none" aria-hidden="true"></path>
             <path class="map-road map-road--interstate" d={otherInterstatePath} fill="none" aria-hidden="true"></path>
             <path class="map-road map-road--major" d={i70Path} fill="none" aria-hidden="true"></path>
             <path class="map-road map-road--major" d={i25Path} fill="none" aria-hidden="true"></path>
 
-            <!-- Coverage region: a smoothed hull around the real projected
+            {
+              /* Coverage region: a smoothed hull around the real projected
                  markers. Deliberately covers only the service corridor, never
-                 the whole state. -->
+                 the whole state. */
+            }
             <path
               class="map-coverage"
               d={coverageAreaPath}
@@ -218,7 +217,7 @@ function labelFor(slug: string) {
               stroke-linejoin="round"></path>
           </g>
 
-          <!-- State border sits above the clip so it reads as a crisp edge. -->
+          {/* State border sits above the clip so it reads as a crisp edge. */}
           <path
             class="map-outline"
             d={coloradoPath}
@@ -227,7 +226,9 @@ function labelFor(slug: string) {
             stroke-width="2.4"
             stroke-linejoin="round"></path>
 
-          <text x={MAP_WIDTH * 0.29} y={MAP_HEIGHT * 0.55} class="map-watermark" text-anchor="middle" aria-hidden="true">COLORADO</text>
+          <text x={MAP_WIDTH * 0.29} y={MAP_HEIGHT * 0.55} class="map-watermark" text-anchor="middle" aria-hidden="true"
+            >COLORADO</text
+          >
 
           {
             !isCompact &&
@@ -240,10 +241,7 @@ function labelFor(slug: string) {
                     d="M0,-13 L11.5,-8.5 L11.5,3 C11.5,10 5.5,14.5 0,17 C-5.5,14.5 -11.5,10 -11.5,3 L-11.5,-8.5 Z"
                     fill="#ffffff"
                   />
-                  <path
-                    d="M0,-11 L9.7,-7.2 L9.7,-4.2 L-9.7,-4.2 L-9.7,-7.2 Z"
-                    fill="#c8102e"
-                  />
+                  <path d="M0,-11 L9.7,-7.2 L9.7,-4.2 L-9.7,-4.2 L-9.7,-7.2 Z" fill="#c8102e" />
                   <path
                     d="M-9.7,-4.2 L9.7,-4.2 L9.7,2.6 C9.7,8.4 4.7,12.4 0,14.6 C-4.7,12.4 -9.7,8.4 -9.7,2.6 Z"
                     fill="#0b3c8c"
@@ -255,7 +253,7 @@ function labelFor(slug: string) {
               ))
           }
 
-          <!-- Geographic reference only (Denver), never a service marker. -->
+          {/* Geographic reference only (Denver), never a service marker. */}
           {
             projectedReferences.map((ref) => (
               <g class="map-reference" transform={`translate(${ref.x} ${ref.y})`} aria-hidden="true">
@@ -268,7 +266,7 @@ function labelFor(slug: string) {
             ))
           }
 
-          <!-- Surrounding service communities -->
+          {/* Surrounding service communities */}
           {
             surrounding.map((m, i) => {
               const hasPage = pagedSlugs.has(m.slug);
@@ -282,7 +280,7 @@ function labelFor(slug: string) {
                   data-has-page={hasPage ? '1' : '0'}
                   transform={`translate(${m.x} ${m.y})`}
                   tabindex="0"
-                  role="button"
+                  role="link"
                   aria-label={`${m.name}, service community${hasPage ? ' - view service details' : ' - request service'}`}
                 >
                   {/* Position lives on the outer <g>; the animation transform
@@ -293,6 +291,10 @@ function labelFor(slug: string) {
                   <g class="map-marker-inner" style={`--enter-delay:${90 + i * 40}ms`}>
                     <circle r="8.5" fill="white" filter={`url(#marker-shadow-${variant})`} />
                     <circle r="6.2" fill="var(--color-orange-500)" />
+                    {/* Invisible hit target, kept after the visible circles so
+                        the nth-child focus styling still targets the pin. The
+                        pin alone is ~6px at phone widths. */}
+                    <circle class="map-marker-hit" r="16" fill="transparent" />
                     <text x={label.dx} y={label.dy} class="map-marker-label" text-anchor={label.anchor}>
                       {m.name}
                     </text>
@@ -302,7 +304,7 @@ function labelFor(slug: string) {
             })
           }
 
-          <!-- Primary market, drawn last so it sits above the cluster -->
+          {/* Primary market, drawn last so it sits above the cluster */}
           <g
             class="map-marker map-marker--primary"
             data-marker
@@ -312,7 +314,7 @@ function labelFor(slug: string) {
             data-primary="1"
             transform={`translate(${primary.x} ${primary.y})`}
             tabindex="0"
-            role="button"
+            role="link"
             aria-label={`${primary.name}, primary service market`}
           >
             <g class="map-marker-inner">
@@ -366,18 +368,20 @@ function labelFor(slug: string) {
           )
         }
 
-        <!-- Compass: a four-point rose with the north arm split light/dark,
-             like the reference. Shown on both variants. -->
+        {
+          /* Compass: a four-point rose with the north arm split light/dark,
+             like the reference. Shown on both variants. */
+        }
         <div class="map-compass" aria-hidden="true">
           <svg viewBox="0 0 44 52">
             <text x="22" y="9" text-anchor="middle" class="map-compass-n">N</text>
             <g transform="translate(22 30)">
-              <!-- East / west / south arms, muted -->
+              {/* East / west / south arms, muted */}
               <path d="M0,0 L18,0 L0,4 Z" fill="var(--color-navy-400)"></path>
               <path d="M0,0 L-18,0 L0,4 Z" fill="var(--color-navy-600)"></path>
               <path d="M0,0 L4,0 L0,18 Z" fill="var(--color-navy-400)"></path>
               <path d="M0,0 L-4,0 L0,18 Z" fill="var(--color-navy-600)"></path>
-              <!-- North arm, emphasised -->
+              {/* North arm, emphasised */}
               <path d="M0,0 L4,0 L0,-20 Z" fill="var(--color-navy-800)"></path>
               <path d="M0,0 L-4,0 L0,-20 Z" fill="var(--color-navy-600)"></path>
               <circle r="2.6" fill="var(--color-navy-900)"></circle>
@@ -386,17 +390,20 @@ function labelFor(slug: string) {
         </div>
       </div>
 
-
-      <!-- Tooltip: positioned via JS on hover/focus. Kept outside the SVG so it
-           can hold real interactive HTML (a real link or button). -->
+      {
+        /* Tooltip: positioned via JS on hover/focus. Kept outside the SVG so it
+           can hold real interactive HTML (a real link or button). */
+      }
       <div id={`map-tooltip-${variant}`} class="map-tooltip" role="tooltip" hidden>
         <p class="map-tooltip-city"></p>
         <p class="map-tooltip-business">{business.name}</p>
         <p class="map-tooltip-status">Service available in this area.</p>
-        <!-- Real default rather than "#": showTooltip() swaps in the marker's
+        {
+          /* Real default rather than "#": showTooltip() swaps in the marker's
              own href before the tooltip is ever shown, but a literal "#" in
              the static markup reads as a dead link to crawlers and link
-             checkers. /service-area/ is the correct fallback destination. -->
+             checkers. /service-area/ is the correct fallback destination. */
+        }
         <a class="map-tooltip-cta map-tooltip-cta--view" href="/service-area/">
           View Area
           <MapPin className="size-3.5" aria-hidden="true" />
@@ -429,8 +436,7 @@ function labelFor(slug: string) {
         isCompact && (
           <p class="text-ink-400 mt-4 flex items-center gap-1.5 text-center text-xs sm:justify-center">
             <Phone className="size-3.5 shrink-0" aria-hidden="true" />
-            Don&rsquo;t see your town? Call {business.hotline.display} - there&rsquo;s a good chance we still cover
-            you.
+            Don&rsquo;t see your town? Call {business.hotline.display} - there&rsquo;s a good chance we still cover you.
           </p>
         )
       }
@@ -532,14 +538,30 @@ function labelFor(slug: string) {
     animation: map-fade-in 0.6s ease-out both;
   }
 
-  .map-relief path:nth-child(1) { animation-delay: 0.05s; }
-  .map-relief path:nth-child(2) { animation-delay: 0.09s; }
-  .map-relief path:nth-child(3) { animation-delay: 0.13s; }
-  .map-relief path:nth-child(4) { animation-delay: 0.17s; }
-  .map-relief path:nth-child(5) { animation-delay: 0.21s; }
-  .map-relief path:nth-child(6) { animation-delay: 0.25s; }
-  .map-relief path:nth-child(7) { animation-delay: 0.29s; }
-  .map-relief path:nth-child(8) { animation-delay: 0.33s; }
+  .map-relief path:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  .map-relief path:nth-child(2) {
+    animation-delay: 0.09s;
+  }
+  .map-relief path:nth-child(3) {
+    animation-delay: 0.13s;
+  }
+  .map-relief path:nth-child(4) {
+    animation-delay: 0.17s;
+  }
+  .map-relief path:nth-child(5) {
+    animation-delay: 0.21s;
+  }
+  .map-relief path:nth-child(6) {
+    animation-delay: 0.25s;
+  }
+  .map-relief path:nth-child(7) {
+    animation-delay: 0.29s;
+  }
+  .map-relief path:nth-child(8) {
+    animation-delay: 0.33s;
+  }
 
   .map-ridges {
     stroke: #b9b79c;
@@ -724,28 +746,54 @@ function labelFor(slug: string) {
   }
 
   @keyframes map-fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   /* Markers settle in rather than just fading: a slight overshoot reads as
    * pins being placed, which is what the reference's styling implies. */
   @keyframes marker-enter {
-    0% { opacity: 0; transform: scale(0.2) translateY(-6px); }
-    60% { opacity: 1; transform: scale(1.12) translateY(0); }
-    100% { opacity: 1; transform: scale(1) translateY(0); }
+    0% {
+      opacity: 0;
+      transform: scale(0.2) translateY(-6px);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.12) translateY(0);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
   }
 
   /* The coverage region sweeps up from the primary market, so the eye lands
    * on Colorado Springs first and the footprint grows outward from it. */
   @keyframes coverage-enter {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   @keyframes pulse-ring {
-    0%, 100% { transform: scale(0.8); opacity: 0.32; }
-    50% { transform: scale(1.45); opacity: 0; }
+    0%,
+    100% {
+      transform: scale(0.8);
+      opacity: 0.32;
+    }
+    50% {
+      transform: scale(1.45);
+      opacity: 0;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -895,11 +943,14 @@ function labelFor(slug: string) {
     }
 
     /* Markers themselves scale up so they stay tappable at ~316px wide. */
-    .map-marker--surrounding .map-marker-inner circle {
+    .map-marker--surrounding .map-marker-inner circle:not(.map-marker-hit) {
       r: 11;
     }
-  }
 
+    .map-marker--surrounding .map-marker-hit {
+      r: 24;
+    }
+  }
 
   .map-tooltip {
     position: absolute;
@@ -1075,7 +1126,6 @@ function labelFor(slug: string) {
     color: var(--color-ink-500);
     margin-top: 0.1rem;
   }
-
 </style>
 
 <script>

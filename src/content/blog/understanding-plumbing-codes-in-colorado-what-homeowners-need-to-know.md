@@ -1,10 +1,10 @@
 ---
-title: "Understanding Plumbing Codes in Colorado: What Homeowners Need to Know"
-description: "Colorado's plumbing codes govern everything from permits to pipe materials and backflow prevention. Learn what homeowners need to know to stay compliant and safe."
-category: "Colorado"
+title: 'Understanding Plumbing Codes in Colorado: What Homeowners Need to Know'
+description: "Colorado's plumbing codes cover permits, pipe materials, and backflow prevention. Learn what homeowners need to know to stay compliant and safe."
+category: 'Colorado'
 publishDate: 2026-10-07
 author: "Adam O'Brien"
-oldSlug: "understanding-plumbing-codes-in-colorado-what-homeowners-need-to-know"
+oldSlug: 'understanding-plumbing-codes-in-colorado-what-homeowners-need-to-know'
 ---
 
 When it comes to home plumbing, following the correct regulations is crucial not just for safety, but also for ensuring your property meets local building standards. Plumbing codes are in place to protect you, your neighbors, and the environment. If you're a homeowner in Colorado, understanding the basics of these codes can help you avoid costly repairs, fines, and unsafe plumbing systems.
