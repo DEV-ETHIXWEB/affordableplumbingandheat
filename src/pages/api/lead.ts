@@ -1,9 +1,11 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
-import { leadApiSchema, type LeadApiPayload } from '../../lib/contactSchema';
+import { leadApiSchema } from '../../lib/contactSchema';
 import { business } from '../../data/business';
+import { buildCustomerEmail, buildOfficeEmail, createLeadReference } from '../../lib/email/leadEmails';
 import { verifyTurnstile } from '../../lib/turnstile';
 import { isRateLimited } from '../../lib/rateLimit';
+import { isCrossOrigin, json, readLimitedBody } from '../../lib/requestGuards';
 import { isProduction } from '../../lib/runtimeEnv';
 import { RESEND_API_KEY, LEAD_TO_EMAIL, LEAD_FROM_EMAIL } from 'astro:env/server';
 
@@ -16,68 +18,19 @@ export const prerender = false;
  * (~8KB); anything far beyond that is abuse, not a customer. */
 const MAX_BODY_BYTES = 32 * 1024;
 
-const SOURCE_LABELS: Record<LeadApiPayload['source'], string> = {
-  'contact-form': 'Contact form',
-  'quick-lead': 'Homepage quick request',
-  chatbot: 'Chatbot'
-};
-
-function json(status: number, body: Record<string, unknown>): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
-  });
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-/** Browsers always send Origin on a cross-site POST. A mismatch means another
- * site is scripting submissions through a visitor's browser. The request's
- * own host is compared alongside x-forwarded-host/host, because behind a
- * proxy or platform router (Vercel) the URL a function sees may carry an
- * internal host rather than the domain the visitor actually used. */
-function isCrossOrigin(request: Request): boolean {
-  const origin = request.headers.get('origin');
-  if (!origin) return false;
-  let originHost: string;
-  try {
-    originHost = new URL(origin).host;
-  } catch {
-    return true;
-  }
-  const allowedHosts = [
-    new URL(request.url).host,
-    ...(request.headers.get('x-forwarded-host') ?? '').split(','),
-    request.headers.get('host') ?? ''
-  ]
-    .map((h) => h.trim().toLowerCase())
-    .filter(Boolean);
-  return !allowedHosts.includes(originHost.toLowerCase());
-}
-
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   if (isCrossOrigin(request)) return json(403, { error: 'Forbidden.' });
 
-  const declaredLength = Number(request.headers.get('content-length') ?? 0);
-  if (declaredLength > MAX_BODY_BYTES) return json(413, { error: 'Request too large.' });
-
   // Counted before parsing, so malformed or invalid payloads still use up the
   // allowance instead of letting a script probe the validator for free.
-  if (await isRateLimited(clientAddress ?? 'unknown')) {
+  if (await isRateLimited(clientAddress ?? 'unknown', { bucket: 'lead', max: 8, windowSeconds: 600 })) {
     return json(429, { error: 'Too many requests. Please call us instead.' });
   }
 
+  const raw = await readLimitedBody(request, MAX_BODY_BYTES);
+  if (raw === null) return json(413, { error: 'Request too large.' });
   let body: unknown;
   try {
-    const raw = await request.text();
-    if (raw.length > MAX_BODY_BYTES) return json(413, { error: 'Request too large.' });
     body = JSON.parse(raw);
   } catch {
     return json(400, { error: 'Invalid request body.' });
@@ -109,34 +62,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return json(403, { error: 'Verification failed. Please try again.' });
   }
 
-  const subjectPrefix = lead.urgent ? 'URGENT - ' : '';
-  const subject = `${subjectPrefix}New ${lead.source === 'chatbot' ? 'chatbot' : 'website'} lead: ${lead.name}${lead.service ? ` (${lead.service})` : ''}`;
-
-  const rows: [string, string][] = [
-    ['Source', SOURCE_LABELS[lead.source]],
-    ['Name', lead.name],
-    ['Phone', lead.phone],
-    ['Email', lead.email || ' - '],
-    ['City', lead.city || ' - '],
-    ['Service', lead.service || ' - '],
-    ['Property type', lead.propertyType || ' - '],
-    ['Urgent', lead.urgent ? 'Yes' : 'No']
-  ];
-  const html = `
-    <h2>${escapeHtml(subject)}</h2>
-    <table cellpadding="6" cellspacing="0" style="border-collapse:collapse">
-      ${rows
-        .map(
-          ([label, value]) =>
-            `<tr><td style="font-weight:600;border:1px solid #ddd">${escapeHtml(label)}</td><td style="border:1px solid #ddd">${escapeHtml(value)}</td></tr>`
-        )
-        .join('')}
-    </table>
-    ${lead.message ? `<p><strong>Message:</strong><br>${escapeHtml(lead.message).replace(/\n/g, '<br>')}</p>` : ''}
-    ${lead.topicsDiscussed ? `<p><strong>Topics discussed:</strong> ${escapeHtml(lead.topicsDiscussed)}</p>` : ''}
-    ${lead.transcript ? `<p><strong>Chat transcript:</strong></p><pre style="white-space:pre-wrap;font-family:inherit">${escapeHtml(lead.transcript)}</pre>` : ''}
-  `;
-
+  const reference = createLeadReference();
+  const receivedAt = new Date();
+  const office = buildOfficeEmail({ lead, reference, receivedAt });
   const toEmail = LEAD_TO_EMAIL || business.email;
   const fromEmail = LEAD_FROM_EMAIL || 'leads@notifications.affordableplumbingandheat.com';
 
@@ -152,25 +80,50 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     // Local/preview only: log enough to see the flow working. Name and phone
     // are omitted - server logs are not the place for customer PII.
     console.warn(
-      `[api/lead] RESEND_API_KEY not configured (${import.meta.env.MODE}) - ${lead.source} lead validated, not emailed`
+      `[api/lead] RESEND_API_KEY not configured (${import.meta.env.MODE}) - ${lead.source} lead ${reference} validated, not emailed`
     );
-    return json(200, { ok: true, delivered: false });
+    return json(200, { ok: true, delivered: false, reference });
   }
 
+  const resend = new Resend(RESEND_API_KEY);
+
+  // 1. The office notification is the lead. If it fails, the visitor is told
+  //    to call instead of seeing a false "request received".
   try {
-    const resend = new Resend(RESEND_API_KEY);
     const { error } = await resend.emails.send({
-      from: fromEmail,
+      from: `${business.name} Website <${fromEmail}>`,
       to: toEmail,
       replyTo: lead.email || undefined,
-      subject,
-      html
+      subject: office.subject,
+      html: office.html,
+      text: office.text
     });
     if (error) throw new Error(error.message);
   } catch (err) {
-    console.error('[api/lead] Resend send failed:', err);
+    console.error(`[api/lead] office email failed for ${reference}:`, err);
     return json(502, { error: 'Could not send right now. Please call us instead.' });
   }
 
-  return json(200, { ok: true, delivered: true });
+  // 2. Customer confirmation, only when they gave an email. Its failure never
+  //    fails the request: the office already has the lead.
+  let confirmationSent = false;
+  if (lead.email) {
+    try {
+      const customer = buildCustomerEmail({ lead, reference, receivedAt });
+      const { error } = await resend.emails.send({
+        from: `${business.name} <${fromEmail}>`,
+        to: lead.email,
+        replyTo: toEmail,
+        subject: customer.subject,
+        html: customer.html,
+        text: customer.text
+      });
+      if (error) throw new Error(error.message);
+      confirmationSent = true;
+    } catch (err) {
+      console.error(`[api/lead] customer confirmation failed for ${reference}:`, err);
+    }
+  }
+
+  return json(200, { ok: true, delivered: true, confirmationSent, reference });
 };

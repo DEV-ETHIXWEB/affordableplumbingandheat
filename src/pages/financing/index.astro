@@ -7,21 +7,14 @@ import Button from '../../components/ui/Button.astro';
 import { CheckCircle2, Phone } from 'lucide-react';
 import { business } from '../../data/business';
 import { buildBreadcrumbSchema } from '../../lib/schema';
+import { financing } from '../../data/financing';
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', path: '/' },
   { name: 'Financing', path: '/financing/' }
 ]);
 
-const points = [
-  'Finance projects up to $55,000',
-  'Simple and fast application with instant decisions',
-  'Completely digital process',
-  'View loan offers with a soft credit pull that doesn’t affect your credit score',
-  'Multiple loan offers for qualified borrowers to choose from',
-  'Convenient monthly payments',
-  'No early payment penalties on any loans'
-];
+const points = financing.points;
 ---
 
 <BaseLayout
@@ -58,9 +51,7 @@ const points = [
       </div>
 
       <p class="text-ink-400 mt-10 max-w-xl text-xs leading-relaxed">
-        *BuyFin, powered by Momnt Technologies, Inc., arranges consumer loans used to purchase goods and services from
-        its participating merchant businesses. All loans are originated by participating financial institutions. Equal
-        Housing Lender.
+        *{financing.disclaimer}
       </p>
     </Container>
   </section>

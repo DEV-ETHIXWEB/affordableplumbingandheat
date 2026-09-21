@@ -64,13 +64,29 @@ src/
   middleware.ts       Security headers for the server-rendered route(s)
 ```
 
-### Chatbot
+### Chat assistant
 
-Not an LLM — a small deterministic rule engine (`src/lib/chat/engine.tsx` + `knowledge.tsx`) that keyword-matches
-visitor messages against the site's own services/FAQ/coupons/service-area content, so answers can never drift out of
-sync with the rest of the site. Handles emergency detection, a guided lead-capture wizard, and hands off to
-`POST /api/lead` after the same Turnstile check as the forms. If sending fails, the chat says so and offers call, retry,
-or a visitor-initiated email - it never claims success or navigates away on its own. No LLM or AI API key is used.
+A conversational assistant that runs entirely in the visitor's browser - no LLM, no API key, no per-message network
+call - so it answers instantly and keeps working even if everything else is down. The language work lives in
+`src/lib/assistant/`:
+
+- **Understanding** (`text.ts`, `lexicon.ts`, `entities.ts`): normalization and contraction expansion, a light
+  stemmer, typo correction by edit distance ("furnce" -> furnace), a service lexicon covering all 40 services with
+  repair/replace/tune-up wording, and extraction of name, phone, email, city/ZIP/neighborhood, urgency, property
+  type, and emergency type from ordinary sentences.
+- **Knowledge** (`search.ts`, `buildKnowledge.ts`): BM25 search across services, the FAQ, and every blog article,
+  split by heading, so questions the rules don't cover ("why is my toilet running?") are answered from the site's own
+  words with a link to read more. The knowledge file is prerendered to `/assistant-knowledge.json` and fetched the
+  first time the chat is opened, so it costs nothing on page load.
+- **Conversation** (`brain.ts`): small talk, business answers (hours, area, licensing, financing, coupons, careers),
+  safety-first emergency advice, context across turns, and conversational lead collection with slot filling. It never
+  invents prices, arrival times, or facts the site doesn't state. Deterministic and pure, so it is covered by
+  `brain.test.ts` (105 assertions, `npm test`).
+- **Lead capture:** once it has a name, a valid phone, and what's wrong, the widget shows a confirmation card;
+  nothing is sent until the visitor taps Send, which posts to `/api/lead` with Turnstile. Replies render through a
+  tiny safe formatter (`renderChatMarkdown.tsx`) that only allows links to this site, the phone number, and the
+  office email.
+- **Mobile:** below 640px the chat opens full screen, follows the on-screen keyboard, and locks page scroll behind it.
 
 ### Accessibility widget
 
@@ -91,8 +107,14 @@ The contact page form, the homepage quick-request form, and the chatbot's wizard
 - Silently drops submissions that fill the hidden honeypot field
 - Validates with Zod (`src/lib/contactSchema.ts`) - the same rules the forms and chatbot use client-side
 - Verifies a Cloudflare Turnstile token for **every** source (fails closed in production)
-- Emails the lead via Resend. In production a missing `RESEND_API_KEY` returns 503 so the visitor is sent to the
-  phone number instead of seeing a false "request received"; locally it logs a PII-free notice
+- Emails the lead via Resend (`src/lib/email/leadEmails.ts`):
+  - **Office notification** to `LEAD_TO_EMAIL`: urgent banner, tap-to-call and reply buttons, all details, the chat
+    summary and transcript, the page it came from, and a reference number. Reply-To is the customer.
+  - **Customer confirmation** (only when they gave an email): what happens next, what they sent, the same reference
+    number, and the phone number. Free-text messages are deliberately not echoed back. A failed confirmation never
+    fails the lead.
+  - In production a missing `RESEND_API_KEY` returns 503 so the visitor is sent to the phone number instead of seeing
+    a false "request received"; locally it logs a PII-free notice
 
 Conversion events (`generate_lead`, and `phone_call_click` for `tel:` links) are pushed to GTM/GA4 only after the
 API confirms success - see `src/lib/analytics.ts`.
@@ -116,7 +138,7 @@ builds. **A Vercel production build fails on purpose** if any required variable 
 
 | Variable                                                   | Production  | Purpose                                                                    |
 | ---------------------------------------------------------- | ----------- | -------------------------------------------------------------------------- |
-| `RESEND_API_KEY`                                           | Required    | Sends lead emails via Resend.                                              |
+| `RESEND_API_KEY`                                           | Required    | Sends the office notification and customer confirmation emails via Resend. |
 | `LEAD_FROM_EMAIL`                                          | Required    | Sender address on a domain verified in Resend.                             |
 | `LEAD_TO_EMAIL`                                            | Optional    | Inbox for leads. Defaults to the business email in `src/data/business.ts`. |
 | `TURNSTILE_SECRET_KEY` / `PUBLIC_TURNSTILE_SITE_KEY`       | Required    | Cloudflare Turnstile on every lead form and the chatbot.                   |

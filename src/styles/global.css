@@ -146,6 +146,9 @@
     font-family: var(--font-body);
     background-color: #fff;
     color: var(--color-ink-800);
+    /* Long unbroken strings (URLs, emails) wrap instead of widening the page:
+       the privacy policy's site URL scrolled the whole page sideways at 360px. */
+    overflow-wrap: break-word;
   }
   h1,
   h2,

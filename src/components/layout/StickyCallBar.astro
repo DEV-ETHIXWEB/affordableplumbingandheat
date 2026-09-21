@@ -3,9 +3,13 @@ import { Phone, Calendar } from 'lucide-react';
 import { business } from '../../data/business';
 ---
 
+{
+  /* container-px: the same side gutter as every page section (it was p-3,
+    8px wider than the content above it on phones). */
+}
 <nav
   aria-label="Quick contact"
-  class="bg-navy-900/95 fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-white/10 p-3 backdrop-blur-xl lg:hidden"
+  class="bg-navy-900/95 container-px fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-white/10 pt-3 backdrop-blur-xl lg:hidden"
   style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));"
 >
   <a

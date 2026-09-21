@@ -39,6 +39,7 @@ const errorText = 'mt-1.5 text-xs font-medium text-red-600';
 
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sent' | 'error'>('idle');
+  const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   // Bumped after every attempt: a Turnstile token is single-use, so the
   // widget must remount to issue a new one before the visitor can retry.
@@ -81,6 +82,8 @@ export default function ContactForm() {
         })
       });
       if (!res.ok) throw new Error('Request failed');
+      const result = (await res.json().catch(() => null)) as { confirmationSent?: boolean } | null;
+      setConfirmationEmail(result?.confirmationSent ? data.email : null);
       setStatus('sent');
       trackLead({ source: 'contact-form', service: serviceLine, urgent: data.service === 'Emergency / Not Sure' });
     } catch {
@@ -103,6 +106,11 @@ export default function ContactForm() {
         <p className="text-ink-600 max-w-sm text-sm">
           We'll get back to you as quickly as possible. For emergencies, please call now.
         </p>
+        {confirmationEmail && (
+          <p className="text-ink-500 max-w-sm text-sm">
+            A confirmation is on its way to <strong className="text-ink-700 break-all">{confirmationEmail}</strong>.
+          </p>
+        )}
         <a
           href={`tel:${business.hotline.tel}`}
           className="inline-flex items-center gap-2 rounded-full bg-orange-600 px-6 py-3 text-sm font-bold text-white transition-transform active:scale-95"

@@ -85,7 +85,7 @@ const activeCouponCount = getActiveCoupons().length;
         <details class="group relative shrink-0">
           <summary
             class:list={[
-              'font-display flex shrink-0 cursor-pointer list-none items-center gap-1 rounded-full px-3 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors hover:bg-white/5 hover:text-orange-300 xl:px-4 xl:text-[15px] [&::-webkit-details-marker]:hidden',
+              'font-display flex shrink-0 cursor-pointer list-none items-center gap-1 rounded-full px-2.5 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors hover:bg-white/5 hover:text-orange-300 xl:px-4 xl:text-[15px] [&::-webkit-details-marker]:hidden',
               servicesSectionActive ? 'bg-white/10 text-orange-300' : 'text-white/90'
             ]}
           >
@@ -149,7 +149,7 @@ const activeCouponCount = getActiveCoupons().length;
               href={link.href}
               aria-current={isCurrent(link.href) ? 'page' : undefined}
               class:list={[
-                'font-display shrink-0 rounded-full px-3 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors hover:bg-white/5 hover:text-orange-300 xl:px-4 xl:text-[15px]',
+                'font-display shrink-0 rounded-full px-2.5 py-2.5 text-sm font-semibold whitespace-nowrap transition-colors hover:bg-white/5 hover:text-orange-300 xl:px-4 xl:text-[15px]',
                 isCurrent(link.href) ? 'bg-white/10 text-orange-300' : 'text-white/90'
               ]}
             >
@@ -159,7 +159,11 @@ const activeCouponCount = getActiveCoupons().length;
         }
       </nav>
 
-      <div class="flex items-center gap-2 sm:gap-3">
+      {
+        /* gap-2 until lg and px-2.5 nav items: at 768px the action row and at
+          1024px the desktop nav each ran past the right content gutter. */
+      }
+      <div class="flex items-center gap-2 lg:gap-3">
         <div class="hidden sm:inline-flex">
           <Button href="/contact-us/" size="md">Request Service</Button>
         </div>

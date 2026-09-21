@@ -1,155 +1,49 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { X, Send, Phone, Mail, MessageCircle, Sparkles, CircleCheck, AlertTriangle } from 'lucide-react';
+import { X, Send, Phone, Mail, MessageCircle, Sparkles, CircleCheck } from 'lucide-react';
 import { business } from '../../data/business';
-import {
-  detectContactInfo,
-  getSmartReply,
-  initialChatContext,
-  isValidEmail,
-  isValidName,
-  isValidPhone,
-  type ChatContext
-} from '../../lib/chat/engine';
-import { getPageContextTopic, topicLabel } from '../../lib/chat/knowledge';
-import { services } from '../../data/services';
-import { cityPages } from '../../data/cityPages';
 import { LEAD_LIMITS } from '../../lib/contactSchema';
+import { chatMarkdownToPlainText, renderChatMarkdown } from '../../lib/chat/renderChatMarkdown';
 import { trackLead } from '../../lib/analytics';
 import { Turnstile, turnstileEnabled } from './Turnstile';
+import type { Assistant, ConversationState } from '../../lib/assistant/brain';
+import type { AssistantKnowledge, BotReply, LeadDraft } from '../../lib/assistant/types';
+
+/**
+ * The website's chat assistant. All of the language work happens in
+ * `lib/assistant` - no API key, no network round trip per message - so replies
+ * are instant and the widget keeps working if anything else is down. The
+ * knowledge file and the engine itself load only when the chat is opened.
+ */
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const TEASER_SEEN_KEY = 'aph-chat-teaser-seen';
 
-type Message = { id: string; from: 'bot' | 'user'; content: React.ReactNode };
-type QuickAction = { key: string; label: string; shortLabel: string; triggerText: string };
-type LeadStep =
-  | 'idle'
-  | 'offer'
-  | 'wizard-service'
-  | 'wizard-urgency'
-  | 'wizard-city'
-  | 'wizard-type'
-  | 'wizard-issue'
-  | 'name'
-  | 'phone'
-  | 'email'
-  | 'confirm'
-  | 'sending'
-  | 'done';
-type PropertyType = 'Residential' | 'Commercial';
-type LeadState = {
-  step: LeadStep;
-  name?: string;
-  phone?: string;
-  email?: string;
-  wizard?: boolean;
-  wizardService?: string;
-  wizardUrgent?: boolean;
-  wizardCity?: string;
-  wizardPropertyType?: PropertyType;
-  wizardIssue?: string;
-};
+type Message = { id: string; from: 'bot' | 'user'; content: React.ReactNode; kind?: 'text' | 'lead' };
 type TranscriptLine = { from: 'bot' | 'user'; text: string };
+type LeadStatus = 'ready' | 'sending' | 'sent' | 'error';
+type Engine = typeof import('../../lib/assistant/brain');
 
 let idCounter = 0;
 const nextId = () => `m${++idCounter}`;
 
-const GREETING = (
-  <>
-    Hi, I&rsquo;m the Affordable Plumbing &amp; Heat assistant. Ask me about a service, your area, pricing, or just tell
-    me what&rsquo;s going on, I&rsquo;ll get you the right answer or a real person.
-  </>
-);
-
-/** Smart greeting based on current page: a visitor already reading about a
- * specific service or city gets acknowledged instead of a generic hello. */
-function buildGreeting(pageTopic: string | null): React.ReactNode {
-  if (pageTopic?.startsWith('service:')) {
-    const slug = pageTopic.slice('service:'.length);
-    const service = services.find((s) => s.slug === slug);
-    if (service) {
-      return (
-        <>
-          Hi, I&rsquo;m the Affordable Plumbing &amp; Heat assistant. Looking into {service.title.toLowerCase()}? I can
-          answer questions about it, pricing, or anything else on your mind.
-        </>
-      );
-    }
-  }
-  if (pageTopic?.startsWith('location:')) {
-    const slug = pageTopic.slice('location:'.length);
-    const city = cityPages.find((c) => c.slug === slug);
-    if (city) {
-      return (
-        <>
-          Hi, I&rsquo;m the Affordable Plumbing &amp; Heat assistant. Yep, we serve {city.name}, ask me anything about
-          service there, pricing, or a specific issue.
-        </>
-      );
-    }
-  }
-  return GREETING;
+/** Pathname for the lead email, only when it is a plain site path the API accepts. */
+function currentPagePath(): string {
+  const path = typeof window === 'undefined' ? '/' : window.location.pathname;
+  return /^\/[\w\-./]*$/.test(path) ? path.slice(0, LEAD_LIMITS.pageUrl) : '/';
 }
-
-/** Quick-reply chips adapt to the page a visitor is chatting from. */
-function buildQuickActions(pageTopic: string | null): QuickAction[] {
-  if (pageTopic?.startsWith('service:')) {
-    const slug = pageTopic.slice('service:'.length);
-    const service = services.find((s) => s.slug === slug);
-    if (service) {
-      const contextual: QuickAction = {
-        key: 'page-service-cost',
-        label: `Cost of ${service.title.toLowerCase()}`,
-        shortLabel: 'Pricing',
-        triggerText: 'How much will this cost?'
-      };
-      return [contextual, ...QUICK_ACTIONS.filter((qa) => qa.key !== 'services')];
-    }
-  }
-  return QUICK_ACTIONS;
-}
-
-const QUICK_ACTIONS: QuickAction[] = [
-  {
-    key: 'estimate-wizard',
-    label: 'Get a free estimate',
-    shortLabel: 'Free estimate',
-    triggerText: "I'd like a free estimate"
-  },
-  { key: 'emergency', label: 'This is an emergency', shortLabel: 'Emergency', triggerText: 'This is an emergency' },
-  {
-    key: 'services',
-    label: 'What services do you offer',
-    shortLabel: 'Services',
-    triggerText: 'What services do you offer?'
-  },
-  { key: 'areas', label: 'Do you serve my area', shortLabel: 'Service area', triggerText: 'Do you serve my area?' },
-  { key: 'coupons', label: 'Any current coupons', shortLabel: 'Coupons', triggerText: 'Do you have any coupons?' },
-  {
-    key: 'human',
-    label: 'Talk to a real person',
-    shortLabel: 'Talk to a human',
-    triggerText: 'I want to talk to a real person'
-  }
-];
 
 function BotAvatar() {
   return (
-    <span className="bg-navy-900 relative grid h-7 w-7 shrink-0 place-items-center overflow-hidden rounded-full">
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{ background: 'radial-gradient(circle at 32% 26%, rgba(236,87,19,0.5), transparent 60%)' }}
-      />
-      <MessageCircle className="relative h-3.5 w-3.5 text-white" strokeWidth={2.25} />
+    <span className="bg-navy-900 grid h-7 w-7 shrink-0 place-items-center rounded-full text-white">
+      <MessageCircle className="h-3.5 w-3.5" strokeWidth={2.5} />
     </span>
   );
 }
 
 function TypingIndicator() {
   return (
-    <div className="flex items-end gap-2">
+    <div className="flex items-end gap-2" aria-label="Assistant is typing">
       <BotAvatar />
       <div className="border-ink-100 flex items-center gap-1 rounded-2xl rounded-bl-md border bg-white px-4 py-3">
         {[0, 1, 2].map((i) => (
@@ -178,101 +72,181 @@ function ActionButton({ label, onClick, disabled }: { label: string; onClick: ()
   );
 }
 
-function buildLeadPayload(
-  lead: LeadState,
-  ctx: ChatContext,
-  transcript: TranscriptLine[],
-  turnstileToken: string | null
-) {
-  const urgent = Boolean(lead.wizardUrgent || ctx.urgent);
-  const topics = ctx.topicsDiscussed.map(topicLabel).join(', ') || 'General chat';
-  return {
-    source: 'chatbot' as const,
-    name: lead.name ?? '',
-    phone: lead.phone ?? '',
-    email: lead.email ?? '',
-    service: lead.wizardService ?? '',
-    city: lead.wizardCity ?? '',
-    propertyType: lead.wizardPropertyType ?? '',
-    message: lead.wizardIssue ?? '',
-    urgent,
-    topicsDiscussed: topics,
-    // Most recent part of the conversation; the API caps transcripts too.
-    transcript: transcript
-      .map((line) => `${line.from === 'bot' ? 'Bot' : 'Visitor'}: ${line.text}`)
-      .join('\n')
-      .slice(-LEAD_LIMITS.transcript),
-    // Honeypot field — always empty for a real human using the chat UI.
-    company: '',
-    turnstileToken: turnstileToken ?? undefined
-  };
-}
-
-function buildLeadMailto(lead: LeadState, ctx: ChatContext, transcript: TranscriptLine[]): string {
-  const urgent = lead.wizardUrgent || ctx.urgent;
-  const subject = lead.wizard
-    ? `Estimate request: ${lead.wizardService ?? 'Service'} (${lead.name})${urgent ? ' - URGENT' : ''}`
-    : `Chatbot lead: ${lead.name} (${business.name} site)`;
-  const topics = ctx.topicsDiscussed.map(topicLabel).join(', ') || 'General chat';
-  const body = [
-    `Name: ${lead.name}`,
-    `Phone: ${lead.phone}`,
-    lead.email ? `Email: ${lead.email}` : null,
-    lead.wizard ? `Service needed: ${lead.wizardService}` : null,
-    lead.wizard ? `City: ${lead.wizardCity}` : null,
-    lead.wizard ? `Property type: ${lead.wizardPropertyType}` : null,
-    lead.wizard && lead.wizardIssue ? `Issue details: ${lead.wizardIssue}` : null,
-    `Urgent: ${urgent ? 'Yes' : 'No'}`,
-    `Topics discussed: ${topics}`,
-    '',
-    'Conversation:',
-    ...transcript.map((line) => `${line.from === 'bot' ? 'Bot' : 'Visitor'}: ${line.text}`)
-  ]
-    .filter((line) => line !== null)
-    .join('\n');
-  return `mailto:${business.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body.slice(0, 1500))}`;
-}
-
-// Astro islands with client:load hydrate in the browser, so this module-level
-// read happens once, after mount, never during SSR.
-const initialPageTopic: string | null =
-  typeof window === 'undefined' ? null : getPageContextTopic(window.location.pathname);
+/** A human-feeling pause: long enough to read as thinking, short enough to feel instant. */
+const typingPause = (text: string) => Math.min(1100, 320 + text.length * 6);
 
 export default function ChatWidget() {
-  const [pageTopic] = useState<string | null>(initialPageTopic);
-  const quickActions = useMemo(() => buildQuickActions(pageTopic), [pageTopic]);
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { id: nextId(), from: 'bot', content: buildGreeting(initialPageTopic) }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [teaser, setTeaser] = useState(false);
   const [unread, setUnread] = useState(0);
-  const [ctx, setCtx] = useState<ChatContext>(initialChatContext);
-  const [lead, setLead] = useState<LeadState>({ step: 'idle' });
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const transcriptRef = useRef<TranscriptLine[]>([{ from: 'bot', text: 'Greeted the visitor' }]);
-  const leadRef = useRef<LeadState>(lead);
-  const ctxRef = useRef<ChatContext>(ctx);
-  const openRef = useRef(open);
-  const launcherRef = useRef<HTMLButtonElement>(null);
-  const hasOpenedRef = useRef(false);
+  const [quickReplies, setQuickReplies] = useState<string[]>([]);
+  const [leadCard, setLeadCard] = useState<{ draft: LeadDraft; status: LeadStatus; messageId: string } | null>(null);
+  const [isPhone, setIsPhone] = useState(false);
+  const [viewport, setViewport] = useState<{ height: number; top: number } | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0);
   const [turnstileFailed, setTurnstileFailed] = useState(false);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const hasOpenedRef = useRef(false);
+  const transcriptRef = useRef<TranscriptLine[]>([]);
+  const engineRef = useRef<{ engine: Engine; assistant: Assistant } | null>(null);
+  const loadingRef = useRef<Promise<{ engine: Engine; assistant: Assistant } | null> | null>(null);
+  const convRef = useRef<ConversationState | null>(null);
+  const leadCardRef = useRef(leadCard);
   const turnstileTokenRef = useRef<string | null>(null);
-  turnstileTokenRef.current = turnstileToken;
+  const queueRef = useRef<Promise<void>>(Promise.resolve());
+  const greetedRef = useRef(false);
+  const openRef = useRef(open);
   openRef.current = open;
+  leadCardRef.current = leadCard;
+  turnstileTokenRef.current = turnstileToken;
+
+  // ---- loading the assistant ------------------------------------------------
+
+  /** Pulls in the engine and the site's knowledge file, once, on first open. */
+  function loadEngine() {
+    if (engineRef.current) return Promise.resolve(engineRef.current);
+    if (loadingRef.current) return loadingRef.current;
+    loadingRef.current = (async () => {
+      try {
+        const [engine, response] = await Promise.all([
+          import('../../lib/assistant/brain'),
+          fetch('/assistant-knowledge.json', { headers: { Accept: 'application/json' } })
+        ]);
+        if (!response.ok) throw new Error('knowledge unavailable');
+        const knowledge = (await response.json()) as AssistantKnowledge;
+        const loaded = { engine, assistant: engine.createAssistant(knowledge) };
+        engineRef.current = loaded;
+        convRef.current = engine.initialState(currentPagePath());
+        return loaded;
+      } catch {
+        loadingRef.current = null;
+        return null;
+      }
+    })();
+    return loadingRef.current;
+  }
+
+  function pushBot(reply: BotReply) {
+    const id = nextId();
+    setMessages((m) => [...m, { id, from: 'bot', content: renderChatMarkdown(reply.text) }]);
+    transcriptRef.current.push({ from: 'bot', text: chatMarkdownToPlainText(reply.text) });
+    setQuickReplies(reply.quickReplies ?? []);
+    if (reply.lead) {
+      const leadId = nextId();
+      setMessages((m) => [...m, { id: leadId, from: 'bot', kind: 'lead', content: null }]);
+      setLeadCard({ draft: reply.lead, status: 'ready', messageId: leadId });
+    }
+    if (!openRef.current) setUnread((n) => n + 1);
+  }
+
+  function offlineNotice() {
+    pushBot({
+      text: `Sorry - I'm having trouble loading right now. Please call us at **${business.hotline.display}**; a real person answers 24/7.`
+    });
+  }
+
+  /** One message in, one reply out - queued so fast typing keeps its order. */
+  function handleUserInput(text: string) {
+    const clean = text.trim().slice(0, 500);
+    if (!clean || busy) return;
+    setMessages((m) => [...m, { id: nextId(), from: 'user', content: clean }]);
+    transcriptRef.current.push({ from: 'user', text: clean });
+    setQuickReplies([]);
+    setBusy(true);
+    setTyping(true);
+    queueRef.current = queueRef.current.then(async () => {
+      const loaded = await loadEngine();
+      if (!loaded || !convRef.current) {
+        setTyping(false);
+        setBusy(false);
+        offlineNotice();
+        return;
+      }
+      const { state, reply } = loaded.engine.respond(convRef.current, clean, loaded.assistant, { now: new Date() });
+      convRef.current = state;
+      await new Promise((r) => setTimeout(r, typingPause(reply.text)));
+      setTyping(false);
+      setBusy(false);
+      pushBot(reply);
+    });
+  }
+
+  async function sendLead() {
+    const current = leadCardRef.current;
+    if (!current || current.status === 'sending' || current.status === 'sent') return;
+    if (turnstileEnabled && !turnstileTokenRef.current) return;
+    const { draft, messageId } = current;
+    setLeadCard({ draft, status: 'sending', messageId });
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'chatbot',
+          name: draft.name,
+          phone: draft.phone,
+          email: draft.email ?? '',
+          city: draft.city ?? '',
+          service: draft.service ?? '',
+          propertyType: draft.propertyType ?? '',
+          message: draft.details ?? '',
+          urgent: draft.urgent,
+          summary: draft.summary,
+          topicsDiscussed: 'Website chat assistant conversation',
+          pageUrl: currentPagePath(),
+          transcript: transcriptRef.current
+            .map((line) => `${line.from === 'bot' ? 'Assistant' : 'Visitor'}: ${line.text}`)
+            .join('\n')
+            .slice(-LEAD_LIMITS.transcript),
+          company: '',
+          turnstileToken: turnstileTokenRef.current ?? undefined
+        })
+      });
+      if (!res.ok) throw new Error('Request failed');
+      setLeadCard({ draft, status: 'sent', messageId });
+      trackLead({ source: 'chatbot', service: draft.service, urgent: draft.urgent });
+      const engine = engineRef.current?.engine;
+      if (engine && convRef.current) convRef.current = engine.markLeadSent(convRef.current);
+      const note = draft.urgent
+        ? `Sent! The team has your details. Since it's urgent, calling **${business.hotline.display}** is the fastest way to reach someone right now.`
+        : `Sent! Thanks, ${draft.name.split(' ')[0]}. The team will give you a call soon${draft.email ? `, and a confirmation is on its way to ${draft.email}` : ''}. Anything else I can help with?`;
+      pushBot({ text: note, quickReplies: ['Any coupons?', 'Your hours', 'Talk to a person'] });
+    } catch {
+      setLeadCard({ draft, status: 'error', messageId });
+      setTurnstileToken(null);
+      setTurnstileKey((k) => k + 1);
+    }
+  }
+
+  // ---- open, greet, and keep the panel usable -------------------------------
 
   useEffect(() => {
-    leadRef.current = lead;
-  }, [lead]);
-  useEffect(() => {
-    ctxRef.current = ctx;
-  }, [ctx]);
+    if (!open || greetedRef.current) return;
+    greetedRef.current = true;
+    setTyping(true);
+    let cancelled = false;
+    void (async () => {
+      const loaded = await loadEngine();
+      if (cancelled) return;
+      await new Promise((r) => setTimeout(r, 400));
+      if (cancelled) return;
+      setTyping(false);
+      if (!loaded || !convRef.current) offlineNotice();
+      else pushBot(loaded.engine.greeting(convRef.current, loaded.assistant, { now: new Date() }));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
 
   useEffect(() => {
     // Storage can throw (Safari private mode, blocked site data); the teaser
@@ -294,16 +268,9 @@ export default function ChatWidget() {
   }, []);
 
   // `open` belongs in here: the transcript survives a close, so reopening a
-  // conversation with no new message left the scroller parked at the top and
-  // the newest reply cut off mid-sentence. Jump (not smooth) on reopen, since
-  // there is no motion for the reader to follow from a freshly mounted panel.
+  // conversation with no new message left the scroller parked at the top.
   useEffect(() => {
     if (!open) return;
-    // The panel mounts through AnimatePresence, so scrollRef is still null on
-    // this tick. A timer rather than requestAnimationFrame: rAF is throttled
-    // to zero in a backgrounded tab, and this has to land whether or not the
-    // browser is painting frames. Instant, not smooth - there is no motion
-    // for the reader to follow out of a panel that just appeared.
     const t = window.setTimeout(() => {
       const el = scrollRef.current;
       if (el) el.scrollTop = el.scrollHeight;
@@ -333,6 +300,39 @@ export default function ChatWidget() {
     const t = window.setTimeout(() => launcherRef.current?.focus(), 0);
     return () => window.clearTimeout(t);
   }, [open]);
+
+  // Phones get a full-screen chat. Track the breakpoint, lock page scroll
+  // behind the panel, and follow the visual viewport so the on-screen
+  // keyboard never covers the message box.
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const update = () => setIsPhone(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    if (!open || !isPhone) {
+      setViewport(null);
+      return;
+    }
+    const root = document.documentElement;
+    const previousOverflow = root.style.overflow;
+    root.style.overflow = 'hidden';
+    const vv = window.visualViewport;
+    const sync = () => {
+      if (vv) setViewport({ height: vv.height, top: vv.offsetTop });
+    };
+    sync();
+    vv?.addEventListener('resize', sync);
+    vv?.addEventListener('scroll', sync);
+    return () => {
+      root.style.overflow = previousOverflow;
+      vv?.removeEventListener('resize', sync);
+      vv?.removeEventListener('scroll', sync);
+    };
+  }, [open, isPhone]);
 
   useEffect(() => {
     if (!open) return;
@@ -378,378 +378,13 @@ export default function ChatWidget() {
     };
   }, [open]);
 
-  function pushUserMessage(text: string) {
-    setMessages((m) => [...m, { id: nextId(), from: 'user', content: text }]);
-    transcriptRef.current.push({ from: 'user', text });
-  }
-
-  function pushBotReply(content: React.ReactNode, logLabel: string, onDone?: () => void) {
-    setTyping(true);
-    setTimeout(() => {
-      setTyping(false);
-      setMessages((m) => [...m, { id: nextId(), from: 'bot', content }]);
-      transcriptRef.current.push({ from: 'bot', text: logLabel });
-      if (!openRef.current) setUnread((u) => u + 1);
-      onDone?.();
-    }, 700);
-  }
-
-  function offerLeadCapture() {
-    setCtx((c) => ({ ...c, leadOffered: true }));
-    setLead({ step: 'offer' });
-    pushBotReply(
-      <>Want me to have a technician follow up? I just need a name and phone number, no obligation.</>,
-      'Offered to collect contact info'
-    );
-  }
-
-  function startLeadCapture(prefill: { phone?: string; email?: string }, autoDetected: boolean) {
-    setCtx((c) => ({ ...c, leadOffered: true }));
-    setLead({ step: 'name', phone: prefill.phone, email: prefill.email });
-    pushBotReply(
-      autoDetected ? (
-        <>Thanks, I&rsquo;ve got that. What name should I put with it?</>
-      ) : (
-        <>Great, what&rsquo;s your name?</>
-      ),
-      'Detected contact info and started lead capture'
-    );
-  }
-
-  function startWizard() {
-    setCtx((c) => ({ ...c, leadOffered: true }));
-    setLead({ step: 'wizard-service', wizard: true });
-    pushBotReply(
-      <>Happy to help you get an estimate. What do you need help with?</>,
-      'Started the estimate wizard: asked for service type'
-    );
-  }
-
-  function confirmReply(l: LeadState): React.ReactNode {
-    return (
-      <>
-        <p>Here&rsquo;s what I&rsquo;ve got:</p>
-        <ul className="mt-1.5 list-disc space-y-0.5 pl-4">
-          {l.wizard && <li>Service: {l.wizardService}</li>}
-          {l.wizard && <li>Urgency: {l.wizardUrgent ? 'Emergency' : 'Not an emergency'}</li>}
-          {l.wizard && <li>City: {l.wizardCity}</li>}
-          {l.wizard && <li>Property: {l.wizardPropertyType}</li>}
-          {l.wizard && l.wizardIssue && <li>Details: {l.wizardIssue}</li>}
-          <li>Name: {l.name}</li>
-          <li>Phone: {l.phone}</li>
-          {l.email && <li>Email: {l.email}</li>}
-        </ul>
-        <p className="mt-2">
-          {l.wizard
-            ? 'Perfect! We’ve got everything our team needs. Want me to send this over now?'
-            : 'Want me to send this to the team?'}
-        </p>
-      </>
-    );
-  }
-
-  async function submitLeadFromChat() {
-    if (turnstileEnabled && !turnstileTokenRef.current) {
-      pushBotReply(
-        <>One quick security check first, tick the box below, then send.</>,
-        'Asked visitor to complete the security check'
-      );
-      return;
-    }
-    setLead((prev) => ({ ...prev, step: 'sending' }));
-    const payload = buildLeadPayload(leadRef.current, ctxRef.current, transcriptRef.current, turnstileTokenRef.current);
-    try {
-      const res = await fetch('/api/lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error('Request failed');
-      setLead((prev) => ({ ...prev, step: 'done' }));
-      setCtx((c) => ({ ...c, leadSubmitted: true }));
-      trackLead({ source: 'chatbot', service: payload.service, urgent: payload.urgent });
-      pushBotReply(
-        <>
-          <p className="flex items-center gap-1.5 font-semibold text-orange-600">
-            <CircleCheck className="h-4 w-4" /> Got it, thanks!
-          </p>
-          <p className="text-ink-500 mt-1">
-            Our team will reach out shortly. For anything urgent, call {business.hotline.display}.
-          </p>
-        </>,
-        'Lead submitted successfully to the office'
-      );
-    } catch {
-      // Never claim success, and never navigate the visitor away on our own.
-      // The details stay in the chat so they can retry, call, or choose to
-      // email them. Tokens are single-use, so the check is re-issued.
-      setTurnstileToken(null);
-      setTurnstileKey((k) => k + 1);
-      setLead((prev) => ({ ...prev, step: 'confirm' }));
-      pushBotReply(
-        <>
-          <p className="flex items-center gap-1.5 font-semibold text-red-700">
-            <AlertTriangle className="h-4 w-4" /> That didn&rsquo;t go through.
-          </p>
-          <p className="text-ink-600 mt-1">
-            Please call{' '}
-            <a href={`tel:${business.hotline.tel}`} className="font-semibold text-orange-600 underline">
-              {business.hotline.display}
-            </a>
-            , try sending again, or{' '}
-            <a
-              href={buildLeadMailto(leadRef.current, ctxRef.current, transcriptRef.current)}
-              className="font-semibold text-orange-600 underline"
-            >
-              email these details
-            </a>
-            .
-          </p>
-        </>,
-        'Lead submission failed; offered call, retry, or email'
-      );
-    }
-  }
-
-  function handleLeadStep(text: string) {
-    const t = text.trim();
-    const step = leadRef.current.step;
-
-    if (step === 'offer') {
-      if (/^(yes|yep|yeah|sure|let'?s do it|ok|okay|sounds good)/i.test(t)) {
-        setLead({ step: 'name' });
-        pushBotReply(<>Great, what&rsquo;s your name?</>, 'Asked for name');
-      } else if (/^(no|nope|not now|no thanks|not really)/i.test(t)) {
-        setCtx((c) => ({ ...c, leadDeclined: true }));
-        setLead({ step: 'idle' });
-        pushBotReply(
-          <>No problem, happy to keep answering questions. Call {business.hotline.display} any time.</>,
-          'Declined lead capture'
-        );
-      } else {
-        pushBotReply(<>Just a yes or no works, want me to grab your info?</>, 'Reprompted for offer response');
-      }
-      return;
-    }
-
-    if (step === 'wizard-service') {
-      const matchedService = services.find((s) => s.title.toLowerCase() === t.toLowerCase());
-      const label = matchedService?.title ?? t;
-      if (t.length < 2 || t.length > LEAD_LIMITS.service) {
-        pushBotReply(
-          <>
-            What kind of issue is it, drain, water heater, cooling, electrical, or something else? A few words is
-            plenty.
-          </>,
-          'Reprompted for service type'
-        );
-        return;
-      }
-      const urgentWords = /emergency|urgent|burst|flood|no water|no heat|leak|leaking|asap|spark/i.test(t);
-      setLead((prev) => ({ ...prev, wizardService: label, step: 'wizard-urgency' }));
-      pushBotReply(
-        <>Got it, {label.toLowerCase()}. Is this an emergency, or can it wait for regular scheduling?</>,
-        `Wizard: service = ${label}`,
-        () => {
-          if (urgentWords) setCtx((c) => ({ ...c, urgent: true }));
-        }
-      );
-      return;
-    }
-
-    if (step === 'wizard-urgency') {
-      const isUrgent = /^(yes|yep|yeah|emergency|urgent|asap|right now)/i.test(t);
-      const isNotUrgent = /^(no|nope|not|can wait|whenever|regular|schedule)/i.test(t);
-      if (!isUrgent && !isNotUrgent) {
-        pushBotReply(<>Just need to know, is it an emergency (yes) or can it wait (no)?</>, 'Reprompted for urgency');
-        return;
-      }
-      setLead((prev) => ({ ...prev, wizardUrgent: isUrgent, step: 'wizard-city' }));
-      if (isUrgent) setCtx((c) => ({ ...c, urgent: true }));
-      pushBotReply(
-        isUrgent ? (
-          <>
-            Got it, we&rsquo;ll flag this as urgent. For fastest help right now you can also call{' '}
-            {business.hotline.display} directly. Which city are you in?
-          </>
-        ) : (
-          <>No rush, good to know. Which city are you in?</>
-        ),
-        `Wizard: urgency = ${isUrgent ? 'emergency' : 'not urgent'}`
-      );
-      return;
-    }
-
-    if (step === 'wizard-city') {
-      if (t.length < 2 || t.length > LEAD_LIMITS.city) {
-        pushBotReply(<>Which city should I put down?</>, 'Reprompted for city');
-        return;
-      }
-      setLead((prev) => ({ ...prev, wizardCity: t, step: 'wizard-type' }));
-      pushBotReply(<>Thanks. Is this for a home (residential) or a business (commercial)?</>, `Wizard: city = ${t}`);
-      return;
-    }
-
-    if (step === 'wizard-type') {
-      const isCommercial = /^comm/i.test(t);
-      const isResidential = /^resi|^home|^house/i.test(t);
-      if (!isCommercial && !isResidential) {
-        pushBotReply(<>Residential or commercial?</>, 'Reprompted for property type');
-        return;
-      }
-      const propertyType: PropertyType = isCommercial ? 'Commercial' : 'Residential';
-      setLead((prev) => ({ ...prev, wizardPropertyType: propertyType, step: 'wizard-issue' }));
-      pushBotReply(
-        <>
-          Last thing before I grab your contact info, anything else about the issue our team should know? (Or type
-          &ldquo;skip&rdquo;.)
-        </>,
-        `Wizard: property type = ${propertyType}`
-      );
-      return;
-    }
-
-    if (step === 'wizard-issue') {
-      const issue = /^skip$/i.test(t) ? undefined : t;
-      setLead((prev) => ({ ...prev, wizardIssue: issue, step: 'name' }));
-      pushBotReply(<>Great, what&rsquo;s your name?</>, 'Wizard: collected issue details, asked for name');
-      return;
-    }
-
-    if (step === 'name') {
-      if (!isValidName(t)) {
-        pushBotReply(<>I didn&rsquo;t quite catch a name there, mind typing it again?</>, 'Asked again for name');
-        return;
-      }
-      const firstName = t.split(' ')[0];
-      if (leadRef.current.phone) {
-        setLead((prev) => ({ ...prev, name: t, step: 'confirm' }));
-        pushBotReply(confirmReply({ ...leadRef.current, name: t }), 'Recapped lead details for confirmation');
-      } else {
-        setLead((prev) => ({ ...prev, name: t, step: 'phone' }));
-        pushBotReply(<>Thanks, {firstName}. What&rsquo;s the best phone number to reach you?</>, 'Asked for phone');
-      }
-      return;
-    }
-
-    if (step === 'phone') {
-      if (!isValidPhone(t)) {
-        pushBotReply(
-          <>That doesn&rsquo;t look like a full phone number, mind including the area code?</>,
-          'Asked again for phone'
-        );
-        return;
-      }
-      if (leadRef.current.email) {
-        setLead((prev) => ({ ...prev, phone: t, step: 'confirm' }));
-        pushBotReply(confirmReply({ ...leadRef.current, phone: t }), 'Recapped lead details for confirmation');
-      } else {
-        setLead((prev) => ({ ...prev, phone: t, step: 'email' }));
-        pushBotReply(<>Got it. Email too? Optional, type &ldquo;skip&rdquo; to move on.</>, 'Asked for email');
-      }
-      return;
-    }
-
-    if (step === 'email') {
-      if (/^skip$/i.test(t)) {
-        setLead((prev) => ({ ...prev, step: 'confirm' }));
-        pushBotReply(confirmReply(leadRef.current), 'Recapped lead details for confirmation');
-        return;
-      }
-      if (!isValidEmail(t)) {
-        pushBotReply(
-          <>That email doesn&rsquo;t look quite right, try again or type &ldquo;skip&rdquo;.</>,
-          'Asked again for email'
-        );
-        return;
-      }
-      setLead((prev) => ({ ...prev, email: t, step: 'confirm' }));
-      pushBotReply(confirmReply({ ...leadRef.current, email: t }), 'Recapped lead details for confirmation');
-      return;
-    }
-
-    if (step === 'confirm') {
-      if (/^(yes|yep|yeah|send|confirm|correct|sure)/i.test(t)) {
-        submitLeadFromChat();
-      } else if (/^(no|nope|start over|redo|restart)/i.test(t)) {
-        setLead({ step: 'name' });
-        pushBotReply(<>No problem, let&rsquo;s start over. What&rsquo;s your name?</>, 'Restarted lead capture');
-      } else {
-        pushBotReply(
-          <>Just need a yes to send this along, or say &ldquo;start over&rdquo;.</>,
-          'Reprompted for confirmation'
-        );
-      }
-    }
-  }
-
-  function cancelLeadCapture() {
-    pushUserMessage('Cancel');
-    setCtx((c) => ({ ...c, leadDeclined: true }));
-    setLead({ step: 'idle' });
-    pushBotReply(<>No worries, cancelled. What else can I help with?</>, 'Cancelled lead capture');
-  }
-
-  function handleUserInput(displayText: string, matchText: string = displayText) {
-    pushUserMessage(displayText);
-
-    const step = leadRef.current.step;
-    if (step !== 'idle' && step !== 'done') {
-      handleLeadStep(matchText);
-      return;
-    }
-
-    const detected = detectContactInfo(matchText);
-    if ((detected.phone || detected.email) && !ctx.leadOffered && !ctx.leadDeclined && !ctx.leadSubmitted) {
-      startLeadCapture(detected, true);
-      return;
-    }
-
-    const result = getSmartReply(matchText, ctx, pageTopic);
-    setCtx(result.nextContext);
-    pushBotReply(result.content, result.logLabel, () => {
-      if (result.startWizard) setTimeout(startWizard, 500);
-      else if (result.offerLeadCapture) setTimeout(offerLeadCapture, 500);
-    });
-  }
-
-  function handleQuickAction(qa: QuickAction) {
-    if (qa.key === 'coupons') window.dispatchEvent(new CustomEvent('open-coupon-widget'));
-    if (qa.key === 'estimate-wizard' || qa.key === 'page-service-estimate') {
-      pushUserMessage(qa.label);
-      startWizard();
-      return;
-    }
-    handleUserInput(qa.label, qa.triggerText);
-  }
-
   function handleSend() {
-    const text = input.trim();
-    if (!text) return;
+    const text = input;
     setInput('');
     handleUserInput(text);
   }
 
-  const capturing = lead.step !== 'idle' && lead.step !== 'done';
-  const placeholder =
-    lead.step === 'name'
-      ? 'Your name…'
-      : lead.step === 'phone'
-        ? 'Your phone number…'
-        : lead.step === 'email'
-          ? 'Your email (or type skip)…'
-          : lead.step === 'offer' ||
-              lead.step === 'confirm' ||
-              lead.step === 'wizard-urgency' ||
-              lead.step === 'wizard-type'
-            ? 'Yes or no…'
-            : lead.step === 'wizard-service'
-              ? 'e.g. drain cleaning…'
-              : lead.step === 'wizard-city'
-                ? 'Your city…'
-                : lead.step === 'wizard-issue'
-                  ? 'Optional details, or type skip…'
-                  : 'Type a question…';
+  const awaitingSend = leadCard?.status === 'ready' || leadCard?.status === 'error';
 
   return (
     <aside
@@ -760,39 +395,38 @@ export default function ChatWidget() {
         {open && (
           <motion.div
             ref={panelRef}
-            initial={{ opacity: 0, y: 16, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.96 }}
+            initial={isPhone ? { opacity: 0, y: 24 } : { opacity: 0, y: 16, scale: 0.96 }}
+            animate={isPhone ? { opacity: 1, y: 0 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={isPhone ? { opacity: 0, y: 24 } : { opacity: 0, y: 16, scale: 0.96 }}
             transition={{ duration: 0.22, ease: EASE }}
-            className="border-ink-100 mb-4 flex h-[min(600px,72vh)] w-[92vw] max-w-[400px] flex-col overflow-hidden rounded-[1.75rem] border bg-white shadow-2xl shadow-black/15"
+            // Phones: the whole screen (height follows the visual viewport so the
+            // keyboard never hides the input). Larger screens: floating panel.
+            style={isPhone && viewport ? { height: viewport.height, top: viewport.top } : undefined}
+            className="border-ink-100 fixed inset-x-0 top-0 z-[70] flex h-[100dvh] w-full flex-col overflow-hidden bg-white sm:static sm:mb-4 sm:h-[min(640px,75vh)] sm:w-[400px] sm:rounded-[1.75rem] sm:border sm:shadow-2xl sm:shadow-black/15"
             role="dialog"
             aria-modal="true"
             aria-label={`Chat with ${business.name}`}
           >
-            <div className="bg-navy-900 relative shrink-0 overflow-hidden p-5">
+            <div className="bg-navy-900 relative shrink-0 overflow-hidden px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-5 sm:pt-5">
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0"
                 style={{ background: 'radial-gradient(circle at 18% 0%, rgba(236,87,19,0.35), transparent 60%)' }}
               />
               <div className="relative flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
+                <div className="flex min-w-0 items-center gap-3">
                   <span className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full border-2 border-white/20 bg-white">
                     <MessageCircle className="h-5 w-5 text-orange-600" strokeWidth={2.25} />
                   </span>
-                  <div>
-                    <div className="flex items-center gap-1.5 text-sm font-semibold text-white">
-                      {business.shortName}
-                      <span className="inline-flex items-center gap-0.5 rounded-full bg-white/15 px-1.5 py-0.5 text-[10px] font-medium text-white/90">
-                        <Sparkles className="h-2.5 w-2.5" /> Smart assistant
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-white/70">
-                      <span className="relative flex h-1.5 w-1.5">
+                  <div className="min-w-0">
+                    <div className="truncate text-[15px] font-semibold text-white">{business.shortName}</div>
+                    <div className="mt-0.5 flex items-center gap-1.5 text-xs whitespace-nowrap text-white/75">
+                      <span className="relative flex h-1.5 w-1.5 shrink-0">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                         <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
                       </span>
-                      Usually replies in minutes
+                      <Sparkles className="h-3 w-3 shrink-0" aria-hidden="true" />
+                      Assistant, here 24/7
                     </div>
                   </div>
                 </div>
@@ -822,123 +456,174 @@ export default function ChatWidget() {
             </div>
 
             <div ref={scrollRef} aria-live="polite" className="flex-1 space-y-3 overflow-y-auto p-4">
-              {messages.map((m) => (
-                <motion.div
-                  key={m.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className={`flex items-end gap-2 ${m.from === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  {m.from === 'bot' && <BotAvatar />}
-                  <div
-                    className={`max-w-[78%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                      m.from === 'user'
-                        ? 'rounded-br-md bg-orange-600 text-white'
-                        : 'border-ink-100 text-ink-700 rounded-bl-md border bg-white'
-                    }`}
+              {messages.map((m) =>
+                m.kind === 'lead' ? (
+                  <motion.div
+                    key={m.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="pl-9"
                   >
-                    {m.content}
-                  </div>
-                </motion.div>
-              ))}
+                    {leadCard && leadCard.messageId === m.id ? (
+                      <div
+                        className="rounded-2xl border border-orange-200 bg-orange-50/60 p-4 text-sm"
+                        aria-label="Your service request details"
+                      >
+                        <p className="font-display text-ink-900 font-bold">
+                          {leadCard.status === 'sent' ? 'Sent to our team' : 'Ready to send to our team'}
+                        </p>
+                        <dl className="text-ink-700 mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[13px]">
+                          <dt className="text-ink-500">Name</dt>
+                          <dd>{leadCard.draft.name}</dd>
+                          <dt className="text-ink-500">Phone</dt>
+                          <dd>{leadCard.draft.phone}</dd>
+                          {leadCard.draft.email && (
+                            <>
+                              <dt className="text-ink-500">Email</dt>
+                              <dd className="break-all">{leadCard.draft.email}</dd>
+                            </>
+                          )}
+                          {leadCard.draft.city && (
+                            <>
+                              <dt className="text-ink-500">City</dt>
+                              <dd>{leadCard.draft.city}</dd>
+                            </>
+                          )}
+                          {leadCard.draft.service && (
+                            <>
+                              <dt className="text-ink-500">Service</dt>
+                              <dd>{leadCard.draft.service}</dd>
+                            </>
+                          )}
+                          {leadCard.draft.urgent && (
+                            <>
+                              <dt className="text-ink-500">Priority</dt>
+                              <dd className="font-semibold text-red-700">Urgent</dd>
+                            </>
+                          )}
+                        </dl>
+                        {leadCard.status === 'sent' ? (
+                          <p className="mt-3 flex items-center gap-1.5 font-semibold text-emerald-700">
+                            <CircleCheck className="h-4 w-4" aria-hidden="true" /> Received. We&rsquo;ll call you soon.
+                          </p>
+                        ) : (
+                          <div className="mt-3 space-y-2">
+                            <Turnstile
+                              key={turnstileKey}
+                              onVerify={(token) => {
+                                setTurnstileToken(token);
+                                setTurnstileFailed(false);
+                              }}
+                              onExpire={() => setTurnstileToken(null)}
+                              onError={() => setTurnstileFailed(true)}
+                              theme="light"
+                            />
+                            {turnstileFailed && (
+                              <p role="alert" className="text-xs font-medium text-red-700">
+                                The security check couldn&rsquo;t load. Please call {business.hotline.display}.
+                              </p>
+                            )}
+                            {leadCard.status === 'error' && (
+                              <p role="alert" className="text-xs font-medium text-red-700">
+                                That didn&rsquo;t go through. Try again, or call{' '}
+                                <a href={`tel:${business.hotline.tel}`} className="underline">
+                                  {business.hotline.display}
+                                </a>
+                                .
+                              </p>
+                            )}
+                            <div className="grid grid-cols-2 gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => void sendLead()}
+                                disabled={leadCard.status === 'sending' || (turnstileEnabled && !turnstileToken)}
+                                className="flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-orange-600 px-3 text-sm font-bold text-white transition-colors hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
+                              >
+                                <Send className="h-3.5 w-3.5" aria-hidden="true" />
+                                {leadCard.status === 'sending' ? 'Sending…' : 'Send'}
+                              </button>
+                              <ActionButton
+                                label="Change details"
+                                disabled={leadCard.status === 'sending' || busy}
+                                onClick={() => {
+                                  pushBot({
+                                    text: 'Sure - tell me what to change and I\'ll update it. For example: "my number is 719-555-0100" or "make it Monument".'
+                                  });
+                                  inputRef.current?.focus();
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-ink-400 text-xs italic">Details updated below.</p>
+                    )}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key={m.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className={`flex items-end gap-2 ${m.from === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    {m.from === 'bot' && <BotAvatar />}
+                    <div
+                      className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed break-words sm:max-w-[78%] sm:text-sm ${
+                        m.from === 'user'
+                          ? 'rounded-br-md bg-orange-600 text-white'
+                          : 'border-ink-100 text-ink-700 rounded-bl-md border bg-white'
+                      }`}
+                    >
+                      {m.content}
+                    </div>
+                  </motion.div>
+                )
+              )}
               {typing && <TypingIndicator />}
             </div>
 
-            <div className="border-ink-100 bg-ink-50/60 shrink-0 border-t px-3 py-2.5">
-              {lead.step === 'offer' ? (
+            {quickReplies.length > 0 && !awaitingSend && (
+              <div className="border-ink-100 bg-ink-50/60 shrink-0 border-t px-3 py-2.5">
                 <div className="grid grid-cols-2 gap-1.5">
-                  <ActionButton label="Yes, let's do it" onClick={() => handleUserInput("Yes, let's do it")} />
-                  <ActionButton label="No thanks" onClick={() => handleUserInput('No thanks')} />
-                </div>
-              ) : lead.step === 'wizard-service' ? (
-                <div className="grid grid-cols-2 gap-1.5">
-                  {services.slice(0, 8).map((s) => (
-                    <ActionButton key={s.slug} label={s.title} onClick={() => handleUserInput(s.title)} />
-                  ))}
-                  <ActionButton label="Something else" onClick={() => handleUserInput('Something else')} />
-                  <ActionButton label="Cancel" onClick={cancelLeadCapture} />
-                </div>
-              ) : lead.step === 'wizard-urgency' ? (
-                <div className="grid grid-cols-2 gap-1.5">
-                  <ActionButton label="Yes, emergency" onClick={() => handleUserInput('Yes, emergency')} />
-                  <ActionButton label="No, can wait" onClick={() => handleUserInput('No, can wait')} />
-                </div>
-              ) : lead.step === 'wizard-type' ? (
-                <div className="grid grid-cols-2 gap-1.5">
-                  <ActionButton label="Residential" onClick={() => handleUserInput('Residential')} />
-                  <ActionButton label="Commercial" onClick={() => handleUserInput('Commercial')} />
-                </div>
-              ) : lead.step === 'wizard-issue' ? (
-                <ActionButton label="Skip this" onClick={() => handleUserInput('skip')} />
-              ) : lead.step === 'confirm' ? (
-                <div className="space-y-2">
-                  <Turnstile
-                    key={turnstileKey}
-                    onVerify={(token) => {
-                      setTurnstileToken(token);
-                      setTurnstileFailed(false);
-                    }}
-                    onExpire={() => setTurnstileToken(null)}
-                    onError={() => setTurnstileFailed(true)}
-                    theme="light"
-                  />
-                  {turnstileFailed && (
-                    <p role="alert" className="text-center text-xs font-medium text-red-700">
-                      The security check couldn&rsquo;t load. Please call {business.hotline.display}.
-                    </p>
-                  )}
-                  <div className="grid grid-cols-2 gap-1.5">
-                    <ActionButton
-                      label="Yes, send it"
-                      disabled={turnstileEnabled && !turnstileToken}
-                      onClick={() => handleUserInput('Yes, send it')}
-                    />
-                    <ActionButton label="Start over" onClick={() => handleUserInput('Start over')} />
-                  </div>
-                </div>
-              ) : lead.step === 'sending' ? (
-                <p className="text-ink-400 py-1.5 text-center text-xs">Sending…</p>
-              ) : lead.step === 'name' ||
-                lead.step === 'phone' ||
-                lead.step === 'email' ||
-                lead.step === 'wizard-city' ? (
-                <ActionButton label="Cancel" onClick={cancelLeadCapture} />
-              ) : (
-                <div className="grid grid-cols-3 gap-1.5">
-                  {quickActions.map((qa) => (
-                    <ActionButton key={qa.key} label={qa.shortLabel} onClick={() => handleQuickAction(qa)} />
+                  {quickReplies.slice(0, 6).map((label) => (
+                    <ActionButton key={label} label={label} disabled={busy} onClick={() => handleUserInput(label)} />
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSend();
               }}
-              className="border-ink-100 flex shrink-0 items-center gap-2 border-t p-3"
+              className="border-ink-100 flex shrink-0 items-center gap-2 border-t px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-3"
             >
               <input
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 maxLength={500}
-                placeholder={placeholder}
-                className="border-ink-200 text-ink-900 placeholder:text-ink-400 flex-1 rounded-full border bg-white px-4 py-2.5 text-sm outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10"
+                placeholder="Type a message…"
+                aria-label="Message"
+                enterKeyHint="send"
+                // 16px on phones: iOS zooms the whole page into any smaller input.
+                className="border-ink-200 text-ink-900 placeholder:text-ink-400 min-w-0 flex-1 rounded-full border bg-white px-4 py-2.5 text-base outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 sm:text-sm"
               />
               <button
                 type="submit"
                 aria-label="Send message"
-                disabled={!input.trim()}
+                disabled={!input.trim() || busy}
                 className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-orange-600 text-white transition-transform active:scale-95 disabled:opacity-40"
               >
                 <Send className="h-4 w-4" />
               </button>
             </form>
             <p className="text-ink-400 shrink-0 px-4 pb-3 text-center text-[11px]">
-              {capturing
+              {awaitingSend
                 ? 'Your info goes straight to our team.'
                 : `Automated assistant. For anything urgent, call ${business.hotline.display}.`}
             </p>

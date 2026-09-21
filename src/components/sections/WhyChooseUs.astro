@@ -5,11 +5,14 @@ import Eyebrow from '../ui/Eyebrow.astro';
 import Button from '../ui/Button.astro';
 import StatCounter from '../islands/StatCounter.tsx';
 import techImage from '../../assets/images/services/electrical-panel.jpg';
+import { serviceAreaCount } from '../../data/business';
 
 const stats = [
   { value: 24, suffix: '/7', label: 'Emergency Availability' },
   { value: 3, suffix: '', label: 'Licenses Held' },
-  { value: 12, suffix: '+', label: 'Communities Served' },
+  // Derived from the service-area list (it read a hardcoded "12+" while the
+  // site lists 15 communities).
+  { value: serviceAreaCount, suffix: '', label: 'Communities Served' },
   { value: 100, suffix: '%', label: 'Upfront Pricing' }
 ];
 ---
@@ -32,7 +35,7 @@ const stats = [
         class="shadow-card-hover aspect-[4/3.3] w-full rounded-[2rem] object-cover"
       />
       <div
-        class="shadow-card-hover border-ink-100 absolute -right-4 -bottom-6 rounded-2xl border bg-white px-6 py-4 backdrop-blur-xl sm:-right-8"
+        class="shadow-card-hover border-ink-100 absolute right-4 -bottom-6 rounded-2xl border bg-white px-6 py-4 backdrop-blur-xl lg:-right-8"
       >
         <p class="font-display text-ink-900 text-2xl font-bold">24 Hrs</p>
         <p class="text-ink-500 text-xs">Emergency response</p>

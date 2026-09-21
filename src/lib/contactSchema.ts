@@ -19,7 +19,9 @@ export const LEAD_LIMITS = {
   propertyType: 40,
   message: 2000,
   topicsDiscussed: 500,
-  transcript: 6000
+  transcript: 6000,
+  summary: 1000,
+  pageUrl: 200
 } as const;
 
 const PHONE_EXTENSION = /\s*(?:x|ext\.?|extension)\s*\d{1,6}$/i;
@@ -116,6 +118,15 @@ export const leadApiSchema = z.object({
     .max(LEAD_LIMITS.transcript * 4)
     .optional()
     .transform((v) => v?.trim().slice(-LEAD_LIMITS.transcript)),
+  // Chatbot only: the assistant's plain-language summary of the conversation
+  // and the page the visitor was on, so the office sees context at a glance.
+  summary: optionalText(LEAD_LIMITS.summary),
+  pageUrl: z
+    .string()
+    .trim()
+    .max(LEAD_LIMITS.pageUrl)
+    .regex(/^\/[\w\-./]*$/)
+    .optional(),
   // Honeypot, must always arrive empty.
   company: z.string().max(0).optional().default(''),
   // Cloudflare Turnstile token, verified server-side in api/lead.ts. Nullable
